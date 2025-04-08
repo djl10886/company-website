@@ -18,7 +18,7 @@ export default function About() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto">
               <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                We are also avid enjoyers of open world and role-playing games, and in particular, the immersive world component. To that, we believe that more dynamic NPCs can help further increase the immersion factor for such games. More dynamic NPCs could potentially even open all new playstyles not previously possible.
+                We are also avid enjoyers of open world and role-playing games, and in particular, the immersive world component. To that end, we believe that more dynamic NPCs can help further increase the immersion factor for such games. More dynamic NPCs could potentially even open all new playstyles not previously possible.
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
                 Current NPCs can have some dynamic behavior, but we feel like they could contribute more actively to the world they are part of. Instead of just representing an aspect of the game and/or world (such as a store or the start of a quest), what if NPCs could participate in events that happen in the world, interact with the characters in the world, or maybe even alter certain aspects of the world itself?
@@ -40,7 +40,7 @@ export default function About() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto">
               <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                We are looking at leveraging the processing ability of large language models by having them take the role of an NPC's "brain". The language model would allow the NPC to process various information about itself and then generate corresponding responses. The responses can then be translated into various in-game operations. Executing those operations would produce updated information, which is fed back in to the language model. This repeating cycle would be what breathes life into NPCs.
+                We are looking at leveraging the processing ability of large language models by having them take the role of an NPC's "brain". The language model would allow the NPC to process various information about itself and then generate corresponding responses. The responses can then be translated into various in-game operations. Executing those operations produces updated information, which is fed back in to the language model. This repeating cycle would be what breathes life into NPCs.
               </p>
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function About() {
                 <ul className="text-gray-300 text-lg leading-relaxed space-y-6">
                   <li className="flex items-start">
                     <span className="text-blue-400 mr-4 mt-1.5">•</span>
-                    <span>Enhanced immersion from actively participating in the game world, making the world feel more alive and organic</span>
+                    <span>Enhanced immersion from NPCs actively participating in the game world, making the world feel more alive and organic</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-blue-400 mr-4 mt-1.5">•</span>
@@ -77,7 +77,7 @@ export default function About() {
                   </li>
                   <li className="flex items-start">
                     <span className="text-blue-400 mr-4 mt-1.5">•</span>
-                    <span>More unpredictable playthroughs as NPC actions can influence the narrative in meaningful ways</span>
+                    <span>More unpredictable playthroughs as NPC actions can influence the narrative in nondeterministic ways</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-blue-400 mr-4 mt-1.5">•</span>
