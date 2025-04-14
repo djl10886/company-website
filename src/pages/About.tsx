@@ -3,51 +3,10 @@ import { Lightbulb, Target, Award } from 'lucide-react';
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 pt-16">
+    <div className="pt-16">
       <div className="max-w-7xl mx-auto px-4 py-16">
-        {/* Our Inspiration Section */}
-        <section className="mb-20">
-          <div className="text-center mb-12">
-            <Lightbulb className="text-blue-400 w-12 h-12 mx-auto mb-4" />
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Our Inspiration
-            </h2>
-            <div className="w-24 h-1 bg-blue-400 mx-auto"></div>
-          </div>
-          
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
-            <div className="max-w-3xl mx-auto">
-              <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                We are also avid enjoyers of open world and role-playing games, and in particular, the immersive world component. To that end, we believe that more dynamic NPCs can help further increase the immersion factor for such games. More dynamic NPCs could potentially even open all new playstyles not previously possible.
-              </p>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                Current NPCs can have some dynamic behavior, but we feel like they could contribute more actively to the world they are part of. Instead of just representing an aspect of the game and/or world (such as a store or the start of a quest), what if NPCs could participate in events that happen in the world, interact with the characters in the world, or maybe even alter certain aspects of the world itself?
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Our Approach Section */}
-        <section className="mb-20">
-          <div className="text-center mb-12">
-            <Target className="text-blue-400 w-12 h-12 mx-auto mb-4" />
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Our Approach
-            </h2>
-            <div className="w-24 h-1 bg-blue-400 mx-auto"></div>
-          </div>
-          
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
-            <div className="max-w-3xl mx-auto">
-              <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                We are looking at leveraging the processing ability of large language models by having them take the role of an NPC's "brain". The language model would allow the NPC to process various information about itself and then generate corresponding responses. The responses can then be translated into various in-game operations. Executing those operations produces updated information, which is fed back in to the language model. This repeating cycle would be what breathes life into NPCs.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* Potential Benefits Section */}
-        <section>
+        <section className="mb-20">
           <div className="text-center mb-12">
             <Award className="text-blue-400 w-12 h-12 mx-auto mb-4" />
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -113,6 +72,50 @@ export default function About() {
                   </li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Approach Section */}
+        <section className="mb-20">
+          <div className="text-center mb-12">
+            <Target className="text-blue-400 w-12 h-12 mx-auto mb-4" />
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Our Approach
+            </h2>
+            <div className="w-24 h-1 bg-blue-400 mx-auto"></div>
+          </div>
+          
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
+            <div className="max-w-3xl mx-auto space-y-8">
+              <p className="text-gray-300 text-lg leading-relaxed">
+                We are looking at leveraging the processing ability of large language models by having them take the role of an NPC's "brain". The language model would allow the NPC to process various information about itself and then generate corresponding responses. The responses can then be translated into various in-game operations. Executing those operations produces updated information, which is fed back in to the language model. This repeating cycle would be what breathes life into NPCs.
+              </p>
+              <p className="text-gray-300 text-lg leading-relaxed">
+                The process is also very straightforward from a technical perspective. Developers provide a natural language description on various aspects of a NPC, such as their background, personality, goals, etc. NPC actions can be coded as usual, and then provided to the framework with a corresponding description of that action. The framework handles the rest.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Inspiration Section */}
+        <section>
+          <div className="text-center mb-12">
+            <Lightbulb className="text-blue-400 w-12 h-12 mx-auto mb-4" />
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Our Inspiration
+            </h2>
+            <div className="w-24 h-1 bg-blue-400 mx-auto"></div>
+          </div>
+          
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
+            <div className="max-w-3xl mx-auto">
+              <p className="text-gray-300 text-lg leading-relaxed mb-6">
+                We are also avid enjoyers of open world and role-playing games, and in particular, the immersive world component. To that end, we believe that more dynamic NPCs can help further increase the immersion factor for such games. More dynamic NPCs could potentially even open all new playstyles not previously possible.
+              </p>
+              <p className="text-gray-300 text-lg leading-relaxed">
+                Current NPCs can have some dynamic behavior, but we feel like they could contribute more actively to the world they are part of. Instead of just representing an aspect of the game and/or world (such as a store or the start of a quest), what if NPCs could participate in events that happen in the world, interact with the characters in the world, or maybe even alter certain aspects of the world itself?
+              </p>
             </div>
           </div>
         </section>

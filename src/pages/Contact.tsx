@@ -68,7 +68,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 pt-16">
+    <div className="pt-16">
       <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
         <div className="text-center mb-12 md:mb-16">
           <Send className="text-blue-400 w-10 h-10 md:w-12 md:h-12 mx-auto mb-4" />

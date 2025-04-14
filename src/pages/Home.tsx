@@ -52,7 +52,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 pt-16">
+    <div className="pt-16">
       {/* Hero Section with Company Name */}
       <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-12">
         <div className="mb-6">
@@ -70,9 +70,12 @@ export default function Home() {
 
       {/* Company Introduction Section */}
       <div className="max-w-4xl mx-auto px-4 pb-20">
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 md:p-8 text-center">
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12 space-y-8">
           <p className="text-lg md:text-2xl text-gray-300 leading-relaxed">
-            Clankr Intelligence is a startup working to bring the latest AI tech to games. Our goal is to bring NPCs to life by imbuing them with lifelike behaviors.
+            Clankr Intelligence is a startup working to bring the latest AI tech to games. Our goal is to bring non-player-characters (NPCs) to life by imbuing them with lifelike behaviors. With our framework, game developers can easily leverage language models to create NPCs with dynamic behaviors that can also hold dynamic conversations.
+          </p>
+          <p className="text-lg md:text-2xl text-gray-300 leading-relaxed">
+            Our framework is model agnostic, so developers can use any language model they prefer with no hassle when changing between models. There are also no costs from us no matter what model is chosen. Our framework also executes completely locally, so we don't see any of your data.
           </p>
         </div>
       </div>
@@ -84,7 +87,7 @@ export default function Home() {
             Join the Waitlist
           </h2>
           <p className="text-gray-300 text-lg mb-8 text-center">
-            Get notified when our prototype becomes available.
+            Our initial prototype will be released soon as an Unreal Engine plugin. Get notified when our prototype becomes available.
           </p>
           
           <form onSubmit={handleSubmit} className="space-y-4">

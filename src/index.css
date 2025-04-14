@@ -17,3 +17,8 @@
 .animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
+}

@@ -3,7 +3,7 @@ import { Gamepad2 } from 'lucide-react';
 
 export default function Products() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 pt-16">
+    <div className="pt-16">
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <Gamepad2 className="text-blue-400 w-12 h-12 mx-auto mb-4" />
