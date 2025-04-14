@@ -12,11 +12,13 @@ export default function Home() {
     
     if (!email.trim()) {
       setError('Please enter your email address');
+      setStatus('error');
       return;
     }
     
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError('Please enter a valid email address');
+      setStatus('error');
       return;
     }
 
@@ -24,6 +26,7 @@ export default function Home() {
     setError('');
 
     try {
+      // First, add to waitlist
       const { error: supabaseError } = await supabase
         .from('waitlist')
         .insert([{ email: email.toLowerCase() }]);
@@ -31,17 +34,37 @@ export default function Home() {
       if (supabaseError) {
         if (supabaseError.code === '23505') {
           setError('This email is already on the waitlist');
+          setStatus('error');
+          return;
         } else {
           setError('An error occurred. Please try again.');
+          setStatus('error');
+          return;
         }
-        setStatus('error');
-      } else {
-        setStatus('success');
-        setEmail('');
       }
+
+      // Then, call the edge function directly
+      const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-email`;
+      const response = await fetch(functionUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ email: email.toLowerCase() }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send welcome email');
+      }
+
+      setStatus('success');
+      setEmail('');
     } catch (err) {
+      console.error('Error:', err);
       setStatus('error');
-      setError('An error occurred. Please try again.');
+      setError('An error occurred while sending the welcome email. Please try again.');
     }
 
     setTimeout(() => {
@@ -98,13 +121,11 @@ export default function Home() {
                 onChange={(e) => {
                   setEmail(e.target.value);
                   setError('');
+                  setStatus('idle');
                 }}
                 placeholder="Enter your email address"
                 className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
               />
-              {error && (
-                <p className="mt-2 text-red-400 text-sm">{error}</p>
-              )}
             </div>
             
             <div className="flex items-center justify-between">
@@ -132,9 +153,28 @@ export default function Home() {
             </div>
 
             {status === 'success' && (
-              <div className="flex items-center justify-center text-green-400 mt-4">
-                <CheckCircle size={20} className="mr-2" />
-                <span>You've been added to the waitlist!</span>
+              <div className="flex flex-col items-center justify-center text-green-400 mt-4 space-y-2">
+                <div className="flex items-center">
+                  <CheckCircle size={20} className="mr-2" />
+                  <span>You've been added to the waitlist!</span>
+                </div>
+                <p className="text-sm text-gray-300">
+                  A confirmation has been sent to your email. Please also check your spam folder if you don't see it in your inbox.
+                </p>
+              </div>
+            )}
+
+            {status === 'error' && (
+              <div className="flex flex-col items-center justify-center text-red-400 mt-4">
+                <div className="flex items-center">
+                  <XCircle size={20} className="mr-2" />
+                  <span>{error}</span>
+                </div>
+                {error !== 'This email is already on the waitlist' && (
+                  <p className="text-sm text-gray-300 mt-2">
+                    Please try again or contact support if the issue persists.
+                  </p>
+                )}
               </div>
             )}
           </form>
