@@ -18,10 +18,7 @@ export default function About() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto space-y-8">
               <p className="text-gray-300 text-lg leading-relaxed">
-                We are looking at leveraging the processing ability of large language models by having them take the role of an NPC's "brain". The language model would allow the NPC to process various information about itself and then generate corresponding responses. The responses can then be translated into various in-game operations. Executing those operations produces updated information, which is fed back in to the language model. This repeating cycle would be what breathes life into NPCs.
-              </p>
-              <p className="text-gray-300 text-lg leading-relaxed">
-                The process is also very straightforward from a technical perspective. Developers provide a natural language description on various aspects of a NPC, such as their background, personality, goals, etc. NPC actions can be coded as usual, and then provided to the framework with a corresponding description of that action. The framework handles the rest.
+                Our framework is designed to easily integrate into existing workflows. Developers provide a natural language description on various aspects of a NPC, such as their background, personality, goals, etc. NPC actions can be coded as usual, and then provided to the framework with a corresponding description of that action. The framework handles the rest, leveraging language models in conjunction with the provided information to breathe life into the NPC. 
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
                 {/* Space for new paragraph */}

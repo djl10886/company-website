@@ -98,7 +98,7 @@ export default function Home() {
             Clankr Intelligence is a startup working to bring the latest AI tech to games. Our goal is to bring non-player-characters (NPCs) to life by imbuing them with lifelike behaviors. With our framework, game developers can easily leverage language models to create NPCs with dynamic behaviors that can also hold dynamic conversations.
           </p>
           <p className="text-lg md:text-2xl text-gray-300 leading-relaxed">
-            Our framework is model agnostic, so developers can use any language model they prefer with no hassle when changing between models. There are also no costs from us no matter what model is chosen. Our framework also executes completely locally, so we don't see any of your data.
+            Our framework is model agnostic, so developers can use any language model they prefer with no hassle when changing between models. There are no costs from us no matter what model is chosen. Our framework also executes completely locally, so we don't see any of your data.
           </p>
         </div>
       </div>
