@@ -18,7 +18,7 @@ export default function About() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto space-y-8">
               <p className="text-gray-300 text-lg leading-relaxed">
-                Our framework is designed to easily integrate into existing workflows. Developers provide a natural language description on various aspects of a NPC, such as their background, personality, goals, etc. NPC actions can be coded as usual, and then provided to the framework with a corresponding description of that action. The framework handles the rest, leveraging language models in conjunction with the provided information to breathe life into the NPC. 
+                Our framework is designed to be flexible and to easily integrate into existing workflows. Developers can customize an NPC with natural language descriptions on various aspects of an NPC, such as their background, personality, and goals. NPC actions can be implemented using standard code and then integrated into the framework with a clear natural language description of their purposes. The framework handles interfacing with the language models of choice to generate and then execute behavior according to the NPC's specifications. Whether you're creating a vast open world or a focused narrative experience, our framework can help bring your NPCs to life.
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
                 {/* Space for new paragraph */}
@@ -111,10 +111,10 @@ export default function About() {
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12">
             <div className="max-w-3xl mx-auto">
               <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                We are also avid enjoyers of open world and role-playing games, and in particular, the immersive world component. To that end, we believe that more dynamic NPCs can help further increase the immersion factor for such games. More dynamic NPCs could potentially even open all new playstyles not previously possible.
+                As passionate gamers, we've spent countless hours exploring virtual worlds and interacting with NPCs. While these digital characters have come a long way, we've always dreamed of NPCs that could truly participate in shaping the world around them – not just as quest givers or merchants, but as dynamic entities with their own goals and agency.
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
-                Current NPCs can have some dynamic behavior, but we feel like they could contribute more actively to the world they are part of. Instead of just representing an aspect of the game and/or world (such as a store or the start of a quest), what if NPCs could participate in events that happen in the world, interact with the characters in the world, or maybe even alter certain aspects of the world itself?
+                Imagine a merchant who doesn't just stand behind their counter, but actively responds to market changes, forms relationships with other traders, and even expands their business. Or a village guard who remembers past interactions, develops rivalries, and makes decisions based on their personal history with the player. This vision of truly dynamic NPCs that can meaningfully impact their world is what drives our innovation at Clankr Intelligence.
               </p>
             </div>
           </div>

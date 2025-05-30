@@ -95,10 +95,10 @@ export default function Home() {
       <div className="max-w-4xl mx-auto px-4 pb-20">
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 md:p-12 space-y-8">
           <p className="text-lg md:text-2xl text-gray-300 leading-relaxed">
-            Clankr Intelligence is a startup working to bring the latest AI tech to games. Our goal is to bring non-player-characters (NPCs) to life by imbuing them with lifelike behaviors. With our framework, game developers can easily leverage language models to create NPCs with dynamic behaviors that can also hold dynamic conversations.
+            Clankr Intelligence is a startup working to bring the latest AI tech to games. Our framework helps game developers easily leverage language models to create non-player-characters (NPCs) with dynamic behaviors.
           </p>
           <p className="text-lg md:text-2xl text-gray-300 leading-relaxed">
-            Our framework is model agnostic, so developers can use any language model they prefer with no hassle when changing between models. There are no costs from us no matter what model is chosen. Our framework also executes completely locally, so we don't see any of your data.
+            Our framework is model agnostic, platform independent, and can also run completely locally, providing developers with a high level of control, customizability, and privacy.
           </p>
         </div>
       </div>
