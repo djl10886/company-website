@@ -26,7 +26,6 @@ export default function Home() {
     setError('');
 
     try {
-      // First, add to waitlist
       const { error: supabaseError } = await supabase
         .from('waitlist')
         .insert([{ email: email.toLowerCase() }]);
@@ -43,28 +42,12 @@ export default function Home() {
         }
       }
 
-      // Then, call the edge function directly
-      const functionUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-welcome-email`;
-      const response = await fetch(functionUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({ email: email.toLowerCase() }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send welcome email');
-      }
-
       setStatus('success');
       setEmail('');
     } catch (err) {
       console.error('Error:', err);
       setStatus('error');
-      setError('An error occurred while sending the welcome email. Please try again.');
+      setError('An error occurred. Please try again.');
     }
 
     setTimeout(() => {
@@ -153,14 +136,9 @@ export default function Home() {
             </div>
 
             {status === 'success' && (
-              <div className="flex flex-col items-center justify-center text-green-400 mt-4 space-y-2">
-                <div className="flex items-center">
-                  <CheckCircle size={20} className="mr-2" />
-                  <span>You've been added to the waitlist!</span>
-                </div>
-                <p className="text-sm text-gray-300">
-                  A confirmation has been sent to your email. Please also check your spam folder if you don't see it in your inbox.
-                </p>
+              <div className="flex items-center justify-center text-green-400 mt-4">
+                <CheckCircle size={20} className="mr-2" />
+                <span>You've been added to the waitlist!</span>
               </div>
             )}
 

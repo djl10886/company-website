@@ -3,7 +3,7 @@ import { Send, CheckCircle, XCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS
-emailjs.init("4btqnF56GNMvdGKvF");
+emailjs.init("XFdWyLS5AexANO6C6");
 
 export default function Contact() {
   const [name, setName] = useState('');
@@ -45,11 +45,12 @@ export default function Contact() {
     try {
       await emailjs.send(
         'general_correspondence',
-        'general_correspondence',
+        'contact_template',
         {
           from_name: name,
           from_email: email,
           message: message,
+          to_email: 'dli@clankrintelligence.com',
         }
       );
 

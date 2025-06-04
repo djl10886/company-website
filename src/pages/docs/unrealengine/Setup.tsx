@@ -28,6 +28,9 @@ export default function Setup() {
             <p className="text-gray-300 text-xl leading-relaxed">
               For a project-specific installation, locate your project's root directory (where your .uproject file is) and create a "Plugins" folder if it doesn't exist. Copy the "RealisticNPCs" folder into this new "Plugins" folder. Right-click your .uproject file and select "Generate Visual Studio project files", then build the project. When you launch the editor, the plugin should be automatically enabled and ready to use.
             </p>
+            <p className="text-gray-300 text-xl leading-relaxed">
+              Remember to include "RealisticNPCs" in the PublicDependencyModuleNames of your project's Build.cs file so the plugin's headers are visible to your project's files.
+            </p>
           </div>
         </div>
       </div>
