@@ -112,7 +112,7 @@ export default function QuickStart() {
                       <li>Define ShortTermGoal</li>
                       <li>Add Relationships with other characters</li>
                       <li>Add KnownActorsAndLocations (WorldActor references)</li>
-                      <li>Define ActionLibrary (available actions)</li>
+                      <li>Optional: Define ActionLibrary (available actions)</li>
                     </ul>
                   </li>
                 </ol>
@@ -120,7 +120,7 @@ export default function QuickStart() {
                 <h3 className="text-xl font-semibold text-white mt-8 mb-4">B. Create NPC Controller Class</h3>
                 <ol className="list-decimal list-inside space-y-4 pl-4">
                   <li>Create a Blueprint class inheriting from <Link to="/docs/unrealengine/classes#basenpccontroller" className="text-blue-400 hover:text-blue-300 transition-colors">BaseNPCController</Link></li>
-                  <li>Define NPC actions with a FinishNPCAction function call at the end of each action</li>
+                  <li>Define your own NPC actions (using standard Unreal Engine logic) with a FinishNPCAction function call at the end of each action</li>
                   <li>
                     In the Event BeginPlay or OnPossess:
                     <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
