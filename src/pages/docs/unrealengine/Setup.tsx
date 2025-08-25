@@ -20,7 +20,7 @@ export default function Setup() {
 
           <div className="max-w-3xl mx-auto space-y-8">
             <p className="text-gray-300 text-xl leading-relaxed">
-              After downloading the plugin, you'll find a folder named "RealisticNPCs" - this is the plugin's root directory. You have two options for installing the plugin: as an engine-wide plugin available to all projects, or as a project-specific plugin. Both methods are explained below.
+              After downloading the plugin, you'll find a folder named "RealisticNPCs" - this is the plugin's root directory. Note that if downloading the plugin as a zip file, the top level folder name contains a "-main" suffix - make sure to remove the suffix from the folder name. You have two options for installing the plugin: as an engine-wide plugin available to all projects, or as a project-specific plugin. Both methods are explained below.
             </p>
             <p className="text-gray-300 text-xl leading-relaxed">
               For an engine-wide installation, navigate to your Unreal Engine installation directory and locate the "Plugins" folder. Copy the entire "RealisticNPCs" folder into this directory. Launch the Unreal Editor, open the Plugins window (Edit → Plugins), find the "RealisticNPCs" plugin, and enable it. Restart the editor for the changes to take effect.

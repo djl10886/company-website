@@ -25,7 +25,7 @@ export default function QuickStart() {
               <h2 className="text-2xl font-bold text-white mb-6">1. Plugin Installation</h2>
               <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  First, follow the <Link to="/docs/unrealengine/setup" className="text-blue-400 hover:text-blue-300 transition-colors">setup instructions</Link> to install the plugin in your project. Once installed, enable the plugin in your project settings and restart the editor.
+                  First, follow the <Link to="/docs/unrealengine/setup" className="text-blue-400 hover:text-blue-300 transition-colors">setup instructions</Link> to install the plugin in your project.
                 </p>
               </div>
             </div>
@@ -38,7 +38,7 @@ export default function QuickStart() {
                   Create a file named <code className="bg-white/20 px-2 py-1 rounded">RealisticNPCsConfig.json</code> in your project's <code className="bg-white/20 px-2 py-1 rounded">Config</code> folder. This file specifies which language model(s) the plugin will use. At minimum, include:
                 </p>
                 <ul className="list-disc list-inside pl-4 space-y-2">
-                  <li>Service provider details (e.g., OpenAI)</li>
+                  <li>Service provider label (e.g., OpenAI)</li>
                   <li>API endpoint</li>
                   <li>API key</li>
                   <li>Default model target</li>
@@ -64,7 +64,7 @@ export default function QuickStart() {
                   <li>Important rules or constraints</li>
                 </ul>
                 <p className="mt-4">
-                  In your game instance's <code className="bg-white/20 px-2 py-1 rounded">Init()</code> function, load the world description using the <Link to="/docs/unrealengine/classes#rnpcsutilities" className="text-blue-400 hover:text-blue-300 transition-colors">RNPCsUtilities</Link> class:
+                  Before starting NPC behavior generation, such as in your game instance's <code className="bg-white/20 px-2 py-1 rounded">Init()</code> function, load the world description using the <Link to="/docs/unrealengine/classes#rnpcsutilities" className="text-blue-400 hover:text-blue-300 transition-colors">RNPCsUtilities</Link> class:
                 </p>
                 <pre className="bg-slate-800/50 p-4 rounded-lg mt-2 overflow-x-auto">
                   <code className="text-sm text-gray-300">RNPCsUtilities::LoadWorldDescription(TEXT("/Game/Config/WorldDescription.txt"));</code>
@@ -89,7 +89,6 @@ export default function QuickStart() {
                     Add <Link to="/docs/unrealengine/classes#environmentcomponent" className="text-blue-400 hover:text-blue-300 transition-colors">EnvironmentComponent</Link> instances to define specific areas
                     <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
                       <li>Set descriptive ComponentName (e.g., "Alice's house - kitchen")</li>
-                      <li>Set appropriate ComponentAccessLevel (Public/Private)</li>
                     </ul>
                   </li>
                   <li>Place the WorldActor Blueprint in your level</li>
@@ -103,9 +102,9 @@ export default function QuickStart() {
               <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
                 <h3 className="text-xl font-semibold text-white mb-4">A. Create NPC Character Class</h3>
                 <ol className="list-decimal list-inside space-y-4 pl-4">
-                  <li>Create a Blueprint class inheriting from <Link to="/docs/unrealengine/classes#basenpc" className="text-blue-400 hover:text-blue-300 transition-colors">BaseNPC</Link></li>
+                  <li>Create a custom class inheriting from <Link to="/docs/unrealengine/classes#basenpc" className="text-blue-400 hover:text-blue-300 transition-colors">BaseNPC</Link></li>
                   <li>
-                    Configure NPC settings in the Details panel:
+                    In the class Blueprint, configure NPC settings in the Details panel:
                     <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
                       <li>Set CharacterName (e.g., "Alice Smith")</li>
                       <li>Write a detailed Background description</li>
@@ -115,18 +114,19 @@ export default function QuickStart() {
                       <li>Optional: Define ActionLibrary (available actions)</li>
                     </ul>
                   </li>
+                  <li>Override <code className="bg-white/20 px-2 py-1 rounded">ReceiveMessage</code> to customize how the NPC handles receiving a conversation message from another character. Refer to the <Link to="/docs/unrealengine/classes#basecharacter" className="text-blue-400 hover:text-blue-300 transition-colors">BaseCharacter</Link> documentation for more details on the function definition.</li>
                 </ol>
 
                 <h3 className="text-xl font-semibold text-white mt-8 mb-4">B. Create NPC Controller Class</h3>
                 <ol className="list-decimal list-inside space-y-4 pl-4">
-                  <li>Create a Blueprint class inheriting from <Link to="/docs/unrealengine/classes#basenpccontroller" className="text-blue-400 hover:text-blue-300 transition-colors">BaseNPCController</Link></li>
-                  <li>Define your own NPC actions (using standard Unreal Engine logic) with a FinishNPCAction function call at the end of each action</li>
+                  <li>Create a custom class inheriting from <Link to="/docs/unrealengine/classes#basenpccontroller" className="text-blue-400 hover:text-blue-300 transition-colors">BaseNPCController</Link></li>
+                  <li>Define NPC actions (using standard Unreal Engine code and logic) with a <code className="bg-white/20 px-2 py-1 rounded">FinishNPCAction</code> function call at the end of each action</li>
                   <li>
                     In the Event BeginPlay or OnPossess:
                     <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
-                      <li>Register NPC actions using RegisterNPCAction</li>
-                      <li>Set up a perception system (e.g., AI Perception component)</li>
-                      <li>Call StartNPCTask to begin behavior generation</li>
+                      <li>Register NPC actions using <code className="bg-white/20 px-2 py-1 rounded">RegisterNPCAction</code></li>
+                      <li>Set up a perception system (e.g., AI Perception component) and use <code className="bg-white/20 px-2 py-1 rounded">UpdatePerception</code> to inform the plugin of NPC perception updates</li>
+                      <li>Call <code className="bg-white/20 px-2 py-1 rounded">StartNPCTask</code> to begin behavior generation</li>
                     </ul>
                   </li>
                 </ol>
@@ -138,9 +138,15 @@ export default function QuickStart() {
               <h2 className="text-2xl font-bold text-white mb-6">6. Setting Up Player Character</h2>
               <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
                 <ol className="list-decimal list-inside space-y-4 pl-4">
-                  <li>Create a Blueprint class inheriting from <Link to="/docs/unrealengine/classes#basecharacter" className="text-blue-400 hover:text-blue-300 transition-colors">BaseCharacter</Link></li>
-                  <li>Set the CharacterName in the Details panel</li>
-                  <li>Add any custom functionality needed for player interaction</li>
+                  <li>Create a custom class inheriting from <Link to="/docs/unrealengine/classes#basecharacter" className="text-blue-400 hover:text-blue-300 transition-colors">BaseCharacter</Link></li>
+                  <li>In the class Blueprint, set the CharacterName in the Details panel</li>
+                  <li>Override:
+                    <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
+                      <li><code className="bg-white/20 px-2 py-1 rounded">ReceiveMessage</code> to customize how the player character handles receiving a conversation message from an NPC</li>
+                      <li><code className="bg-white/20 px-2 py-1 rounded">TryStartConvo</code> to customize how the player character handles starting a conversation with an NPC</li>
+                      <li><code className="bg-white/20 px-2 py-1 rounded">FinishConvo</code> to customize how the player character handles finishing a conversation with an NPC</li>
+                    </ul>
+                  </li>
                 </ol>
               </div>
             </div>
