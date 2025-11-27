@@ -23,10 +23,15 @@ export default function Classes() {
   }, []);
 
   return (
-    <div id="top" className="pt-16">
+    <div id="top" className="relative min-h-screen pt-16">
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+      <div className="fixed inset-0 opacity-30" style={{
+        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
+        backgroundSize: '48px 48px'
+      }}></div>
       <UnrealDocsNavigation />
-      <div className="ml-64">
-        <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="relative ml-64">
+        <div className="mx-auto px-[8%] py-16">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Classes
@@ -34,26 +39,26 @@ export default function Classes() {
             <div className="w-24 h-1 bg-blue-400 mx-auto mb-8"></div>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-12">
-            <div id="configmanager">
+          <div className="space-y-20">
+            <div id="configmanager" className="scroll-mt-24">
               <ConfigManagerDocs />
             </div>
-            <div id="rnpcsutilities">
+            <div id="rnpcsutilities" className="scroll-mt-24">
               <RNPCsUtilitiesDocs />
             </div>
-            <div id="worldactor">
+            <div id="worldactor" className="scroll-mt-24">
               <WorldActorDocs />
             </div>
-            <div id="environmentcomponent">
+            <div id="environmentcomponent" className="scroll-mt-24">
               <EnvironmentComponentDocs />
             </div>
-            <div id="basecharacter">
+            <div id="basecharacter" className="scroll-mt-24">
               <BaseCharacterDocs />
             </div>
-            <div id="basenpc">
+            <div id="basenpc" className="scroll-mt-24">
               <BaseNPCDocs />
             </div>
-            <div id="basenpccontroller">
+            <div id="basenpccontroller" className="scroll-mt-24">
               <BaseNPCControllerDocs />
             </div>
           </div>

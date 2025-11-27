@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import MainPage from './pages/MainPage';
+import Changelog from './pages/docs/unrealengine/changelog/Changelog';
+import ChangelogDetail from './pages/docs/unrealengine/changelog/ChangelogDetail';
 import FrameworkIntroduction from './pages/docs/framework/Introduction';
 import FrameworkArchitecture from './pages/docs/framework/Architecture';
 import FrameworkTerminology from './pages/docs/framework/Terminology';
@@ -20,6 +22,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/changelog" element={<Changelog />} />
+          <Route path="/changelog/:version" element={<ChangelogDetail />} />
           <Route path="/docs/framework" element={<Navigate to="/docs/framework/introduction\" replace />} />
           <Route path="/docs/framework/introduction" element={<FrameworkIntroduction />} />
           <Route path="/docs/framework/terminology" element={<FrameworkTerminology />} />

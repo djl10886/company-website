@@ -4,7 +4,14 @@ import { Link } from 'react-router-dom';
 
 export default function Products() {
   return (
-    <div className="pt-16">
+    <div className="relative min-h-screen pt-16">
+      {/* Background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 -z-10"></div>
+      <div className="fixed inset-0 opacity-30 -z-10" style={{
+        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
+        backgroundSize: '48px 48px'
+      }}></div>
+
       <div className="max-w-7xl mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <Gamepad2 className="text-blue-400 w-12 h-12 mx-auto mb-4" />

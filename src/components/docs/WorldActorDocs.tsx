@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function WorldActorDocs() {
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-      <h2 className="text-2xl font-bold text-white mb-6">WorldActor</h2>
+    <>
+      <h2 className="text-3xl font-bold text-white mb-6">WorldActor</h2>
       <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
         <p>
           The base class that represents all objects and locations in the game world that NPCs can interact with. This class extends Unreal Engine's AActor class and is meant to provide a way to define physical locations and objects that NPCs can be aware of and interact with. Custom object and location classes are meant to extend this class.
@@ -31,6 +31,6 @@ export default function WorldActorDocs() {
           </ol>
         </div>
       </div>
-    </div>
+    </>
   );
 }

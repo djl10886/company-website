@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function BaseNPCControllerDocs() {
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-      <h2 className="text-2xl font-bold text-white mb-6">BaseNPCController</h2>
+    <>
+      <h2 className="text-3xl font-bold text-white mb-6">BaseNPCController</h2>
       <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
         <p>
           The base controller class for NPCs. This class extends Unreal Engine's AAIController class and is meant to handle all the AI-related functionality for NPCs, including task generation, action execution, perception processing, and behavior coordination. Custom NPC controller classes are meant to extend this class.
@@ -17,7 +17,8 @@ export default function BaseNPCControllerDocs() {
         <h3 className="text-xl font-semibold text-white mt-8 mb-6">Class Functions</h3>
         <div className="space-y-8">
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">RegisterNPCAction</code>
             </h4>
             <p className="mb-4">
@@ -75,9 +76,11 @@ export default function BaseNPCControllerDocs() {
               </li>
             </ul>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">FinishNPCAction</code>
             </h4>
             <p className="mb-4">
@@ -90,9 +93,11 @@ export default function BaseNPCControllerDocs() {
               For example, if a C++ function is defined for some NPC action, then at the end of that function, the FinishNPCAction() function can be called. As a second example, if a walking action is defined with a MoveToActor or MoveToLocation function call, the FinishNPCAction() function can be called in an overridden OnMoveCompleted() function. As a third example, if an NPC action is defined as an animation montage, then the FinishNPCAction() function can be called via a notify at the end of the montage. 
             </p>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">StartNPCTask</code>
             </h4>
             <p className="mb-4">
@@ -102,9 +107,11 @@ export default function BaseNPCControllerDocs() {
               This function starts the NPC behavior generation. Once called, the BaseNPCController will generate a task for the controlled NPC to complete (based on the various specifications, such as its background, its goals, relationships, etc.). After determining the task, the BaseNPCController will also determine the appropriate sequence of actions for the controlled NPC to execute to complete that task, using the set of registered actions. The BaseNPCController will also automatically instruct the controlled NPC to execute the sequence of actions. Once all actions in that sequence are executed, the next task will automatically be generated, starting the process anew.
             </p>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">InsertNPCAction</code>
             </h4>
             <p className="mb-4">
@@ -120,9 +127,11 @@ export default function BaseNPCControllerDocs() {
               </li>
             </ul>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">LoadMemoriesFromFile</code>
             </h4>
             <p className="mb-4">
@@ -138,9 +147,11 @@ export default function BaseNPCControllerDocs() {
               </li>
             </ul>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">SaveMemoriesToFile</code>
             </h4>
             <p className="mb-4">
@@ -156,9 +167,11 @@ export default function BaseNPCControllerDocs() {
               </li>
             </ul>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">SetCustomMoveFunction</code>
             </h4>
             <p className="mb-4">
@@ -190,9 +203,11 @@ export default function BaseNPCControllerDocs() {
               </li>
             </ul>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">FindLocation</code>
             </h4>
             <p className="mb-4">
@@ -208,9 +223,11 @@ export default function BaseNPCControllerDocs() {
               </li>
             </ul>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
               <code className="bg-white/20 px-2 py-1 rounded">FindCharacter</code>
             </h4>
             <p className="mb-4">
@@ -226,26 +243,29 @@ export default function BaseNPCControllerDocs() {
               </li>
             </ul>
           </div>
+            </div>
 
           <div>
-            <h4 className="text-lg font-medium text-white mb-4">
-              <code className="bg-white/20 px-2 py-1 rounded">UpdatePerception</code>
-            </h4>
-            <p className="mb-4">
-              <code className="bg-slate-800/50 px-2 py-1 rounded">void UpdatePerception(const TArray{'<'}AActor*{'>&'} PerceivedActors)</code>
-            </p>
-            <p className="mb-4">
-              This function updates the actors that the NPC is currently perceiving. The function should be called whenever the perception mechanism being used detects a perception update which changes the set of actors currently being perceived.
-            </p>
-            <h5 className="text-white font-medium mb-2">Parameters:</h5>
-            <ul className="list-none space-y-2">
-              <li>
-                <code className="bg-white/20 px-2 py-1 rounded">PerceivedActors</code>: The list of actors currently being perceived by the NPC. This list should only include the actors that are currently being perceived and NOT all actors that had a perception update, i.e. actors that are now no longer perceived should not be included in this list.
-              </li>
-            </ul>
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
+                <code className="bg-white/20 px-2 py-1 rounded">UpdatePerception</code>
+              </h4>
+              <p className="mb-4">
+                <code className="bg-slate-800/50 px-2 py-1 rounded">void UpdatePerception(const TArray{'<'}AActor*{'>&'} PerceivedActors)</code>
+              </p>
+              <p className="mb-4">
+                This function updates the actors that the NPC is currently perceiving. The function should be called whenever the perception mechanism being used detects a perception update which changes the set of actors currently being perceived.
+              </p>
+              <h5 className="text-white font-medium mb-2">Parameters:</h5>
+              <ul className="list-none space-y-2">
+                <li>
+                  <code className="bg-white/20 px-2 py-1 rounded">PerceivedActors</code>: The list of actors currently being perceived by the NPC. This list should only include the actors that are currently being perceived and NOT all actors that had a perception update, i.e. actors that are now no longer perceived should not be included in this list.
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

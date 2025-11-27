@@ -7,10 +7,15 @@ export default function Architecture() {
   }, []);
 
   return (
-    <div id="top" className="pt-16">
+    <div id="top" className="relative min-h-screen pt-16">
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+      <div className="fixed inset-0 opacity-30" style={{
+        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
+        backgroundSize: '48px 48px'
+      }}></div>
       <FrameworkDocsNavigation />
-      <div className="ml-64">
-        <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="relative ml-64">
+        <div className="mx-auto px-[8%] py-16">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Architecture
@@ -18,9 +23,9 @@ export default function Architecture() {
             <div className="w-24 h-1 bg-blue-400 mx-auto mb-8"></div>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-12">
+          <div className="space-y-20">
             {/* Framework Overview Section */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div>
               <h2 className="text-3xl font-bold text-white mb-6">Framework Overview</h2>
               <div className="space-y-8">
                 <p className="text-gray-300 text-lg leading-relaxed">The following provides an overview of the framework's architecture:</p>
@@ -35,7 +40,7 @@ export default function Architecture() {
             </div>
 
             {/* Component Interactions Section */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div>
               <h2 className="text-3xl font-bold text-white mb-6">Component Interactions</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
@@ -54,7 +59,7 @@ export default function Architecture() {
             </div>
 
             {/* NPC Structure Section */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div>
               <h2 className="text-3xl font-bold text-white mb-6">NPC Structure</h2>
               <div className="space-y-8">
                 <p className="text-gray-300 text-lg leading-relaxed">The following provides another way to conceptualize the NPC structure:</p>

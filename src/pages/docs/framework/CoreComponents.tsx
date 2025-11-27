@@ -7,23 +7,28 @@ export default function CoreComponents() {
   }, []);
 
   return (
-    <div id="top" className="pt-16">
+    <div id="top" className="relative min-h-screen pt-16">
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+      <div className="fixed inset-0 opacity-30" style={{
+        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
+        backgroundSize: '48px 48px'
+      }}></div>
       <FrameworkDocsNavigation />
-      <div className="ml-64">
-        <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="relative ml-64">
+        <div className="mx-auto px-[8%] py-16">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Core Components
             </h1>
             <div className="w-24 h-1 bg-blue-400 mx-auto mb-8"></div>
-            <p className="text-gray-300 text-xl max-w-3xl mx-auto">
+            <p className="text-gray-300 text-xl">
               The RealisticNPCs framework consists of various components that handle different aspects of NPC functionality and work together to create dynamic, coherent, and realistic behavior patterns.
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-16">
-            <div id="memory-module" className="scroll-mt-24 bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-              <h2 className="text-3xl font-bold text-white mb-6">Memory Module</h2>
+          <div className="space-y-20">
+            <div id="memory-module" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">Memory</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
                   Like humans, NPC behavior shouldn't be determined in a vacuum, but based on their interactions with their environment and their past experiences. The memory module stores such information for an NPC, which the NPC can then subsequently draw on to generate behavior that is in line with their experiences, helping NPC behavior to maintain longer-term coherence.
@@ -40,7 +45,7 @@ export default function CoreComponents() {
               </div>
             </div>
 
-            <div id="perception" className="scroll-mt-24 bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div id="perception" className="scroll-mt-24">
               <h2 className="text-3xl font-bold text-white mb-6">Perception</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
@@ -49,7 +54,7 @@ export default function CoreComponents() {
               </div>
             </div>
 
-            <div id="npc-profile" className="scroll-mt-24 bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div id="npc-profile" className="scroll-mt-24">
               <h2 className="text-3xl font-bold text-white mb-6">NPC Profile</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
@@ -58,7 +63,7 @@ export default function CoreComponents() {
               </div>
             </div>
 
-            <div id="runtime-context" className="scroll-mt-24 bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div id="runtime-context" className="scroll-mt-24">
               <h2 className="text-3xl font-bold text-white mb-6">Runtime Context</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
@@ -67,7 +72,7 @@ export default function CoreComponents() {
               </div>
             </div>
 
-            <div id="task-generation" className="scroll-mt-24 bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div id="task-generation" className="scroll-mt-24">
               <h2 className="text-3xl font-bold text-white mb-6">Task Generation</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
@@ -76,7 +81,7 @@ export default function CoreComponents() {
               </div>
             </div>
 
-            <div id="task-decomposition" className="scroll-mt-24 bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div id="task-decomposition" className="scroll-mt-24">
               <h2 className="text-3xl font-bold text-white mb-6">Task Decomposition</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
@@ -85,7 +90,7 @@ export default function CoreComponents() {
               </div>
             </div>
 
-            <div id="communication" className="scroll-mt-24 bg-white/10 backdrop-blur-lg rounded-2xl p-8">
+            <div id="communication" className="scroll-mt-24">
               <h2 className="text-3xl font-bold text-white mb-6">Communication</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>

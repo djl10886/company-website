@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function EnvironmentComponentDocs() {
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-      <h2 className="text-2xl font-bold text-white mb-6">EnvironmentComponent</h2>
+    <>
+      <h2 className="text-3xl font-bold text-white mb-6">EnvironmentComponent</h2>
       <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
         <p>
           A component class that represents a physical location in the game world that NPCs can interact with. This class extends Unreal Engine's UBoxComponent class and is meant to be attached to WorldActor instances to define specific locations within those actors that NPCs can be aware of and interact with.
@@ -27,6 +27,6 @@ export default function EnvironmentComponentDocs() {
           <p className="mb-4">Alternatively, add an EnvironmentComponent for "Grocery store – checkout counter" to a WorldActor blueprint for a grocery store with the "Public" accessibility access level, indicating the location is open to any character.</p>
         </div>
       </div>
-    </div>
+    </>
   );
 }

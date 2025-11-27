@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function BaseNPCDocs() {
   return (
-    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-      <h2 className="text-2xl font-bold text-white mb-6">BaseNPC</h2>
+    <>
+      <h2 className="text-3xl font-bold text-white mb-6">BaseNPC</h2>
       <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
         <p>
           The base class for all NPCs. This class extends the <code className="bg-white/20 px-2 py-1 rounded">BaseCharacter</code> class. Custom NPC classes are meant to extend this class.
@@ -46,29 +46,39 @@ export default function BaseNPCDocs() {
         </div>
 
         <h3 className="text-xl font-semibold text-white mt-8 mb-6">Class Functions</h3>
-        <div className="space-y-4">
+        <div className="space-y-8">
           <div>
-            <code className="bg-white/20 px-2 py-1 rounded">FString GetCharacterBackground()</code>
-            <p className="mt-2">Returns the NPC's background.</p>
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <code className="bg-white/20 px-2 py-1 rounded">FString GetCharacterBackground()</code>
+              <p className="mt-2">Returns the NPC's background.</p>
+            </div>
           </div>
           <div>
-            <code className="bg-white/20 px-2 py-1 rounded">FString GetShortTermGoal()</code>
-            <p className="mt-2">Returns the NPC's short-term goal.</p>
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <code className="bg-white/20 px-2 py-1 rounded">FString GetShortTermGoal()</code>
+              <p className="mt-2">Returns the NPC's short-term goal.</p>
+            </div>
           </div>
           <div>
-            <code className="bg-white/20 px-2 py-1 rounded">FString GetSelfAssessment()</code>
-            <p className="mt-2">Returns the NPC's current self-assessment.</p>
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <code className="bg-white/20 px-2 py-1 rounded">FString GetSelfAssessment()</code>
+              <p className="mt-2">Returns the NPC's current self-assessment.</p>
+            </div>
           </div>
           <div>
-            <code className="bg-white/20 px-2 py-1 rounded">TArray{'<'}FString{'>'} GetActionLibrary()</code>
-            <p className="mt-2">Returns the names of the actions that the NPC has access to.</p>
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <code className="bg-white/20 px-2 py-1 rounded">TArray{'<'}FString{'>'} GetActionLibrary()</code>
+              <p className="mt-2">Returns the names of the actions that the NPC has access to.</p>
+            </div>
           </div>
           <div>
-            <code className="bg-white/20 px-2 py-1 rounded">virtual void PauseCurrentAction()</code>
-            <p className="mt-2">This function is called to pause an NPC's current in-game action and is primarily used to help NPCs transition between action sequences and conversations. When an NPC enters a conversation, their current action will be paused until the conversation finishes, at which point the paused action will be resumed. This function can be overridden to handle any processing that should happen when the NPC action is paused. The base implementation of this function simply stops any montage that is currently playing.</p>
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <code className="bg-white/20 px-2 py-1 rounded">virtual void PauseCurrentAction()</code>
+              <p className="mt-2">This function is called to pause an NPC's current in-game action and is primarily used to help NPCs transition between action sequences and conversations. When an NPC enters a conversation, their current action will be paused until the conversation finishes, at which point the paused action will be resumed. This function can be overridden to handle any processing that should happen when the NPC action is paused. The base implementation of this function simply stops any montage that is currently playing.</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -8,10 +8,15 @@ export default function QuickStart() {
   }, []);
 
   return (
-    <div id="top" className="pt-16">
+    <div id="top" className="relative min-h-screen pt-16">
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+      <div className="fixed inset-0 opacity-30" style={{
+        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
+        backgroundSize: '48px 48px'
+      }}></div>
       <UnrealDocsNavigation />
-      <div className="ml-64">
-        <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="relative ml-64">
+        <div className="mx-auto px-[8%] py-16">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Quick Start Guide
@@ -19,42 +24,47 @@ export default function QuickStart() {
             <div className="w-24 h-1 bg-blue-400 mx-auto mb-8"></div>
           </div>
 
-          <div className="max-w-4xl mx-auto space-y-12">
-            {/* Installation */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">1. Plugin Installation</h2>
-              <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+          <div className="space-y-20">
+            <div id="installation" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">1. Plugin Installation</h2>
+              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
                   First, follow the <Link to="/docs/unrealengine/setup" className="text-blue-400 hover:text-blue-300 transition-colors">setup instructions</Link> to install the plugin in your project.
                 </p>
               </div>
             </div>
 
-            {/* Configuration */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">2. Language Model Configuration</h2>
-              <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+            <div id="project-settings" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">2. Configure Project Settings</h2>
+              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  Create a file named <code className="bg-white/20 px-2 py-1 rounded">RealisticNPCsConfig.json</code> in your project's <code className="bg-white/20 px-2 py-1 rounded">Config</code> folder. This file specifies which language model(s) the plugin will use. At minimum, include:
+                  Open <strong>Project Settings → RealisticNPCs</strong> to configure the plugin:
+                </p>
+
+                <h3 className="text-xl font-semibold text-white mt-8">Language Model Configuration</h3>
+                <p>
+                  Create a file named <code className="bg-white/20 px-2 py-1 rounded">RealisticNPCsConfig.json</code> in your project's <code className="bg-white/20 px-2 py-1 rounded">Config</code> folder, then set the path in Project Settings. The file must include:
                 </p>
                 <ul className="list-disc list-inside pl-4 space-y-2">
                   <li>Service provider label (e.g., OpenAI)</li>
-                  <li>API endpoint</li>
-                  <li>API key</li>
-                  <li>Default model target</li>
+                  <li>API endpoint and key</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">default_heavy_target</code> - for expensive reasoning (daily plans, conversations)</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">default_light_target</code> - for cheaper tasks (memory retrieval, summaries)</li>
                 </ul>
                 <p>
-                  See the <Link to="/docs/unrealengine/configuration" className="text-blue-400 hover:text-blue-300 transition-colors">configuration guide</Link> and <Link to="/docs/unrealengine/classes#configmanager" className="text-blue-400 hover:text-blue-300 transition-colors">ConfigManager class documentation</Link> for more details.
+                  See the <Link to="/docs/unrealengine/configuration" className="text-blue-400 hover:text-blue-300 transition-colors">configuration guide</Link> for the complete file format.
                 </p>
-              </div>
-            </div>
 
-            {/* World Description */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">3. World Description Setup</h2>
-              <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+                <h3 className="text-xl font-semibold text-white mt-8">World Description</h3>
                 <p>
-                  Create a text file containing your game world's description. This provides context for NPC behavior. Include:
+                  You can provide the world description in two ways (if both are provided, the inline description takes precedence):
+                </p>
+                <ul className="list-disc list-inside pl-4 space-y-2">
+                  <li><strong>InlineWorldDescription</strong> - Enter the description directly in Project Settings</li>
+                  <li><strong>WorldDescriptionFilePath</strong> - Set a path to a text file containing the description</li>
+                </ul>
+                <p>
+                  Your world description should include:
                 </p>
                 <ul className="list-disc list-inside pl-4 space-y-2">
                   <li>Setting and time period</li>
@@ -63,19 +73,20 @@ export default function QuickStart() {
                   <li>Technology level</li>
                   <li>Important rules or constraints</li>
                 </ul>
-                <p className="mt-4">
-                  Before starting NPC behavior generation, such as in your game instance's <code className="bg-white/20 px-2 py-1 rounded">Init()</code> function, load the world description using the <Link to="/docs/unrealengine/classes#rnpcsutilities" className="text-blue-400 hover:text-blue-300 transition-colors">RNPCsUtilities</Link> class:
+
+                <h3 className="text-xl font-semibold text-white mt-8">Initial Game Time</h3>
+                <p>
+                  Set the <strong>Initial Game Start Time</strong> to specify when the in-game clock begins (e.g., Day 1, Month 1, Year 2000, 08:00). The plugin uses a global time system to ensure all NPCs maintain a unified sense of time.
                 </p>
-                <pre className="bg-slate-800/50 p-4 rounded-lg mt-2 overflow-x-auto">
-                  <code className="text-sm text-gray-300">RNPCsUtilities::LoadWorldDescription(TEXT("/Game/Config/WorldDescription.txt"));</code>
-                </pre>
+                <p className="mt-4 text-sm text-gray-400">
+                  Note: The plugin automatically loads these configurations on startup. No manual loading code is required.
+                </p>
               </div>
             </div>
 
-            {/* Physical Locations */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">4. Setting Up Physical Locations</h2>
-              <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+            <div id="physical-locations" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">3. Setting Up Physical Locations</h2>
+              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>Create locations that NPCs can interact with:</p>
                 <ol className="list-decimal list-inside space-y-4 pl-4">
                   <li>
@@ -96,11 +107,10 @@ export default function QuickStart() {
               </div>
             </div>
 
-            {/* NPC Setup */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">5. Creating NPCs</h2>
-              <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
-                <h3 className="text-xl font-semibold text-white mb-4">A. Create NPC Character Class</h3>
+            <div id="creating-npcs" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">4. Creating NPCs</h2>
+              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
+                <h3 className="text-xl font-semibold text-white">A. Create NPC Character Class</h3>
                 <ol className="list-decimal list-inside space-y-4 pl-4">
                   <li>Create a custom class inheriting from <Link to="/docs/unrealengine/classes#basenpc" className="text-blue-400 hover:text-blue-300 transition-colors">BaseNPC</Link></li>
                   <li>
@@ -117,53 +127,89 @@ export default function QuickStart() {
                   <li>Override <code className="bg-white/20 px-2 py-1 rounded">ReceiveMessage</code> to customize how the NPC handles receiving a conversation message from another character. Refer to the <Link to="/docs/unrealengine/classes#basecharacter" className="text-blue-400 hover:text-blue-300 transition-colors">BaseCharacter</Link> documentation for more details on the function definition.</li>
                 </ol>
 
-                <h3 className="text-xl font-semibold text-white mt-8 mb-4">B. Create NPC Controller Class</h3>
+                <h3 className="text-xl font-semibold text-white mt-8">B. Create NPC Controller Class</h3>
                 <ol className="list-decimal list-inside space-y-4 pl-4">
                   <li>Create a custom class inheriting from <Link to="/docs/unrealengine/classes#basenpccontroller" className="text-blue-400 hover:text-blue-300 transition-colors">BaseNPCController</Link></li>
-                  <li>Define NPC actions (using standard Unreal Engine code and logic) with a <code className="bg-white/20 px-2 py-1 rounded">FinishNPCAction</code> function call at the end of each action</li>
                   <li>
-                    In the Event BeginPlay or OnPossess:
+                    Define NPC actions using standard Unreal Engine code and logic. When registering actions, specify:
                     <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
-                      <li>Register NPC actions using <code className="bg-white/20 px-2 py-1 rounded">RegisterNPCAction</code></li>
-                      <li>Set up a perception system (e.g., AI Perception component) and use <code className="bg-white/20 px-2 py-1 rounded">UpdatePerception</code> to inform the plugin of NPC perception updates</li>
-                      <li>Call <code className="bg-white/20 px-2 py-1 rounded">StartNPCTask</code> to begin behavior generation</li>
+                      <li>
+                        <strong>Completion Mode:</strong>
+                        <ul className="list-disc list-inside pl-12 mt-1 space-y-1">
+                          <li><code className="bg-white/20 px-2 py-1 rounded">Until_Complete</code> - Action runs until completion (e.g., walk to location). Must call <code className="bg-white/20 px-2 py-1 rounded">FinishNPCAction()</code> when done.</li>
+                          <li><code className="bg-white/20 px-2 py-1 rounded">Duration</code> - Action runs for a dynamic duration determined by the plugin. Do NOT call <code className="bg-white/20 px-2 py-1 rounded">FinishNPCAction()</code>.</li>
+                        </ul>
+                      </li>
+                      <li>
+                        <strong>Usage Flag:</strong>
+                        <ul className="list-disc list-inside pl-12 mt-1 space-y-1">
+                          <li><code className="bg-white/20 px-2 py-1 rounded">Primary</code> - Core actions for executing NPC plans</li>
+                          <li><code className="bg-white/20 px-2 py-1 rounded">Filler</code> - Simple actions for downtime (e.g., "lean on railing", "look around")</li>
+                          <li><code className="bg-white/20 px-2 py-1 rounded">Primary | Filler</code> - Actions that can serve both roles</li>
+                        </ul>
+                      </li>
                     </ul>
+                  </li>
+                  <li>
+                    In Event BeginPlay or OnPossess:
+                    <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
+                      <li>Register NPC actions using <code className="bg-white/20 px-2 py-1 rounded">RegisterNPCAction</code> with completion mode and usage flag</li>
+                      <li>Set up a perception system (e.g., AI Perception component) and use <code className="bg-white/20 px-2 py-1 rounded">UpdatePerception</code> to inform the plugin of NPC perception updates</li>
+                      <li>Call <code className="bg-white/20 px-2 py-1 rounded">StartNPC()</code> to begin NPC behavior (daily planning, scheduling, execution)</li>
+                    </ul>
+                  </li>
+                  <li>
+                    Optional: Override <code className="bg-white/20 px-2 py-1 rounded">OnNPCActionFinished()</code> to customize cleanup behavior that runs after every action completes
                   </li>
                 </ol>
               </div>
             </div>
 
-            {/* Player Character */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">6. Setting Up Player Character</h2>
-              <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+            <div id="player-character" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">5. Setting Up Player Character</h2>
+              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <ol className="list-decimal list-inside space-y-4 pl-4">
                   <li>Create a custom class inheriting from <Link to="/docs/unrealengine/classes#basecharacter" className="text-blue-400 hover:text-blue-300 transition-colors">BaseCharacter</Link></li>
                   <li>In the class Blueprint, set the CharacterName in the Details panel</li>
-                  <li>Override:
+                  <li>
+                    Override conversation-related functions:
                     <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
-                      <li><code className="bg-white/20 px-2 py-1 rounded">ReceiveMessage</code> to customize how the player character handles receiving a conversation message from an NPC</li>
-                      <li><code className="bg-white/20 px-2 py-1 rounded">TryStartConvo</code> to customize how the player character handles starting a conversation with an NPC</li>
-                      <li><code className="bg-white/20 px-2 py-1 rounded">FinishConvo</code> to customize how the player character handles finishing a conversation with an NPC</li>
+                      <li><code className="bg-white/20 px-2 py-1 rounded">ReceiveMessage</code> - Customize how the player character handles receiving a conversation message from an NPC</li>
+                      <li><code className="bg-white/20 px-2 py-1 rounded">FinishConvo</code> - Customize how the player character handles finishing a conversation with an NPC</li>
+                    </ul>
+                  </li>
+                  <li>
+                    When initiating conversations with NPCs:
+                    <ul className="list-disc list-inside pl-8 mt-2 space-y-2">
+                      <li>Call <code className="bg-white/20 px-2 py-1 rounded">RequestConversation(ABaseCharacter* Partner)</code> first to request the NPC's attention</li>
+                      <li>Only send messages if the request returns <code className="bg-white/20 px-2 py-1 rounded">true</code> (NPC accepted)</li>
+                      <li>Use <code className="bg-white/20 px-2 py-1 rounded">ForceEndConversation()</code> if you need to abort a conversation early</li>
                     </ul>
                   </li>
                 </ol>
               </div>
             </div>
 
-            {/* Testing */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
-              <h2 className="text-2xl font-bold text-white mb-6">7. Testing Your Setup</h2>
-              <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
+            <div id="testing" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">6. Testing Your Setup</h2>
+              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
                   Place your NPCs and WorldActors in the level. Each NPC should automatically:
                 </p>
                 <ul className="list-disc list-inside pl-4 space-y-2">
-                  <li>Generate tasks based on their background and goals</li>
-                  <li>Break down tasks into executable actions</li>
+                  <li>Generate a daily plan with tasks based on their background and goals</li>
+                  <li>Schedule and execute plans throughout the day</li>
+                  <li>Break down high-level tasks into sequences of executable actions</li>
                   <li>Interact with WorldActors and other characters</li>
                   <li>Form memories of their experiences</li>
                   <li>Engage in conversations when appropriate</li>
+                </ul>
+
+                <h3 className="text-xl font-semibold text-white mt-8">Debugging Tips</h3>
+                <ul className="list-disc list-inside pl-4 space-y-2">
+                  <li>Enable <code className="bg-white/20 px-2 py-1 rounded">bLogTasks</code> on an NPC to see their complete thinking process (daily plans, expansions, action sequences)</li>
+                  <li>Warning: Task logging is very verbose - only enable for one or a few NPCs at a time to avoid flooding the console</li>
+                  <li>Use <code className="bg-white/20 px-2 py-1 rounded">bNPCEnabled</code> to disable autonomous behavior for specific NPCs (they will still engage in conversations)</li>
                 </ul>
               </div>
             </div>
