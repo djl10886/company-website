@@ -78,8 +78,8 @@ export default function QuickStart() {
                 <p>
                   Set the <strong>Initial Game Start Time</strong> to specify when the in-game clock begins (e.g., Day 1, Month 1, Year 2000, 08:00). The plugin uses a global time system to ensure all NPCs maintain a unified sense of time.
                 </p>
-                <p className="mt-4 text-sm text-gray-400">
-                  Note: The plugin automatically loads these configurations on startup. No manual loading code is required.
+                <p className="mt-4">
+                  <strong>Note:</strong> The plugin automatically loads these configurations on startup. No manual loading code is required.
                 </p>
               </div>
             </div>

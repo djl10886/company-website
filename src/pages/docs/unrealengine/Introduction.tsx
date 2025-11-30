@@ -31,7 +31,7 @@ export default function Introduction() {
               </p>
               <div className="pt-4">
                 <Link
-                  to="/changelog"
+                  to="/docs/unrealengine/changelog"
                   className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors text-lg"
                 >
                   View Changelog →

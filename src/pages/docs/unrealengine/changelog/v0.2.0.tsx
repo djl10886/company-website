@@ -153,7 +153,12 @@ export const v0_2_0: Release = {
       <div>
         <h2 className="text-2xl font-bold text-white mb-6">6. NPC Action Registration and Completion Semantics</h2>
         <ul className="list-disc space-y-3 text-white ml-6">
-          <li>Actions can now be registered with up to 5 parameters, with names and descriptions for each</li>
+          <li>Actions can now be registered with up to 5 parameters, with names and descriptions for each
+            <ul className="list-disc space-y-2 text-white ml-6 mt-2">
+              <li><code className="bg-slate-800/50 px-2 py-1 rounded">RegisterNPCAction</code> now uses a single, unified interface that takes <code className="bg-slate-800/50 px-2 py-1 rounded">TArray&lt;FString&gt;</code> arguments for parameter names and parameter descriptions for all actions, regardless of parameter count</li>
+              <li>Legacy overloads using single <code className="bg-slate-800/50 px-2 py-1 rounded">FString</code> arguments or taking no parameter arguments have been removed</li>
+            </ul>
+          </li>
           <li>
             Two new fields are required when registering actions:
             <ol className="list-decimal space-y-3 text-white ml-6 mt-2">
@@ -281,6 +286,14 @@ export const v0_2_0: Release = {
                 </ul>
               </li>
               <li>
+                <code className="bg-slate-800/50 px-2 py-1 rounded">OnConversationUnavailable(ABaseCharacter* IntendedConvoTarget)</code>
+                <ul className="list-disc space-y-2 text-white ml-6 mt-2">
+                  <li>System-level hook that is called when the <code className="bg-slate-800/50 px-2 py-1 rounded">IntendedConvoTarget</code> is unavailable for a conversation, such as because they are already in another conversation</li>
+                  <li>This hook replaces the old conversation unavailable notification method of an empty string</li>
+                  <li>Default implementation is a no-op</li>
+                </ul>
+              </li>
+              <li>
                 <code className="bg-slate-800/50 px-2 py-1 rounded">ForceEndConversation()</code>
                 <ul className="list-disc space-y-2 text-white ml-6 mt-2">
                   <li>Mirrored versions of the hook are available in the <code className="bg-slate-800/50 px-2 py-1 rounded">ABaseNPC</code> and <code className="bg-slate-800/50 px-2 py-1 rounded">ABaseNPCController</code> classes</li>
@@ -318,6 +331,7 @@ export const v0_2_0: Release = {
             <ul className="list-disc space-y-2 text-white ml-6 mt-2">
               <li>Call <code className="bg-slate-800/50 px-2 py-1 rounded">RequestConversation</code> first when trying to engage an NPC in conversation</li>
               <li>Start sending messages only if the request is accepted; otherwise, the NPC will not receive or respond to messages</li>
+              <li>Override the <code className="bg-slate-800/50 px-2 py-1 rounded">OnConversationUnavailable</code> function to handle processing in the case when a player's conversation request is rejected</li>
             </ul>
           </li>
         </ul>

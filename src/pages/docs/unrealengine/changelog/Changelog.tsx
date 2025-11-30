@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { releases } from './releases';
 
 export default function Changelog() {
@@ -13,6 +14,14 @@ export default function Changelog() {
 
       <div className="relative px-6 py-32">
         <div className="max-w-5xl mx-auto">
+          <Link
+            to="/docs/unrealengine/introduction"
+            className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors mb-8"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Back to UE Plugin Docs
+          </Link>
+
           <div className="mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Changelog
@@ -27,7 +36,7 @@ export default function Changelog() {
             {releases.map((release) => (
               <Link
                 key={release.version}
-                to={`/changelog/${release.version}`}
+                to={`/docs/unrealengine/changelog/${release.version}`}
                 className="block bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-xl p-8 hover:border-white/20 transition-all"
               >
                 <div className="flex items-center justify-between mb-4">

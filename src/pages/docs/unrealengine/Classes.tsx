@@ -5,7 +5,7 @@ import RNPCsUtilitiesDocs from '../../../components/docs/RNPCsUtilitiesDocs';
 import BaseCharacterDocs from '../../../components/docs/BaseCharacterDocs';
 import BaseNPCDocs from '../../../components/docs/BaseNPCDocs';
 import BaseNPCControllerDocs from '../../../components/docs/BaseNPCControllerDocs';
-import ConfigManagerDocs from '../../../components/docs/ConfigManagerDocs';
+import BaseCalendarDocs from '../../../components/docs/BaseCalendarDocs';
 import WorldActorDocs from '../../../components/docs/WorldActorDocs';
 import EnvironmentComponentDocs from '../../../components/docs/EnvironmentComponentDocs';
 
@@ -40,9 +40,6 @@ export default function Classes() {
           </div>
 
           <div className="space-y-20">
-            <div id="configmanager" className="scroll-mt-24">
-              <ConfigManagerDocs />
-            </div>
             <div id="rnpcsutilities" className="scroll-mt-24">
               <RNPCsUtilitiesDocs />
             </div>
@@ -51,6 +48,9 @@ export default function Classes() {
             </div>
             <div id="environmentcomponent" className="scroll-mt-24">
               <EnvironmentComponentDocs />
+            </div>
+            <div id="basecalendar" className="scroll-mt-24">
+              <BaseCalendarDocs />
             </div>
             <div id="basecharacter" className="scroll-mt-24">
               <BaseCharacterDocs />

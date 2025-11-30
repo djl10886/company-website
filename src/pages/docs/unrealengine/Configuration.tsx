@@ -12,11 +12,11 @@ const minimalConfig = `{
   ],
   "default_heavy_target": {
     "service": "openai",
-    "model": "gpt-4o"
+    "model": "gpt-5.1"
   },
   "default_light_target": {
     "service": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-5-mini"
   }
 }`;
 
@@ -30,47 +30,47 @@ const fullConfig = `{
   ],
   "default_heavy_target": {
     "service": "openai",
-    "model": "gpt-4o"
+    "model": "gpt-5.1"
   },
   "default_light_target": {
     "service": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-5-mini"
   },
   "generate_task_target": {
     "service": "openai",
-    "model": "gpt-4o"
+    "model": "gpt-5.1"
   },
   "task_to_actions_target": {
     "service": "openai",
-    "model": "gpt-4o"
+    "model": "gpt-5.1"
   },
   "decide_enter_convo_target": {
     "service": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-5-mini"
   },
   "decide_convo_partner_target": {
     "service": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-5-mini"
   },
   "generate_convo_message_target": {
     "service": "openai",
-    "model": "gpt-4o"
+    "model": "gpt-5.1"
   },
   "retrieve_memories_target": {
     "service": "openai",
-    "model": "gpt-4o"
+    "model": "gpt-5.1"
   },
   "retrieve_relationships_target": {
     "service": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-5-mini"
   },
   "filter_memories_target": {
     "service": "openai",
-    "model": "gpt-4o"
+    "model": "gpt-5.1"
   },
   "reflect_target": {
     "service": "openai",
-    "model": "gpt-4o-mini"
+    "model": "gpt-5-mini"
   }
 }`;
 
@@ -158,7 +158,7 @@ export default function Configuration() {
                 <p>
                   Set the path to your <code className="bg-white/20 px-2 py-1 rounded">RealisticNPCsConfig.json</code> file, which specifies language model settings. Create this file in your project's <code className="bg-white/20 px-2 py-1 rounded">Config</code> folder and provide the path in Project Settings.
                 </p>
-                <p className="text-sm text-gray-400 mt-2">
+                <p className="mt-2">
                   See the <a href="#llm-configuration" className="text-blue-400 hover:text-blue-300 transition-colors">LLM Configuration section</a> below for details on the configuration file format.
                 </p>
 
@@ -217,7 +217,7 @@ export default function Configuration() {
                   <li>The initial timestamp for all NPC memories and events</li>
                   <li>The reference point for time-based NPC behaviors</li>
                 </ul>
-                <p className="mt-4 text-sm text-gray-400">
+                <p className="mt-4">
                   You can modify the in-game time at runtime using <code className="bg-white/20 px-2 py-1 rounded">RNPCsUtilities::SetGameWorldTime(...)</code>. NPCs will automatically observe the new time and update their behavior accordingly.
                 </p>
               </div>

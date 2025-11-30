@@ -48,28 +48,6 @@ export default function BaseCharacterDocs() {
           <div>
             <div className="border-l-4 border-blue-500/50 pl-6">
               <h4 className="text-lg font-medium text-white mb-4">
-                <code className="bg-white/20 px-2 py-1 rounded">TryStartConvo</code>
-              </h4>
-              <p className="mb-4">
-                <code className="bg-slate-800/50 px-2 py-1 rounded">virtual bool TryStartConvo(ABaseCharacter* Target)</code>
-              </p>
-              <p className="mb-4">
-                This function is used by the current character to try and start a conversation with the Target character. The function returns true if a conversation can be started, and false if not. Conversations are currently limited to be one-to-one, so the return of this function essentially indicates whether both the current character and Target character are currently available to start a conversation with each other. This function can be overridden to handle how various aspects of a character should change if it starts a conversation, such as any changes to state variables or changes to animations.
-              </p>
-              <h5 className="text-white font-medium mb-2">Parameters:</h5>
-              <ul className="list-none space-y-2">
-                <li>
-                  <code className="bg-white/20 px-2 py-1 rounded">Target</code>: The character that the current character will try and start a conversation with.
-                </li>
-              </ul>
-              <h5 className="text-white font-medium mb-2">Returns:</h5>
-              <p>True if the current character and Target character can start a conversation; false otherwise.</p>
-            </div>
-          </div>
-
-          <div>
-            <div className="border-l-4 border-blue-500/50 pl-6">
-              <h4 className="text-lg font-medium text-white mb-4">
                 <code className="bg-white/20 px-2 py-1 rounded">FinishConvo</code>
               </h4>
               <p className="mb-4">
@@ -87,15 +65,29 @@ export default function BaseCharacterDocs() {
                 <code className="bg-white/20 px-2 py-1 rounded">UpdateDescription</code>
               </h4>
               <p className="mb-4">
-                <code className="bg-slate-800/50 px-2 py-1 rounded">void UpdateDescription(FString NewDescription)</code>
+                <code className="bg-slate-800/50 px-2 py-1 rounded">virtual void UpdateDescription(FString NewDescription, EDescriptionUpdateKind Kind = EDescriptionUpdateKind::Significant)</code>
               </p>
               <p className="mb-4">
-                This function updates the text description regarding the current state of the character. The text description reflects the latest information that an NPC should obtain about the current character when the former perceives the current character. This function should be called whenever a change to the current character should be perceivable to other NPCs. For example, if there is a function for when a character starts reading, then this function can be called in the reading function with the parameter "Alice is reading a book", which would allow an NPC to obtain that information when it perceives the character. Additionally, the character's new text description will be broadcast to all NPCs currently perceiving the current character.
+                This function updates the text description regarding the current state of the character. The text description reflects the latest information that an NPC should obtain about the current character when the former perceives the current character. This function should be called whenever a change to the current character should be perceivable to other NPCs.
               </p>
+              <p className="mb-4">
+                The Kind parameter determines how the update is handled:
+              </p>
+              <ul className="list-none space-y-2 mb-4">
+                <li>
+                  <code className="bg-white/20 px-2 py-1 rounded">EDescriptionUpdateKind::Significant</code>: For character updates that are likely to influence other NPCs' behavior, memory, conversations, etc. These updates are broadcast to all NPCs currently perceiving the character.
+                </li>
+                <li>
+                  <code className="bg-white/20 px-2 py-1 rounded">EDescriptionUpdateKind::Mundane</code>: For small state changes (e.g., walking, standing up, sitting down) that should be observable but aren't likely to influence other NPCs' behavior. These updates are not broadcast.
+                </li>
+              </ul>
               <h5 className="text-white font-medium mb-2">Parameters:</h5>
               <ul className="list-none space-y-2">
                 <li>
                   <code className="bg-white/20 px-2 py-1 rounded">NewDescription</code>: The new text description for the current character.
+                </li>
+                <li>
+                  <code className="bg-white/20 px-2 py-1 rounded">Kind</code>: The kind of update (Significant or Mundane). Defaults to Significant.
                 </li>
               </ul>
             </div>
@@ -104,18 +96,18 @@ export default function BaseCharacterDocs() {
           <div>
             <div className="border-l-4 border-blue-500/50 pl-6">
               <h4 className="text-lg font-medium text-white mb-4">
-                <code className="bg-white/20 px-2 py-1 rounded">SilentUpdateDescription</code>
+                <code className="bg-white/20 px-2 py-1 rounded">OnConversationUnavailable</code>
               </h4>
               <p className="mb-4">
-                <code className="bg-slate-800/50 px-2 py-1 rounded">void SilentUpdateDescription(FString NewDescription)</code>
+                <code className="bg-slate-800/50 px-2 py-1 rounded">virtual void OnConversationUnavailable(ABaseCharacter* IntendedConvoTarget)</code>
               </p>
               <p className="mb-4">
-                This function also updates the text description for a character, but unlike UpdateDescription, does not immediately broadcast the updated description to any NPCs currently perceiving the character. This function is meant for more inconsequential updates to a character's description, or description changes that wouldn't be likely to elicit an immediate response from NPCs that are perceiving the character, such as changing between walking/running or standing/sitting.
+                This is a system-level hook that is called when the IntendedConvoTarget is unavailable for a conversation, such as when they are already in another conversation. This function replaces the old conversation unavailable notification method of an empty string. The default implementation is a no-op, but this function can be overridden to handle processing when a conversation request is rejected.
               </p>
               <h5 className="text-white font-medium mb-2">Parameters:</h5>
               <ul className="list-none space-y-2">
                 <li>
-                  <code className="bg-white/20 px-2 py-1 rounded">NewDescription</code>: The new text description for the current character.
+                  <code className="bg-white/20 px-2 py-1 rounded">IntendedConvoTarget</code>: The character that was unavailable for conversation.
                 </li>
               </ul>
             </div>

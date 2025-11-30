@@ -22,8 +22,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/changelog" element={<Changelog />} />
-          <Route path="/changelog/:version" element={<ChangelogDetail />} />
+          <Route path="/docs/unrealengine/changelog" element={<Changelog />} />
+          <Route path="/docs/unrealengine/changelog/:version" element={<ChangelogDetail />} />
           <Route path="/docs/framework" element={<Navigate to="/docs/framework/introduction\" replace />} />
           <Route path="/docs/framework/introduction" element={<FrameworkIntroduction />} />
           <Route path="/docs/framework/terminology" element={<FrameworkTerminology />} />

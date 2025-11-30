@@ -20,7 +20,7 @@ export default function ChangelogDetail() {
         <div className="relative px-6 py-32">
           <div className="max-w-5xl mx-auto">
             <p className="text-white text-xl">Release not found</p>
-            <Link to="/changelog" className="text-blue-400 hover:text-blue-300 mt-4 inline-block">
+            <Link to="/docs/unrealengine/changelog" className="text-blue-400 hover:text-blue-300 mt-4 inline-block">
               Back to Changelog
             </Link>
           </div>
@@ -40,7 +40,7 @@ export default function ChangelogDetail() {
       <div className="relative px-6 py-32">
         <div className="max-w-5xl mx-auto">
           <Link
-            to="/changelog"
+            to="/docs/unrealengine/changelog"
             className="inline-flex items-center text-gray-400 hover:text-white transition-colors mb-8"
           >
             <ArrowLeft size={20} className="mr-2" />

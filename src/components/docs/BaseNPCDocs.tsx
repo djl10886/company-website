@@ -13,11 +13,11 @@ export default function BaseNPCDocs() {
         <div className="space-y-4">
           <div>
             <code className="bg-white/20 px-2 py-1 rounded">bool bNPCEnabled</code>
-            <p className="mt-2">A flag to control whether the NPC should execute autonomously, i.e., generate and perform their own tasks. This is meant to be an easy on-off switch. Note that, currently, this flag only controls whether NPCs will generate/perform tasks, but NPCs will still initiate and respond to conversations regardless of this flag.</p>
+            <p className="mt-2">A flag to control whether the NPC should execute autonomously, i.e., generate and perform their own tasks. This is meant to be an easy on-off switch. If disabled, the NPC will not start thinking or acting. Note that this flag does not disable conversation, so even if the flag is disabled, NPCs will still engage in and initiate conversations.</p>
           </div>
           <div>
             <code className="bg-white/20 px-2 py-1 rounded">bool bLogTasks</code>
-            <p className="mt-2">A flag to control whether to log the tasks that the NPC is generating for itself.</p>
+            <p className="mt-2">A flag to control whether to log the thinking process of the NPC. Enabling this flag will cause the NPC to log the entirety of its thinking process including high-level daily plans, intermediate plan item expansions, and decomposed action sequences. The logging is very verbose and is recommended only for debugging a single or small handful of NPCs at a time.</p>
           </div>
           <div>
             <code className="bg-white/20 px-2 py-1 rounded">FString Background</code>
@@ -73,8 +73,37 @@ export default function BaseNPCDocs() {
           </div>
           <div>
             <div className="border-l-4 border-blue-500/50 pl-6">
-              <code className="bg-white/20 px-2 py-1 rounded">virtual void PauseCurrentAction()</code>
-              <p className="mt-2">This function is called to pause an NPC's current in-game action and is primarily used to help NPCs transition between action sequences and conversations. When an NPC enters a conversation, their current action will be paused until the conversation finishes, at which point the paused action will be resumed. This function can be overridden to handle any processing that should happen when the NPC action is paused. The base implementation of this function simply stops any montage that is currently playing.</p>
+              <h4 className="text-lg font-medium text-white mb-4">
+                <code className="bg-white/20 px-2 py-1 rounded">RequestConversation</code>
+              </h4>
+              <p className="mb-4">
+                <code className="bg-slate-800/50 px-2 py-1 rounded">bool RequestConversation(ABaseCharacter* Requester)</code>
+              </p>
+              <p className="mb-4">
+                This function is used when a player character attempts to initiate a conversation with the NPC. It returns whether the NPC accepted the conversation request. If the function returns true, it will also safely pause NPC execution so they don't walk away as a player character types the opening conversation message. Player characters should call this function first when trying to engage an NPC in conversation, and only start sending messages if the request is accepted.
+              </p>
+              <h5 className="text-white font-medium mb-2">Parameters:</h5>
+              <ul className="list-none space-y-2">
+                <li>
+                  <code className="bg-white/20 px-2 py-1 rounded">Requester</code>: The character requesting the conversation.
+                </li>
+              </ul>
+              <h5 className="text-white font-medium mb-2">Returns:</h5>
+              <p>True if the NPC accepts the conversation request; false otherwise.</p>
+            </div>
+          </div>
+
+          <div>
+            <div className="border-l-4 border-blue-500/50 pl-6">
+              <h4 className="text-lg font-medium text-white mb-4">
+                <code className="bg-white/20 px-2 py-1 rounded">ForceEndConversation</code>
+              </h4>
+              <p className="mb-4">
+                <code className="bg-slate-800/50 px-2 py-1 rounded">void ForceEndConversation()</code>
+              </p>
+              <p className="mb-4">
+                Allows a forced abort of an ongoing conversation. This function is meant to allow player characters to force end a conversation without causing the NPC to hang. It ensures that the NPC properly cleans up its conversation state and can resume normal behavior.
+              </p>
             </div>
           </div>
         </div>

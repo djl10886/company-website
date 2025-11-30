@@ -11,10 +11,10 @@ export default function UnrealDocsNavigation() {
       if (!isClassesPage) return;
 
       const sections = [
-        'configmanager',
         'rnpcsutilities',
         'worldactor',
         'environmentcomponent',
+        'basecalendar',
         'basecharacter',
         'basenpc',
         'basenpccontroller'
@@ -66,6 +66,18 @@ export default function UnrealDocsNavigation() {
               }
             >
               Introduction
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/docs/unrealengine/changelog"
+              className={({ isActive }) =>
+                `block text-sm ${
+                  isActive || location.pathname.startsWith('/docs/unrealengine/changelog') ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+                } transition-colors`
+              }
+            >
+              Changelog
             </NavLink>
           </li>
           <li>
@@ -132,16 +144,6 @@ export default function UnrealDocsNavigation() {
                 <ul className="mt-2 ml-4 space-y-2">
                   <li>
                     <a
-                      href="#configmanager"
-                      className={`block text-sm ${
-                        activeSection === 'configmanager' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
-                      } transition-colors`}
-                    >
-                      ConfigManager
-                    </a>
-                  </li>
-                  <li>
-                    <a
                       href="#rnpcsutilities"
                       className={`block text-sm ${
                         activeSection === 'rnpcsutilities' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
@@ -168,6 +170,16 @@ export default function UnrealDocsNavigation() {
                       } transition-colors`}
                     >
                       EnvironmentComponent
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#basecalendar"
+                      className={`block text-sm ${
+                        activeSection === 'basecalendar' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+                      } transition-colors`}
+                    >
+                      BaseCalendar
                     </a>
                   </li>
                   <li>
