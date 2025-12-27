@@ -13,7 +13,7 @@ export default function About() {
       <div className="px-6 py-32">
         <div className="max-w-6xl mx-auto">
           {/* Our Approach Section */}
-          <section className="mb-32">
+          <section className="mb-32 text-center">
             <div className="space-y-6 mb-16">
               <div className="text-5xl font-bold text-white/10">01</div>
               <h2 className="text-3xl md:text-4xl font-bold text-white">
@@ -21,7 +21,7 @@ export default function About() {
               </h2>
             </div>
 
-            <div className="max-w-4xl">
+            <div className="max-w-4xl mx-auto">
               <p className="text-xl md:text-2xl text-gray-400 leading-relaxed">
                 Our framework is designed to be flexible and to easily integrate into existing workflows. Developers can customize an NPC with natural language descriptions on various aspects of an NPC, such as their background, personality, and goals. NPC actions can be implemented using standard code and then integrated into the framework with a clear natural language description of their purposes. The framework handles interfacing with the language models of choice to generate and then execute behavior according to the NPC's specifications. Whether you're creating a vast open world or a focused narrative experience, our framework can help bring your NPCs to life.
               </p>
@@ -29,7 +29,7 @@ export default function About() {
           </section>
 
           {/* Potential Benefits Section */}
-          <section className="mb-32">
+          <section className="mb-32 text-center">
             <div className="space-y-6 mb-16">
               <div className="text-5xl font-bold text-white/10">02</div>
               <h2 className="text-3xl md:text-4xl font-bold text-white">
@@ -43,10 +43,10 @@ export default function About() {
                 <h3 className="text-2xl font-semibold text-white mb-8">
                   From the Player Perspective
                 </h3>
-                <p className="text-xl text-gray-400 leading-relaxed mb-8 max-w-4xl">
+                <p className="text-xl text-gray-400 leading-relaxed mb-8 max-w-4xl mx-auto">
                   NPCs built with our approach can provide an enhanced gaming experience through several key benefits:
                 </p>
-                <div className="grid md:grid-cols-2 gap-6 max-w-5xl">
+                <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
                   <div className="space-y-2">
                     <div className="flex items-start">
                       <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
@@ -79,10 +79,10 @@ export default function About() {
                 <h3 className="text-2xl font-semibold text-white mb-8">
                   From the Developer Perspective
                 </h3>
-                <p className="text-xl text-gray-400 leading-relaxed mb-8 max-w-4xl">
+                <p className="text-xl text-gray-400 leading-relaxed mb-8 max-w-4xl mx-auto">
                   Our framework offers game developers powerful tools and advantages:
                 </p>
-                <div className="grid md:grid-cols-2 gap-6 max-w-5xl">
+                <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
                   <div className="space-y-2">
                     <div className="flex items-start">
                       <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
@@ -113,7 +113,7 @@ export default function About() {
           </section>
 
           {/* Our Inspiration Section */}
-          <section>
+          <section className="text-center">
             <div className="space-y-6 mb-16">
               <div className="text-5xl font-bold text-white/10">03</div>
               <h2 className="text-3xl md:text-4xl font-bold text-white">
@@ -121,7 +121,7 @@ export default function About() {
               </h2>
             </div>
 
-            <div className="max-w-4xl space-y-6">
+            <div className="max-w-4xl mx-auto space-y-6">
               <p className="text-xl md:text-2xl text-gray-400 leading-relaxed">
                 As passionate gamers, we've spent countless hours exploring virtual worlds and interacting with NPCs. While these digital characters have come a long way, we've always dreamed of NPCs that could truly participate in shaping the world around them – not just as quest givers or merchants, but as dynamic entities with their own goals and agency.
               </p>
