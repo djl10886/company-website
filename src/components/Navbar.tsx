@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import logoWhite from '../assets/clankr-logo-white.png';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,9 +34,9 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="https://raw.githubusercontent.com/djl10886/image-hosting/refs/heads/main/processed_logo_black_on_transparent.png"
+                src={logoWhite}
                 alt="Clankr Intelligence Logo"
-                className="w-6 h-6 brightness-0 invert mr-2"
+                className="h-8 w-auto mr-3 shrink-0 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
               />
               <span className="text-white font-bold text-lg md:text-xl">Clankr Intelligence</span>
             </Link>

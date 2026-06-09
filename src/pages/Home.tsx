@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Send, CheckCircle, XCircle } from 'lucide-react';
+import logoWhite from '../assets/clankr-logo-white.png';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -72,9 +73,9 @@ export default function Home() {
           <div className="max-w-6xl mx-auto w-full text-center space-y-12">
             <div className="space-y-6">
               <img
-                src="https://raw.githubusercontent.com/djl10886/image-hosting/refs/heads/main/processed_logo_black_on_transparent.png"
+                src={logoWhite}
                 alt="Clankr Intelligence Logo"
-                className="w-32 h-32 md:w-40 md:h-40 brightness-0 invert opacity-90 mx-auto"
+                className="w-48 h-auto md:w-64 opacity-95 mx-auto drop-shadow-[0_0_28px_rgba(255,255,255,0.18)]"
               />
               <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tight">
                 Clankr Intelligence
