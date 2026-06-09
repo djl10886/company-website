@@ -75,13 +75,6 @@ export default function Navbar() {
               </button>
               <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-slate-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <Link
-                  to="/docs/framework"
-                  className="block px-4 py-2 text-sm text-gray-300 hover:text-blue-400 hover:bg-slate-700"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Framework Docs
-                </Link>
-                <Link
                   to="/docs/unrealengine"
                   className="block px-4 py-2 text-sm text-gray-300 hover:text-blue-400 hover:bg-slate-700"
                   onClick={() => setIsOpen(false)}
@@ -120,13 +113,6 @@ export default function Navbar() {
             >
               Products
             </button>
-            <Link
-              to="/docs/framework"
-              className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 transition-colors pl-6"
-              onClick={() => setIsOpen(false)}
-            >
-              Framework Docs
-            </Link>
             <Link
               to="/docs/unrealengine"
               className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-blue-400 transition-colors pl-6"

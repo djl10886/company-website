@@ -28,13 +28,13 @@ export default function Setup() {
               After downloading the plugin, you'll find a folder named "RealisticNPCs" - this is the plugin's root directory. Note that if downloading the plugin as a zip file, the top level folder name contains a "-main" suffix - make sure to remove the suffix from the folder name. You have two options for installing the plugin: as an engine-wide plugin available to all projects, or as a project-specific plugin. Both methods are explained below.
             </p>
             <p className="text-gray-300 text-xl leading-relaxed">
-              For an engine-wide installation, navigate to your Unreal Engine installation directory and locate the "Plugins" folder. Copy the entire "RealisticNPCs" folder into this directory. Launch the Unreal Editor, open the Plugins window (Edit → Plugins), find the "RealisticNPCs" plugin, and enable it. Restart the editor for the changes to take effect.
+              For an engine-wide installation, navigate to your Unreal Engine installation directory and locate the "Plugins" folder. Copy the entire "RealisticNPCs" folder into this directory. Launch the Unreal Editor, open the Plugins window (Edit -&gt; Plugins), find the "RealisticNPCs" plugin, and enable it. Restart the editor for the changes to take effect.
             </p>
             <p className="text-gray-300 text-xl leading-relaxed">
               For a project-specific installation, locate your project's root directory (where your .uproject file is) and create a "Plugins" folder if it doesn't exist. Copy the "RealisticNPCs" folder into this new "Plugins" folder. Right-click your .uproject file and select "Generate Visual Studio project files", then build the project. When you launch the editor, the plugin should be automatically enabled and ready to use.
             </p>
             <p className="text-gray-300 text-xl leading-relaxed">
-              Remember to include "RealisticNPCs" in the PublicDependencyModuleNames of your project's Build.cs file so the plugin's headers are visible to your project's files.
+              If your project uses plugin classes from C++, add "RealisticNPCs" to the appropriate dependency list in your module's Build.cs file. Use PublicDependencyModuleNames when public headers expose plugin types, or PrivateDependencyModuleNames when the dependency is only used inside your module implementation.
             </p>
           </div>
         </div>

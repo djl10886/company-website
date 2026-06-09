@@ -24,17 +24,17 @@ export default function Introduction() {
             <div className="w-24 h-1 bg-blue-400 mx-auto mb-8"></div>
             <div className="space-y-6 text-left">
               <p className="text-gray-300 text-xl">
-                Our Unreal Engine plugin provides an implementation of the <Link to="/docs/framework" className="text-blue-400 hover:text-blue-300 transition-colors">RealisticNPCs framework</Link>, allowing developers to easily create intelligent NPCs in their Unreal Engine projects. The plugin handles all the complexities of integrating with language models, managing NPC states, and coordinating behavior generation, letting developers focus on creating engaging gameplay experiences.
+                The RealisticNPCs Unreal Engine plugin provides a framework for a humanlike NPC cognition and behavior layer that allows developers to easily create intelligent NPCs in their Unreal Engine projects. The plugin handles all the complexities of integrating with language models, managing NPC states, and coordinating behavior generation, letting developers focus on creating engaging gameplay experiences.
               </p>
               <p className="text-gray-300 text-xl">
-                This documentation will focus on the technical details of how to use the plugin. For a more conceptual description of the framework itself, we recommend taking a look at the framework documentation (link above). Note that the plugin is currently in an alpha phase so there may be major changes without advanced warning.
+                This documentation focuses on the technical details of how to use the plugin. Note that the plugin is currently in an alpha phase so there may be major changes without advanced warning.
               </p>
               <div className="pt-4">
                 <Link
                   to="/docs/unrealengine/changelog"
                   className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors text-lg"
                 >
-                  View Changelog →
+                  View Changelog -&gt;
                 </Link>
               </div>
             </div>

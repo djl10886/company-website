@@ -17,11 +17,7 @@ export default function Products() {
           <Gamepad2 className="text-blue-400 w-12 h-12 mx-auto mb-4" />
           <div className="max-w-3xl mx-auto">
             <p className="text-gray-300 text-xl leading-relaxed mb-6">
-              A prototype for our{' '}
-              <Link to="/docs/framework" className="text-blue-400 hover:text-blue-300 transition-colors">
-                framework
-              </Link>{' '}
-              will be released soon as an Unreal Engine plugin. Check out the{' '}
+              A prototype for our humanlike NPC framework is available as an Unreal Engine plugin. Check out the{' '}
               <Link
                 to="/docs/unrealengine"
                 className="text-blue-400 hover:text-blue-300 transition-colors"

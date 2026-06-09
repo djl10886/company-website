@@ -8,114 +8,123 @@ const minimalConfig = `{
       "service": "openai",
       "endpoint": "https://api.openai.com/v1/chat/completions",
       "APIKey": "your-api-key-here"
-    }
-  ],
-  "default_heavy_target": {
-    "service": "openai",
-    "model": "gpt-5.1"
-  },
-  "default_light_target": {
-    "service": "openai",
-    "model": "gpt-5-mini"
-  }
-}`;
-
-const fullConfig = `{
-  "services": [
+    },
     {
-      "service": "openai",
-      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "service": "openai-embed",
+      "endpoint": "https://api.openai.com/v1/embeddings",
       "APIKey": "your-api-key-here"
     }
   ],
   "default_heavy_target": {
     "service": "openai",
-    "model": "gpt-5.1"
+    "model": "gpt-5.4"
   },
   "default_light_target": {
     "service": "openai",
-    "model": "gpt-5-mini"
+    "model": "gpt-5.4-mini"
   },
-  "generate_task_target": {
-    "service": "openai",
-    "model": "gpt-5.1"
-  },
-  "task_to_actions_target": {
-    "service": "openai",
-    "model": "gpt-5.1"
-  },
-  "decide_enter_convo_target": {
-    "service": "openai",
-    "model": "gpt-5-mini"
-  },
-  "decide_convo_partner_target": {
-    "service": "openai",
-    "model": "gpt-5-mini"
-  },
-  "generate_convo_message_target": {
-    "service": "openai",
-    "model": "gpt-5.1"
-  },
-  "retrieve_memories_target": {
-    "service": "openai",
-    "model": "gpt-5.1"
-  },
-  "retrieve_relationships_target": {
-    "service": "openai",
-    "model": "gpt-5-mini"
-  },
-  "filter_memories_target": {
-    "service": "openai",
-    "model": "gpt-5.1"
-  },
-  "reflect_target": {
-    "service": "openai",
-    "model": "gpt-5-mini"
+  "embed_target": {
+    "service": "openai-embed",
+    "model": "text-embedding-3-large"
   }
 }`;
 
-const worldDescriptionExample = `Aeldenvale is a land of untamed wilderness, where civilizations cling to ancient traditions and fragile alliances. Feudal lords rule fractured kingdoms, their power barely extending beyond the trade roads. The Old Ways, tied to nature and ancient deities, clash with the Church of the Eternal Flame, which seeks to unify the people under one faith. Rural villages uphold ancient customs, while cities embrace the Church's vision of progress.
+const optionalTargetsConfig = `{
+  "agenda_generation_target": {
+    "service": "openai",
+    "model": "gpt-5.4"
+  },
+  "behavior_compile_target": {
+    "service": "openai",
+    "model": "gpt-5.4"
+  },
+  "conversation_reply_target": {
+    "service": "openai",
+    "model": "gpt-5.4"
+  },
+  "memory_reflection_target": {
+    "service": "openai",
+    "model": "gpt-5.4-mini"
+  },
+  "short_horizon_reasoning_target": {
+    "service": "openai",
+    "model": "gpt-5.4-mini"
+  }
+}`;
 
-Thornwharf, a hamlet on the River Wold, houses about a hundred souls in timber cottages amid fields and ancient woods. The self-sufficient village revolves around shared traditions, agrarian life, and reverence for the land. The villagers follow the Old Ways, leaving offerings to honor spirits of harvest and hearth, and speak in a lilting dialect filled with agrarian proverbs. Children learn skills like plowing and weaving through imitation.`;
+const qdrantConfig = `{
+  "services": [
+    {
+      "service": "openai",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "APIKey": "your-api-key-here"
+    },
+    {
+      "service": "openai-embed",
+      "endpoint": "https://api.openai.com/v1/embeddings",
+      "APIKey": "your-api-key-here"
+    },
+    {
+      "service": "qdrant",
+      "endpoint": "http://localhost:6333",
+      "APIKey": ""
+    }
+  ],
+  "default_heavy_target": {
+    "service": "openai",
+    "model": "gpt-5.4"
+  },
+  "default_light_target": {
+    "service": "openai",
+    "model": "gpt-5.4-mini"
+  },
+  "embed_target": {
+    "service": "openai-embed",
+    "model": "text-embedding-3-large"
+  },
+  "vector_store": {
+    "service": "qdrant",
+    "collection": "realistic_npcs"
+  }
+}`;
+
+const worldDescriptionExample = `Aeldenvale is a rural fantasy frontier shaped by scattered villages, old forest roads, seasonal market days, and local customs around hospitality and shared labor. Most people travel by foot, cart, or horse, and news moves slowly unless carried by merchants, clergy, guards, or travelers.
+
+Villagers value reputation, practical skill, family obligation, and visible contribution to the community. Outsiders are treated cautiously until someone local vouches for them. Most conflicts are handled informally unless they threaten land, livelihood, or public safety.`;
+
+function CopyableCode({ text, title, wrap = false }: { text: string; title: string; wrap?: boolean }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={handleCopy}
+        className="absolute top-4 right-4 p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors z-10"
+        title={title}
+      >
+        {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-gray-300" />}
+      </button>
+      <pre className={`bg-slate-800/50 p-4 rounded-lg ${wrap ? 'whitespace-pre-wrap break-words' : 'overflow-x-auto'}`}>
+        <code className="text-sm text-gray-300">{text}</code>
+      </pre>
+    </div>
+  );
+}
 
 export default function Configuration() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  const [copiedMinimal, setCopiedMinimal] = useState(false);
-  const [copiedFull, setCopiedFull] = useState(false);
-  const [copiedWorldDesc, setCopiedWorldDesc] = useState(false);
-
-  const handleCopyMinimal = async () => {
-    try {
-      await navigator.clipboard.writeText(minimalConfig);
-      setCopiedMinimal(true);
-      setTimeout(() => setCopiedMinimal(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
-
-  const handleCopyFull = async () => {
-    try {
-      await navigator.clipboard.writeText(fullConfig);
-      setCopiedFull(true);
-      setTimeout(() => setCopiedFull(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
-
-  const handleCopyWorldDesc = async () => {
-    try {
-      await navigator.clipboard.writeText(worldDescriptionExample);
-      setCopiedWorldDesc(true);
-      setTimeout(() => setCopiedWorldDesc(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy text: ', err);
-    }
-  };
 
   return (
     <div id="top" className="relative min-h-screen pt-16">
@@ -139,203 +148,170 @@ export default function Configuration() {
               <h2 className="text-3xl font-bold text-white mb-6">Overview</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  The plugin is configured through <strong>Project Settings → RealisticNPCs</strong>. All configuration is centralized in Project Settings and loaded automatically on startup.
+                  RealisticNPCs configuration is split between Unreal Project Settings and a JSON language model configuration file. Project Settings control project-wide plugin behavior, while the JSON file tells the plugin which model endpoints to use for chat, reasoning, and embedding requests.
                 </p>
                 <p className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-blue-200">
-                  <strong>Note:</strong> The plugin automatically loads all configurations on startup. No manual loading code is required.
+                  The plugin loads configuration automatically when it is needed. No manual configuration loading code is required.
                 </p>
               </div>
             </div>
 
             <div id="project-settings" className="scroll-mt-24">
-              <h2 className="text-3xl font-bold text-white mb-6">Project Settings Configuration</h2>
+              <h2 className="text-3xl font-bold text-white mb-6">Project Settings</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  Open <strong>Project Settings → RealisticNPCs</strong> to access the following configuration options:
+                  Open <strong>Project Settings &gt; Plugins &gt; RealisticNPCs</strong> to configure the plugin-wide settings.
                 </p>
 
-                <h3 className="text-2xl font-semibold text-white mt-8 mb-4">LLM Configuration Path</h3>
-                <p>
-                  Set the path to your <code className="bg-white/20 px-2 py-1 rounded">RealisticNPCsConfig.json</code> file, which specifies language model settings. Create this file in your project's <code className="bg-white/20 px-2 py-1 rounded">Config</code> folder and provide the path in Project Settings.
-                </p>
-                <p className="mt-2">
-                  See the <a href="#llm-configuration" className="text-blue-400 hover:text-blue-300 transition-colors">LLM Configuration section</a> below for details on the configuration file format.
-                </p>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-blue-500/50 pl-6">
+                    <code className="bg-white/20 px-2 py-1 rounded">LLMConfigFile</code>
+                    <p className="mt-2">
+                      Optional path to the JSON language model configuration file. If left empty, the plugin looks for <code className="bg-white/20 px-2 py-1 rounded">Config/RealisticNPCsConfig.json</code> in the Unreal project. Relative paths are resolved from the project directory.
+                    </p>
+                  </div>
 
-                <h3 className="text-2xl font-semibold text-white mt-8 mb-4">World Description</h3>
-                <p>
-                  Provide your game world's description using one of two methods:
-                </p>
-                <ul className="list-disc list-inside pl-4 space-y-2">
-                  <li>
-                    <strong>InlineWorldDescription</strong> - Enter the description directly in the Project Settings text field. This is convenient for shorter descriptions or quick prototyping.
-                  </li>
-                  <li>
-                    <strong>WorldDescriptionFilePath</strong> - Set a path to a text file containing the description. This is better for longer, more detailed descriptions.
-                  </li>
-                </ul>
-                <p className="mt-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-yellow-200">
-                  <strong>Priority:</strong> If <code className="bg-white/20 px-2 py-1 rounded">InlineWorldDescription</code> is non-empty, it will always take precedence over the file path, even if a file path is also provided.
-                </p>
-                <p className="mt-4">
-                  Your world description should include:
-                </p>
-                <ul className="list-disc list-inside pl-4 space-y-2">
-                  <li>Setting and time period</li>
-                  <li>Cultural norms and customs</li>
-                  <li>Economic systems</li>
-                  <li>Technology level</li>
-                  <li>Important rules or constraints</li>
-                </ul>
+                  <div className="border-l-4 border-blue-500/50 pl-6">
+                    <code className="bg-white/20 px-2 py-1 rounded">InlineWorldDescription</code> and <code className="bg-white/20 px-2 py-1 rounded">WorldDescriptionFile</code>
+                    <p className="mt-2">
+                      Provide global world context for NPC reasoning. Inline text takes precedence over the file path when both are set.
+                    </p>
+                  </div>
 
-                <h4 className="text-xl font-semibold text-white mt-8 mb-4">Example World Description</h4>
-                <p className="mb-4">
-                  The following is a sample world description file. Although more detailed descriptions lead to more contextually accurate NPC behavior, note that this description will be used frequently, affecting both inference time and costs. Initial tests found that a world description around 6-7 sentences can be sufficient for NPCs to maintain proper context.
-                </p>
-                <div className="relative">
-                  <button
-                    onClick={handleCopyWorldDesc}
-                    className="absolute top-4 right-4 p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors z-10"
-                    title="Copy world description example"
-                  >
-                    {copiedWorldDesc ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-gray-300" />}
-                  </button>
-                  <div className="bg-slate-800/50 p-4 rounded-lg">
-                    <pre className="text-sm text-gray-300 whitespace-pre-wrap">{worldDescriptionExample}</pre>
+                  <div className="border-l-4 border-blue-500/50 pl-6">
+                    <code className="bg-white/20 px-2 py-1 rounded">DefaultCalendar</code>, <code className="bg-white/20 px-2 py-1 rounded">bAutoApplyInitialTime</code>, and <code className="bg-white/20 px-2 py-1 rounded">InitialTime</code>
+                    <p className="mt-2">
+                      Configure the calendar asset and initial in-game time behavior. If saved world time exists, the plugin restores that persisted time first. If no persisted time is available and <code className="bg-white/20 px-2 py-1 rounded">bAutoApplyInitialTime</code> is enabled, the configured initial time is used.
+                    </p>
+                  </div>
+
+                  <div className="border-l-4 border-blue-500/50 pl-6">
+                    <code className="bg-white/20 px-2 py-1 rounded">VectorStoreProvider</code>
+                    <p className="mt-2">
+                      Selects the vector memory backend. The default local SQLite backend works out of the box and does not need a <code className="bg-white/20 px-2 py-1 rounded">vector_store</code> block in the JSON file. Use Qdrant only when the project needs an external vector database.
+                    </p>
+                  </div>
+
+                  <div className="border-l-4 border-blue-500/50 pl-6">
+                    <code className="bg-white/20 px-2 py-1 rounded">bResetPersistentStateOnStartup</code>
+                    <p className="mt-2">
+                      Development helper for clean-slate testing. When enabled, startup clears local plugin persistence, including saved world time, local vector memory, spatial memory, and queued local vector writes. It does not delete remote Qdrant collections.
+                    </p>
                   </div>
                 </div>
-
-                <h3 className="text-2xl font-semibold text-white mt-8 mb-4">Initial Game Start Time</h3>
-                <p>
-                  Set the in-game time when your game begins (e.g., Day 1, 8:00 AM). The plugin uses a global time system to ensure all NPCs maintain a unified sense of time throughout gameplay.
-                </p>
-                <p className="mt-4">
-                  This setting controls:
-                </p>
-                <ul className="list-disc list-inside pl-4 space-y-2">
-                  <li>When NPCs begin their daily planning cycles</li>
-                  <li>The initial timestamp for all NPC memories and events</li>
-                  <li>The reference point for time-based NPC behaviors</li>
-                </ul>
-                <p className="mt-4">
-                  You can modify the in-game time at runtime using <code className="bg-white/20 px-2 py-1 rounded">RNPCsUtilities::SetGameWorldTime(...)</code>. NPCs will automatically observe the new time and update their behavior accordingly.
-                </p>
               </div>
             </div>
 
             <div id="llm-configuration" className="scroll-mt-24">
-              <h2 className="text-3xl font-bold text-white mb-6">Language Model Configuration File</h2>
+              <h2 className="text-3xl font-bold text-white mb-6">LLM Configuration File</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  The <code className="bg-white/20 px-2 py-1 rounded">RealisticNPCsConfig.json</code> file specifies which language models to use for different operations.
+                  The JSON configuration file defines named services and model targets. A service is an endpoint plus optional API key. A target references a service by name and specifies the model to use for a particular category of request.
                 </p>
-              </div>
-            </div>
-
-            <div id="minimal-config" className="scroll-mt-24">
-              <h2 className="text-3xl font-bold text-white mb-6">Minimal LLM Configuration</h2>
-              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  The minimum required configuration includes two default targets. Most users should start with this:
+                  The <code className="bg-white/20 px-2 py-1 rounded">services</code> field may be written as an array or an object map. The array form is shown below because it is usually easiest to read.
                 </p>
-                <div className="relative">
-                  <button
-                    onClick={handleCopyMinimal}
-                    className="absolute top-4 right-4 p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors z-10"
-                    title="Copy minimal configuration"
-                  >
-                    {copiedMinimal ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-gray-300" />}
-                  </button>
-                  <pre className="bg-slate-800/50 p-4 rounded-lg overflow-x-auto">
-                    <code className="text-sm text-gray-300">{minimalConfig}</code>
-                  </pre>
-                </div>
-              </div>
-            </div>
 
-            <div id="configuration-keys" className="scroll-mt-24">
-              <h2 className="text-3xl font-bold text-white mb-6">Configuration Keys</h2>
-              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
-                <h3 className="text-2xl font-semibold text-white mt-8 mb-4">Services</h3>
+                <h3 className="text-2xl font-semibold text-white mt-8 mb-4">Configuration File Schema</h3>
                 <p>
-                  <code className="bg-white/20 px-2 py-1 rounded">services</code> (required) - An array specifying language model providers and their API endpoints. Each service includes:
+                  The top-level <code className="bg-white/20 px-2 py-1 rounded">services</code> entry is required. In array form, each service object must include:
                 </p>
                 <ul className="list-disc list-inside pl-4 space-y-2">
-                  <li><code className="bg-white/20 px-2 py-1 rounded">service</code> - A label for the provider (e.g., "openai", "claude"). Can be any name that helps you identify the provider.</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">endpoint</code> - The API endpoint URL where inference requests are sent (e.g., "https://api.openai.com/v1/chat/completions").</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">APIKey</code> - The API key for authentication. Use an empty string ("") if no key is needed.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">service</code> - The service name that target entries will reference, such as <code className="bg-white/20 px-2 py-1 rounded">openai</code> or <code className="bg-white/20 px-2 py-1 rounded">openai-embed</code>.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">endpoint</code> - The provider endpoint used for requests sent through that service.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">APIKey</code> - Optional authentication value for the service. It can be omitted or left empty when the endpoint does not require a key.</li>
+                </ul>
+                <p>
+                  In object-map form, the object key is the service name and the value contains the service fields. Service names must be unique.
+                </p>
+                <p>
+                  Each model target is an object with <code className="bg-white/20 px-2 py-1 rounded">service</code> and <code className="bg-white/20 px-2 py-1 rounded">model</code>. The target's <code className="bg-white/20 px-2 py-1 rounded">service</code> must match one of the configured service names, and <code className="bg-white/20 px-2 py-1 rounded">model</code> should be the exact model identifier expected by that provider.
+                </p>
+                <p className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-yellow-200">
+                  The plugin is currently tuned for low-latency, instant-response language models. Full reasoning models may work, but the behavior loop, conversations, and action cadence have not yet been tuned around longer reasoning latency, so NPC behavior may feel less smooth. For first-time setup and ordinary use, prefer responsive chat or completion models for the default and role-specific targets.
+                </p>
+
+                <h3 className="text-2xl font-semibold text-white mt-8 mb-4">Minimal Configuration</h3>
+                <p>
+                  The minimum configuration requires at least one chat service, one embedding service, heavy and light chat targets, and an embedding target. The embedding target is required even when using the default SQLite vector store, because semantic memory retrieval still needs embeddings. Do not add a <code className="bg-white/20 px-2 py-1 rounded">vector_store</code> block for the default SQLite setup.
+                </p>
+                <CopyableCode text={minimalConfig} title="Copy minimal configuration" />
+
+                <h3 className="text-2xl font-semibold text-white mt-8 mb-4">Required Targets</h3>
+                <p>
+                  These targets must be present and valid. If any required target is missing, lacks <code className="bg-white/20 px-2 py-1 rounded">service</code> or <code className="bg-white/20 px-2 py-1 rounded">model</code>, or references an unknown service, configuration loading fails.
+                </p>
+                <ul className="list-disc list-inside pl-4 space-y-2">
+                  <li><code className="bg-white/20 px-2 py-1 rounded">default_heavy_target</code> is the fallback for higher-reasoning requests.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">default_light_target</code> is the fallback for lighter supporting requests.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">embed_target</code> is used to generate embeddings for semantic memory retrieval.</li>
                 </ul>
 
-                <h3 className="text-2xl font-semibold text-white mt-12 mb-4">Required Inference Targets</h3>
+                <h3 className="text-2xl font-semibold text-white mt-8 mb-4">Optional Role-Specific Targets</h3>
                 <p>
-                  Each target specifies a <code className="bg-white/20 px-2 py-1 rounded">service</code> (matching one from the services array) and a <code className="bg-white/20 px-2 py-1 rounded">model</code> (exact model name from the provider).
+                  Most projects can omit these at first. Add them when you want finer control over cost, latency, or model quality for a specific part of NPC behavior. Missing optional targets fall back to the heavy or light default depending on the request type. If an optional target is present but invalid, the plugin logs a warning and uses its fallback target.
                 </p>
-                <div className="space-y-4 mt-6">
-                  <div>
-                    <p className="font-semibold text-white">
-                      <code className="bg-white/20 px-2 py-1 rounded">default_heavy_target</code> (required)
-                    </p>
-                    <p className="mt-2">
-                      For expensive reasoning tasks including:
-                    </p>
-                    <ul className="list-disc list-inside pl-4 space-y-1 mt-2">
-                      <li>Daily plan generation</li>
-                      <li>Plan item expansion</li>
-                      <li>Action sequence decomposition</li>
-                      <li>Conversation message generation</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-white">
-                      <code className="bg-white/20 px-2 py-1 rounded">default_light_target</code> (required)
-                    </p>
-                    <p className="mt-2">
-                      For cheaper tasks including:
-                    </p>
-                    <ul className="list-disc list-inside pl-4 space-y-1 mt-2">
-                      <li>Memory retrieval</li>
-                      <li>Conversation summaries for memory storage</li>
-                      <li>Various supporting operations</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <h3 className="text-2xl font-semibold text-white mt-12 mb-4">Optional Inference Targets</h3>
-                <p>
-                  You can override specific operations by defining these optional targets. If not specified, they default to either <code className="bg-white/20 px-2 py-1 rounded">default_heavy_target</code> or <code className="bg-white/20 px-2 py-1 rounded">default_light_target</code> depending on the operation's complexity.
-                </p>
-                <ul className="list-disc list-inside pl-4 space-y-2 mt-4">
-                  <li><code className="bg-white/20 px-2 py-1 rounded">generate_task_target</code> - Generating the next high-level task that an NPC will perform</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">task_to_actions_target</code> - Converting a high-level task into a sequence of executable in-game actions</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">decide_enter_convo_target</code> - Deciding whether to start a conversation with another character</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">decide_convo_partner_target</code> - Deciding which character, from a group of characters, to start a conversation with</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">generate_convo_message_target</code> - Generating an NPC's next message in a conversation</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">retrieve_memories_target</code> - Retrieving an NPC's most relevant memories for a particular inference operation</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">retrieve_relationships_target</code> - Retrieving an NPC's most relevant relationships for a particular inference operation</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">filter_memories_target</code> - Filtering out an NPC's unimportant memories and consolidating the more important memories that will make it to their long-term memory</li>
-                  <li><code className="bg-white/20 px-2 py-1 rounded">reflect_target</code> - When an NPC reflects on their experiences and memories to identify higher-level insights</li>
+                <ul className="list-disc list-inside pl-4 space-y-2">
+                  <li><code className="bg-white/20 px-2 py-1 rounded">agenda_generation_target</code> controls model selection for high-level NPC agenda generation.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">behavior_compile_target</code> controls model selection for compiling behavior into executable policy steps.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">conversation_reply_target</code> controls model selection for NPC conversation replies.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">memory_reflection_target</code> controls model selection for memory reflection.</li>
+                  <li><code className="bg-white/20 px-2 py-1 rounded">short_horizon_reasoning_target</code> controls model selection for short-horizon behavior reasoning.</li>
                 </ul>
+                <CopyableCode text={optionalTargetsConfig} title="Copy optional targets example" />
               </div>
             </div>
 
-            <div id="full-example" className="scroll-mt-24">
-              <h2 className="text-3xl font-bold text-white mb-6">Full Configuration Example</h2>
+            <div id="vector-store" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">Vector Store</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  Here's an example with some optional targets specified:
+                  The plugin uses local SQLite vector storage by default. This requires no <code className="bg-white/20 px-2 py-1 rounded">vector_store</code> block in the JSON file. Local vector data is saved under the project's Saved directory and uses the configured <code className="bg-white/20 px-2 py-1 rounded">embed_target</code> for semantic retrieval.
                 </p>
-                <div className="relative">
-                  <button
-                    onClick={handleCopyFull}
-                    className="absolute top-4 right-4 p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors z-10"
-                    title="Copy full configuration"
-                  >
-                    {copiedFull ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-gray-300" />}
-                  </button>
-                  <pre className="bg-slate-800/50 p-4 rounded-lg overflow-x-auto">
-                    <code className="text-sm text-gray-300">{fullConfig}</code>
-                  </pre>
-                </div>
+                <p>
+                  Only add <code className="bg-white/20 px-2 py-1 rounded">vector_store</code> for Qdrant, or for the advanced case where you intentionally want to override the local SQLite collection prefix. For a SQLite collection-prefix override, only set <code className="bg-white/20 px-2 py-1 rounded">collection</code>; do not include <code className="bg-white/20 px-2 py-1 rounded">service</code>, <code className="bg-white/20 px-2 py-1 rounded">endpoint</code>, or <code className="bg-white/20 px-2 py-1 rounded">APIKey</code>.
+                </p>
+                <p>
+                  To use Qdrant, set <code className="bg-white/20 px-2 py-1 rounded">VectorStoreProvider</code> to <code className="bg-white/20 px-2 py-1 rounded">Qdrant (REST)</code> in Project Settings, then add a <code className="bg-white/20 px-2 py-1 rounded">vector_store</code> block with a collection and either a service reference or an inline endpoint. A service reference must match one of the configured service names.
+                </p>
+                <CopyableCode text={qdrantConfig} title="Copy Qdrant configuration" />
+                <p>
+                  If remote vector store fields are present while the provider is set to SQLite, the plugin ignores them and logs a warning. The startup reset setting only clears local persistence; it does not delete remote Qdrant collections.
+                </p>
+              </div>
+            </div>
+
+            <div id="world-description" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">World Description</h2>
+              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
+                <p>
+                  Provide the world description either in <code className="bg-white/20 px-2 py-1 rounded">InlineWorldDescription</code> or through <code className="bg-white/20 px-2 py-1 rounded">WorldDescriptionFile</code>. Inline text is convenient for shorter descriptions and quick iteration. A file is usually better for longer descriptions that you want to maintain outside Project Settings.
+                </p>
+                <p className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-yellow-200">
+                  If <code className="bg-white/20 px-2 py-1 rounded">InlineWorldDescription</code> is non-empty, it takes precedence over <code className="bg-white/20 px-2 py-1 rounded">WorldDescriptionFile</code>.
+                </p>
+                <p>
+                  The world description should describe global context that applies broadly across NPCs: setting, culture, technology level, social rules, major institutions, and constraints NPCs should respect. It should not duplicate individual NPC biographies, starting relationships, or place-specific details that belong in NPC profiles or spatial authoring.
+                </p>
+                <p>
+                  Keep it concise enough to be used frequently in prompts. Include details that materially affect NPC reasoning, such as setting and time period, cultural norms, economic or political constraints, technology level, and important world rules.
+                </p>
+                <CopyableCode text={worldDescriptionExample} title="Copy world description example" wrap />
+              </div>
+            </div>
+
+            <div id="time-and-persistence" className="scroll-mt-24">
+              <h2 className="text-3xl font-bold text-white mb-6">Time and Persistence</h2>
+              <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
+                <p>
+                  The game time subsystem uses the configured calendar and persists the current world time locally. This lets play tests continue from the previous in-game time instead of always restarting at the configured initial time.
+                </p>
+                <p>
+                  When no persisted world time exists and <code className="bg-white/20 px-2 py-1 rounded">bAutoApplyInitialTime</code> is enabled, the configured <code className="bg-white/20 px-2 py-1 rounded">InitialTime</code> is the starting reference point for NPC memory timestamps, event timing, and time-aware behavior.
+                </p>
+                <p>
+                  Use <code className="bg-white/20 px-2 py-1 rounded">RNPCsUtilities::SetGameWorldTime(...)</code> when gameplay needs to set the world time explicitly. When you need a fresh run during development, enable <code className="bg-white/20 px-2 py-1 rounded">bResetPersistentStateOnStartup</code>, start the game once, then disable it again when you want continuity to resume.
+                </p>
               </div>
             </div>
           </div>

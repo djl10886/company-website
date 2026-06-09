@@ -3,21 +3,20 @@ import { NavLink, useLocation } from 'react-router-dom';
 
 export default function UnrealDocsNavigation() {
   const location = useLocation();
-  const isClassesPage = location.pathname === '/docs/unrealengine/classes';
+  const isAuthoringGuidePage = location.pathname === '/docs/unrealengine/authoring-guide';
   const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!isClassesPage) return;
+      if (!isAuthoringGuidePage) return;
 
       const sections = [
-        'rnpcsutilities',
-        'worldactor',
-        'environmentcomponent',
-        'basecalendar',
-        'basecharacter',
-        'basenpc',
-        'basenpccontroller'
+        'core-npc-setup',
+        'actions-and-movement',
+        'spatial-authoring',
+        'perception',
+        'memory-and-persistence',
+        'api-reference'
       ];
       
       let currentSection = '';
@@ -49,7 +48,7 @@ export default function UnrealDocsNavigation() {
     window.addEventListener('scroll', handleScroll);
     setTimeout(handleScroll, 100);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isClassesPage]);
+  }, [isAuthoringGuidePage]);
 
   return (
     <nav className="w-64 bg-slate-800/50 backdrop-blur-sm h-[calc(100vh-4rem)] fixed top-16 left-0 overflow-y-auto">
@@ -78,18 +77,6 @@ export default function UnrealDocsNavigation() {
               }
             >
               Changelog
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/docs/unrealengine/terminology"
-              className={({ isActive }) =>
-                `block text-sm ${
-                  isActive ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
-                } transition-colors`
-              }
-            >
-              Terminology
             </NavLink>
           </li>
           <li>
@@ -131,85 +118,75 @@ export default function UnrealDocsNavigation() {
           <li>
             <div>
               <NavLink
-                to="/docs/unrealengine/classes"
+                to="/docs/unrealengine/authoring-guide"
                 className={({ isActive }) =>
                   `block text-sm ${
                     isActive ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
                   } transition-colors`
                 }
               >
-                Classes
+                Authoring Guide
               </NavLink>
-              {isClassesPage && (
+              {isAuthoringGuidePage && (
                 <ul className="mt-2 ml-4 space-y-2">
                   <li>
                     <a
-                      href="#rnpcsutilities"
+                      href="#core-npc-setup"
                       className={`block text-sm ${
-                        activeSection === 'rnpcsutilities' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+                        activeSection === 'core-npc-setup' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
                       } transition-colors`}
                     >
-                      RNPCsUtilities
+                      Core NPC Setup
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#worldactor"
+                      href="#actions-and-movement"
                       className={`block text-sm ${
-                        activeSection === 'worldactor' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+                        activeSection === 'actions-and-movement' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
                       } transition-colors`}
                     >
-                      WorldActor
+                      Actions and Movement
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#environmentcomponent"
+                      href="#spatial-authoring"
                       className={`block text-sm ${
-                        activeSection === 'environmentcomponent' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+                        activeSection === 'spatial-authoring' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
                       } transition-colors`}
                     >
-                      EnvironmentComponent
+                      Spatial Authoring
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#basecalendar"
+                      href="#perception"
                       className={`block text-sm ${
-                        activeSection === 'basecalendar' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+                        activeSection === 'perception' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
                       } transition-colors`}
                     >
-                      BaseCalendar
+                      Perception
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#basecharacter"
+                      href="#memory-and-persistence"
                       className={`block text-sm ${
-                        activeSection === 'basecharacter' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+                        activeSection === 'memory-and-persistence' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
                       } transition-colors`}
                     >
-                      BaseCharacter
+                      Memory and Persistence
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#basenpc"
+                      href="#api-reference"
                       className={`block text-sm ${
-                        activeSection === 'basenpc' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
+                        activeSection === 'api-reference' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
                       } transition-colors`}
                     >
-                      BaseNPC
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#basenpccontroller"
-                      className={`block text-sm ${
-                        activeSection === 'basenpccontroller' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
-                      } transition-colors`}
-                    >
-                      BaseNPCController
+                      API Reference
                     </a>
                   </li>
                 </ul>

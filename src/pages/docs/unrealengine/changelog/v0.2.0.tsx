@@ -125,7 +125,7 @@ export const v0_2_0: Release = {
       <div>
         <h2 className="text-2xl font-bold text-white mb-6">5. Configuration Flow (Project Settings)</h2>
         <ul className="list-disc list-inside space-y-3 text-white">
-          <li>Configuration that was scattered across various function calls and required developer coordination has been centralized in Project Settings → RealisticNPCs:
+          <li>Configuration that was scattered across various function calls and required developer coordination has been centralized in Project Settings -&gt; RealisticNPCs:
             <ul className="list-disc space-y-2 text-white ml-6 mt-2">
               <li>World description
                 <ul className="list-disc space-y-2 text-white ml-6 mt-2">
