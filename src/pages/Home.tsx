@@ -1,194 +1,729 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  ArrowRight, Zap, Brain, Eye, Target, Users, Puzzle,
+  BookOpen, FileText, CheckCircle, XCircle, Play,
+  Github, Twitter, Linkedin, Mail,
+} from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { Send, CheckCircle, XCircle } from 'lucide-react';
 import logoWhite from '../assets/clankr-logo-white.png';
+import Contact from './Contact';
 
-export default function Home() {
+/* ─── Animated NPC Pipeline ──────────────────────────────────── */
+const PIPELINE_STEPS = [
+  { icon: Eye,    label: 'Perceive',  desc: 'Senses the world',        color: '#22d3ee' },
+  { icon: Brain,  label: 'Remember',  desc: 'Recalls past experience',  color: '#818cf8' },
+  { icon: Target, label: 'Plan',      desc: 'Forms goals & steps',      color: '#f472b6' },
+  { icon: Zap,    label: 'Act',       desc: 'Executes autonomously',    color: '#4ade80' },
+];
+
+function Pipeline() {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setActive(p => (p + 1) % PIPELINE_STEPS.length), 1400);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <div className="relative">
+      {/* Connecting line */}
+      <div className="absolute top-10 left-[12.5%] right-[12.5%] h-px hidden md:block"
+        style={{ background: 'rgba(255,255,255,0.06)' }} />
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {PIPELINE_STEPS.map((step, i) => {
+          const Icon = step.icon;
+          const isActive = active === i;
+          return (
+            <div
+              key={step.label}
+              className="flex flex-col items-center gap-3 p-4 rounded-xl transition-all duration-500 cursor-default"
+              style={{
+                background: isActive ? `${step.color}12` : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${isActive ? step.color + '40' : 'rgba(255,255,255,0.06)'}`,
+                boxShadow: isActive ? `0 0 30px ${step.color}18` : 'none',
+                transform: isActive ? 'translateY(-4px)' : 'none',
+              }}
+            >
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500"
+                style={{
+                  background: isActive ? `${step.color}20` : 'rgba(255,255,255,0.04)',
+                  border: `1px solid ${isActive ? step.color + '50' : 'rgba(255,255,255,0.08)'}`,
+                }}
+              >
+                <Icon size={20} style={{ color: isActive ? step.color : '#4b5563' }} />
+              </div>
+              <div className="text-center">
+                <div className="text-sm font-semibold text-white mb-0.5">{step.label}</div>
+                <div className="text-xs text-gray-500">{step.desc}</div>
+              </div>
+              {i < PIPELINE_STEPS.length - 1 && (
+                <div className="absolute hidden md:block" style={{
+                  right: '-12px', top: '40px',
+                  width: '24px', height: '1px',
+                  background: isActive ? PIPELINE_STEPS[i].color : 'transparent',
+                  transition: 'background 0.5s',
+                }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Pixel Sprite ──────────────────────────────────────────── */
+const SPRITE_COLORS: Record<string, string | null> = {
+  '.': null,
+  'k': '#111111', 'B': '#111111',
+  'E': '#2d1b00',
+  's': '#f5c5a3',
+  'C': '#22d3ee', 'c': '#164e63', 'l': '#a5f3fc',
+  'A': '#4ade80', 'a': '#16a34a',
+  'P': '#a78bfa', 'W': '#f9fafb', 'w': '#e5e7eb', 'b': '#d1d5db',
+};
+
+function PixelSprite({ pixels, scale = 3 }: { pixels: string[]; scale?: number }) {
+  const h = pixels.length;
+  const w = pixels[0]?.length ?? 0;
+  return (
+    <svg width={w * scale} height={h * scale} style={{ imageRendering: 'pixelated', display: 'block' }}>
+      {pixels.flatMap((row, y) =>
+        [...row].map((ch, x) => {
+          const fill = SPRITE_COLORS[ch];
+          return fill
+            ? <rect key={`${x}-${y}`} x={x * scale} y={y * scale} width={scale} height={scale} fill={fill} />
+            : null;
+        })
+      )}
+    </svg>
+  );
+}
+
+const MARCUS_SPRITE = [
+  '....kkkk........',
+  '...kCCCCk.......',
+  '..kCCllCCk......',
+  '..kCCllCCk......',
+  '...ksssskk......',
+  '...ksEsEkk......',
+  '...ksssskk......',
+  '...ksBBsk.......',
+  '....ksskk.......',
+  '...kCCCCk.......',
+  '..kCCCCCCk......',
+  '..kCcCCcCk......',
+  '..kCCCCCCk......',
+  '..kccBBcck......',
+  '...kCCkCCk......',
+  '...kCCkCCk......',
+];
+
+const ELENA_SPRITE = [
+  '...kAAAAk.......',
+  '..kAAAAAAk......',
+  '..kAAssssAAk....',
+  '..kAAEssEAAk....',
+  '..kAAssssAAk....',
+  '..kAAsBBsAAk....',
+  '..kAAAAAAk......',
+  '...kAAAAk.......',
+  '.kAAAAAAAAk.....',
+  '.kAAAAAaAAk.....',
+  '.kAAAAaAAAk.....',
+  '.kAAAAAAaAk.....',
+  '.kAAAAAAAk......',
+  '..kAAAAk........',
+  '..kAAkAAk.......',
+  '..kAAkAAk.......',
+];
+
+const OLDTOM_SPRITE = [
+  '....ksskk.......',
+  '...ksssskk......',
+  '..ksssssskk.....',
+  '..ksEssEskk.....',
+  '..ksssssskk.....',
+  '..kssBBsskk.....',
+  '..kbbbbbkk......',
+  '..kbbbbbbk......',
+  '..kPbbbbPk......',
+  '.kPPWWWWPPk.....',
+  '.kPPWwwWPPk.....',
+  '.kPPWWWWPPk.....',
+  '.kPPWWWWPPk.....',
+  '..kPWWWPk.......',
+  '..kPPkPPk.......',
+  '..kPPkPPk.......',
+];
+
+/* ─── Stats strip ────────────────────────────────────────────── */
+const STATS = [
+  { value: '3',   unit: 'min',  label: 'to author your first NPC' },
+  { value: '100', unit: '%',    label: 'autonomous decision making' },
+  { value: '∞',   unit: '',     label: 'unique playthroughs' },
+  { value: 'Any', unit: '',     label: 'LLM provider supported' },
+];
+
+function CountUp({ target }: { target: string }) {
+  const [display, setDisplay] = useState('0');
+  const ref = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const num = parseInt(target);
+    if (isNaN(num)) { setDisplay(target); return; }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        let start = 0;
+        const step = Math.ceil(num / 30);
+        const t = setInterval(() => {
+          start = Math.min(start + step, num);
+          setDisplay(String(start));
+          if (start >= num) clearInterval(t);
+        }, 40);
+      }
+    });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target]);
+
+  return <span ref={ref}>{display}</span>;
+}
+
+/* ─── Code snippet card ──────────────────────────────────────── */
+function CodeCard() {
+  return (
+    <div
+      className="rounded-xl overflow-hidden text-left"
+      style={{ background: '#0a0f1e', border: '1px solid rgba(255,255,255,0.08)' }}
+    >
+      {/* Terminal bar */}
+      <div className="flex items-center gap-1.5 px-4 py-3" style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <span className="w-3 h-3 rounded-full bg-red-500/60" />
+        <span className="w-3 h-3 rounded-full bg-yellow-500/60" />
+        <span className="w-3 h-3 rounded-full bg-green-500/60" />
+        <span className="ml-2 text-xs text-gray-600">npc_setup.cpp</span>
+      </div>
+      <pre className="px-5 py-4 text-xs leading-6 overflow-x-auto">
+        <code>
+<span style={{color:'#6b7280'}}>// Define your NPC in plain language</span>{'\n'}
+<span style={{color:'#818cf8'}}>UClankrNPC</span><span style={{color:'#e2e8f0'}}> *Guard = </span><span style={{color:'#818cf8'}}>NewObject</span><span style={{color:'#e2e8f0'}}>&lt;</span><span style={{color:'#818cf8'}}>UClankrNPC</span><span style={{color:'#e2e8f0'}}>&gt;();</span>{'\n'}
+{'\n'}
+<span style={{color:'#e2e8f0'}}>Guard-&gt;</span><span style={{color:'#22d3ee'}}>Personality</span><span style={{color:'#e2e8f0'}}> = </span><span style={{color:'#4ade80'}}>"A gruff but fair town guard</span>{'\n'}
+<span style={{color:'#4ade80'}}>  who remembers every face."</span><span style={{color:'#e2e8f0'}}>;</span>{'\n'}
+{'\n'}
+<span style={{color:'#e2e8f0'}}>Guard-&gt;</span><span style={{color:'#22d3ee'}}>Goals</span><span style={{color:'#e2e8f0'}}>{' = {'}</span>{'\n'}
+<span style={{color:'#4ade80'}}>  "Keep the peace"</span><span style={{color:'#e2e8f0'}}>,</span>{'\n'}
+<span style={{color:'#4ade80'}}>  "Protect merchants from thieves"</span>{'\n'}
+<span style={{color:'#e2e8f0'}}>{'}'}</span><span style={{color:'#e2e8f0'}}>;</span>{'\n'}
+{'\n'}
+<span style={{color:'#6b7280'}}>// Register actions with natural language</span>{'\n'}
+<span style={{color:'#e2e8f0'}}>Guard-&gt;</span><span style={{color:'#22d3ee'}}>RegisterAction</span><span style={{color:'#e2e8f0'}}>(PatrolRoute,</span>{'\n'}
+<span style={{color:'#4ade80'}}>  "Walk the market perimeter"</span><span style={{color:'#e2e8f0'}}>);</span>{'\n'}
+        </code>
+      </pre>
+    </div>
+  );
+}
+
+/* ─── Doc card ───────────────────────────────────────────────── */
+function DocCard({ icon, title, description, href, badge }: {
+  icon: React.ReactNode; title: string; description: string; href: string; badge?: string;
+}) {
+  return (
+    <Link to={href} className="glass-card rounded-xl p-5 flex items-start gap-4 transition-all duration-200 group">
+      <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+        style={{ background: 'rgba(6,182,212,0.12)', border: '1px solid rgba(6,182,212,0.2)' }}>
+        {icon}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-white font-semibold text-sm group-hover:text-cyan-300 transition-colors">{title}</span>
+          {badge && (
+            <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+              style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.3)' }}>
+              {badge}
+            </span>
+          )}
+        </div>
+        <p className="text-gray-500 text-xs leading-relaxed">{description}</p>
+      </div>
+      <ArrowRight size={14} className="text-gray-600 group-hover:text-cyan-400 transition-colors shrink-0 mt-0.5" />
+    </Link>
+  );
+}
+
+/* ─── Waitlist form ──────────────────────────────────────────── */
+function WaitlistForm() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!email.trim()) {
-      setError('Please enter your email address');
-      setStatus('error');
-      return;
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Please enter a valid email'); setStatus('error'); return;
     }
-    
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Please enter a valid email address');
-      setStatus('error');
-      return;
-    }
-
-    setStatus('submitting');
-    setError('');
-
+    setStatus('submitting'); setError('');
     try {
-      const { error: supabaseError } = await supabase
-        .from('waitlist')
-        .insert([{ email: email.toLowerCase() }]);
-
-      if (supabaseError) {
-        if (supabaseError.code === '23505') {
-          setError('This email is already on the waitlist');
-          setStatus('error');
-          return;
-        } else {
-          setError('An error occurred. Please try again.');
-          setStatus('error');
-          return;
-        }
-      }
-
-      setStatus('success');
-      setEmail('');
-    } catch (err) {
-      console.error('Error:', err);
-      setStatus('error');
-      setError('An error occurred. Please try again.');
-    }
-
-    setTimeout(() => {
-      if (status === 'success' || status === 'error') {
-        setStatus('idle');
-      }
-    }, 5000);
+      const { error: err } = await supabase.from('waitlist').insert([{ email: email.toLowerCase() }]);
+      if (err) { setError(err.code === '23505' ? 'Already on the waitlist!' : 'Something went wrong.'); setStatus('error'); return; }
+      setStatus('success'); setEmail('');
+    } catch { setStatus('error'); setError('Something went wrong.'); }
+    setTimeout(() => setStatus('idle'), 5000);
   };
 
   return (
-    <div className="relative">
-      {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-      <div className="fixed inset-0 opacity-30" style={{
-        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
-        backgroundSize: '48px 48px'
-      }}></div>
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+      <input type="email" value={email}
+        onChange={e => { setEmail(e.target.value); setError(''); setStatus('idle'); }}
+        placeholder="Enter your email"
+        className="flex-1 px-4 py-3 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none"
+        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+      />
+      <button type="submit" disabled={status === 'submitting'}
+        className="px-6 py-3 rounded-lg font-semibold text-sm transition-all whitespace-nowrap"
+        style={{ background: status === 'submitting' ? 'rgba(6,182,212,0.3)' : '#06b6d4', color: '#04080f' }}>
+        {status === 'submitting'
+          ? <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin mx-auto" />
+          : 'Join Waitlist'}
+      </button>
+      {status === 'success' && (
+        <p className="text-green-400 text-sm flex items-center gap-1.5 justify-center col-span-2">
+          <CheckCircle size={15} /> You're on the list!
+        </p>
+      )}
+      {status === 'error' && (
+        <p className="text-red-400 text-sm flex items-center gap-1.5 justify-center col-span-2">
+          <XCircle size={15} /> {error}
+        </p>
+      )}
+    </form>
+  );
+}
 
-      <div className="relative">
-        {/* Hero Section */}
-        <div className="px-6 pt-32 pb-16 md:pt-40 md:pb-20">
-          <div className="max-w-6xl mx-auto w-full text-center space-y-12">
-            <div className="space-y-6">
-              <img
-                src={logoWhite}
-                alt="Clankr Intelligence Logo"
-                className="w-48 h-auto md:w-64 opacity-95 mx-auto drop-shadow-[0_0_28px_rgba(255,255,255,0.18)]"
-              />
-              <h1 className="text-6xl md:text-8xl font-bold text-white tracking-tight">
-                Clankr Intelligence
-              </h1>
-            </div>
+/* ─── NPC Card Panel ─────────────────────────────────────────── */
+const NPCS = [
+  {
+    name: 'Marcus',
+    role: 'Town Guard',
+    color: '#22d3ee',
+    sprite: MARCUS_SPRITE,
+    thought: '"That merchant is selling silk 40% below market rate. Could be stolen goods — I should investigate."',
+    goal: 'Maintain market security',
+    memories: ['Assisted player in arrest (2 days ago)', 'Unusual price drop at stall #7 (1h ago)'],
+    action: 'InvestigateTarget(stall_7)',
+  },
+  {
+    name: 'Elena',
+    role: 'Silk Merchant',
+    color: '#4ade80',
+    sprite: ELENA_SPRITE,
+    thought: '"Festival in 3 days. If I undercut Aldric now, I can capture his regulars before he restocks."',
+    goal: 'Maximize festival profits',
+    memories: ['Aldric restocked yesterday', 'Festival crowd +40% expected (3 days)'],
+    action: 'AdjustPrices(silk, -15%)',
+  },
+  {
+    name: 'Old Tom',
+    role: 'Tavern Keeper',
+    color: '#a78bfa',
+    sprite: OLDTOM_SPRITE,
+    thought: '"The guard\'s watching that merchant closely. Something\'s brewing. Regulars will want to hear about this."',
+    goal: 'Gather useful information',
+    memories: ['Overheard bandit rumor this morning', 'Guard noticed suspicious merchant (now)'],
+    action: 'ObserveNearby(market_square)',
+  },
+];
 
-            <div className="max-w-4xl mx-auto text-xl md:text-2xl text-gray-400 leading-relaxed">
-              <p>
-                Clankr Intelligence is a startup working to bring the latest AI tech to games. Our product helps game developers easily leverage language models to create non-player-characters (NPCs) with dynamic behaviors.
-              </p>
+function NPCPanel() {
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIdx(p => (p + 1) % NPCS.length);
+        setVisible(true);
+      }, 350);
+    }, 4000);
+    return () => clearInterval(t);
+  }, []);
+
+  const npc = NPCS[idx];
+  const prev = NPCS[(idx + NPCS.length - 1) % NPCS.length];
+  const prev2 = NPCS[(idx + NPCS.length - 2) % NPCS.length];
+
+  const cardBase: React.CSSProperties = {
+    background: 'rgba(8, 13, 26, 0.9)',
+    backdropFilter: 'blur(12px)',
+    borderRadius: '14px',
+    fontFamily: 'inherit',
+  };
+
+  return (
+    <div className="relative w-[340px] mx-auto" style={{ height: '340px' }}>
+      {/* Ghost card 2 (furthest back) */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ ...cardBase, border: `1px solid ${prev2.color}18`, transform: 'rotate(4deg) translateY(12px) scale(0.93)', opacity: 0.35 }} />
+      {/* Ghost card 1 */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ ...cardBase, border: `1px solid ${prev.color}25`, transform: 'rotate(2deg) translateY(6px) scale(0.96)', opacity: 0.55 }} />
+
+      {/* Main card */}
+      <div className="absolute inset-0 flex flex-col transition-opacity duration-300"
+        style={{ ...cardBase, border: `1px solid ${npc.color}35`, opacity: visible ? 1 : 0, boxShadow: `0 0 40px ${npc.color}10, 0 20px 60px rgba(0,0,0,0.5)` }}>
+
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid ${npc.color}18` }}>
+          <div className="flex items-center gap-2.5">
+            <PixelSprite pixels={npc.sprite} scale={3} />
+            <div>
+              <div className="text-white font-semibold text-sm leading-none">{npc.name}</div>
+              <div className="text-xs mt-0.5" style={{ color: npc.color + 'aa' }}>{npc.role}</div>
             </div>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs font-medium" style={{ color: '#4ade80' }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            ACTIVE
           </div>
         </div>
 
-        {/* Features Section */}
-        <div className="px-6 pb-24">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-12">
-              <div className="space-y-4">
-                <div className="text-5xl font-bold text-white/10">01</div>
-                <h3 className="text-xl font-semibold text-white">Autonomous Decision Making</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  NPCs that autonomously make decisions and execute actions based on those decisions.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="text-5xl font-bold text-white/10">02</div>
-                <h3 className="text-xl font-semibold text-white">Environmental Awareness</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  NPCs that actively interact with the environment and respond to changes and events in real-time.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="text-5xl font-bold text-white/10">03</div>
-                <h3 className="text-xl font-semibold text-white">Dynamic Memory</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  NPCs that maintain a dynamic memory which influences personality and affects future behavior.
-                </p>
-              </div>
+        {/* Body */}
+        <div className="flex-1 flex flex-col gap-3 px-4 py-3 overflow-hidden">
+          {/* Thought */}
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: npc.color + '99' }}>
+              💭 Thinking
             </div>
+            <p className="text-gray-300 text-xs leading-relaxed italic">{npc.thought}</p>
           </div>
-        </div>
 
-        {/* CTA Section */}
-        <div className="py-32 px-6">
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-sm border border-white/10 rounded-2xl p-12 md:p-16">
-              <div className="text-center space-y-6 mb-10">
-                <h2 className="text-4xl md:text-5xl font-bold text-white">
-                  Join the Waitlist
-                </h2>
-                <p className="text-lg md:text-xl text-gray-400">
-                  Our initial prototype will be released soon as an Unreal Engine plugin. Get notified when our prototype becomes available.
-                </p>
-              </div>
+          {/* Goal */}
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: npc.color + '99' }}>
+              🎯 Current Goal
+            </div>
+            <div className="text-white text-xs font-medium">{npc.goal}</div>
+          </div>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="flex gap-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      setError('');
-                      setStatus('idle');
-                    }}
-                    placeholder="Enter your email"
-                    className="flex-1 px-6 py-4 bg-white/5 border border-white/10 rounded-lg text-white text-lg placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    disabled={status === 'submitting'}
-                    className={`px-8 py-4 rounded-lg font-semibold text-lg transition-all ${
-                      status === 'submitting'
-                        ? 'bg-white/20 text-white/50 cursor-not-allowed'
-                        : 'bg-white text-black hover:bg-white/90'
-                    }`}
-                  >
-                    {status === 'submitting' ? (
-                      <div className="animate-spin rounded-full h-6 w-6 border-2 border-white/30 border-t-white/70"></div>
-                    ) : (
-                      'Join'
-                    )}
-                  </button>
+          {/* Memory */}
+          <div>
+            <div className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: npc.color + '99' }}>
+              🧠 Memory
+            </div>
+            <div className="space-y-1">
+              {npc.memories.map(m => (
+                <div key={m} className="flex items-start gap-1.5 text-xs text-gray-400">
+                  <span className="mt-1.5 w-1 h-1 rounded-full shrink-0" style={{ background: npc.color }} />
+                  {m}
                 </div>
-
-                {status === 'success' && (
-                  <div className="flex items-center justify-center space-x-2 text-green-400 pt-2">
-                    <CheckCircle size={20} />
-                    <span>You've been added to the waitlist!</span>
-                  </div>
-                )}
-
-                {status === 'error' && (
-                  <div className="text-center pt-2 space-y-1">
-                    <div className="flex items-center justify-center space-x-2 text-red-400">
-                      <XCircle size={20} />
-                      <span>{error}</span>
-                    </div>
-                    {error !== 'This email is already on the waitlist' && (
-                      <p className="text-sm text-gray-500">
-                        Please try again or contact support if the issue persists.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </form>
+              ))}
             </div>
+          </div>
+        </div>
+
+        {/* Footer — action */}
+        <div className="px-4 py-2.5 rounded-b-[14px]" style={{ background: `${npc.color}08`, borderTop: `1px solid ${npc.color}15` }}>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold" style={{ color: npc.color + '80' }}>⚡ Action</span>
+            <code className="text-xs font-mono" style={{ color: npc.color }}>{npc.action}</code>
           </div>
         </div>
       </div>
+
+      {/* NPC counter dots */}
+      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5">
+        {NPCS.map((_, i) => (
+          <button key={i} onClick={() => { setVisible(false); setTimeout(() => { setIdx(i); setVisible(true); }, 200); }}
+            className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+            style={{ background: i === idx ? NPCS[i].color : 'rgba(255,255,255,0.15)', transform: i === idx ? 'scale(1.3)' : 'scale(1)' }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main ───────────────────────────────────────────────────── */
+export default function Home() {
+  return (
+    <div style={{ background: '#070c18' }}>
+      {/* Dot grid */}
+      <div className="fixed inset-0 pointer-events-none" style={{
+        backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)',
+        backgroundSize: '40px 40px',
+      }} />
+
+      {/* ══ HERO ══════════════════════════════════════════════════ */}
+      <section className="relative overflow-hidden pt-24 pb-20">
+        <div className="orb absolute w-[500px] h-[500px] -top-20 right-0 opacity-20 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.6) 0%, transparent 70%)' }} />
+        <div className="orb absolute w-[350px] h-[350px] bottom-10 left-0 opacity-12 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.5) 0%, transparent 70%)' }} />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left */}
+            <div className="space-y-7">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium"
+                style={{ background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.25)', color: '#4ade80' }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                AI NPCs for Unreal Engine — prototype available now
+              </div>
+
+              <div>
+                <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight tracking-tight">
+                  Humanlike behavior for the next generation
+                </h1>
+                <h1 className="text-5xl md:text-6xl font-bold leading-tight tracking-tight mt-1"
+                  style={{ color: '#4ade80', textShadow: '0 0 40px rgba(74,222,128,0.3)' }}>
+                  of game NPCs
+                </h1>
+              </div>
+
+              <p className="text-lg text-gray-400 max-w-lg">
+                Give your NPCs memory, perception, and goals — so they think, adapt, and surprise players every time.
+              </p>
+
+              <div className="flex flex-wrap gap-3">
+                <Link to="/docs/unrealengine"
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm"
+                  style={{ background: '#06b6d4', color: '#04080f' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = '#22d3ee')}
+                  onMouseLeave={e => (e.currentTarget.style.background = '#06b6d4')}>
+                  <BookOpen size={15} /> Explore Docs
+                </Link>
+                <a href="#demo" onClick={e => { e.preventDefault(); document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' }); }}
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: 'white' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}>
+                  Watch Demo <ArrowRight size={15} />
+                </a>
+              </div>
+            </div>
+
+            {/* Right */}
+            <div className="flex items-center justify-center lg:justify-end pb-8">
+              <NPCPanel />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ DEMO VIDEO ════════════════════════════════════════════ */}
+      <section id="demo" className="relative py-20 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="orb absolute w-[500px] h-[300px] top-0 left-1/4 opacity-10 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(139,92,246,0.5) 0%, transparent 70%)' }} />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">See it live</span>
+            <h2 className="text-3xl font-bold text-white mt-2">Watch NPCs think for themselves</h2>
+          </div>
+          <div className="rounded-2xl overflow-hidden"
+            style={{ border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 0 60px rgba(6,182,212,0.07)' }}>
+            <div className="relative pb-[56.25%] h-0">
+              <iframe src="https://www.youtube.com/embed/ANQRXpAMjt4" title="Clankr Demo"
+                className="absolute inset-0 w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ MISSION ═══════════════════════════════════════════════ */}
+      <section className="relative py-20 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="text-xs text-purple-400 font-semibold tracking-widest uppercase">What drives us</span>
+              <h2 className="text-3xl font-bold text-white mt-2 mb-5">We dreamed of NPCs with real agency</h2>
+              <p className="text-gray-400 leading-relaxed">
+                As gamers, we've always wanted a merchant who reacts to market shifts, a guard who remembers your history together, a world that feels genuinely alive. That vision — NPCs with goals, memory, and real autonomy — is what we're building.
+              </p>
+              <div className="mt-6 flex flex-col gap-3">
+                {['Merchants who adapt to market changes', 'Guards who remember past encounters', 'Villagers with their own agendas'].map(t => (
+                  <div key={t} className="flex items-center gap-2.5 text-sm text-gray-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+                    {t}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <CodeCard />
+          </div>
+        </div>
+      </section>
+
+      {/* ══ HOW IT WORKS ══════════════════════════════════════════ */}
+      <section className="relative py-20 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="orb absolute w-[400px] h-[400px] top-0 right-1/4 opacity-10 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.5) 0%, transparent 70%)' }} />
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">How it works</span>
+            <h2 className="text-3xl font-bold text-white mt-2">Every NPC runs its own AI loop</h2>
+            <p className="text-gray-500 mt-3 max-w-lg mx-auto text-sm">
+              Continuously cycling through perception, memory, planning, and action — in real time, inside Unreal Engine.
+            </p>
+          </div>
+          <Pipeline />
+        </div>
+      </section>
+
+      {/* ══ STATS ═════════════════════════════════════════════════ */}
+      <section className="relative py-16 border-t border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {STATS.map(s => (
+              <div key={s.label} className="text-center">
+                <div className="text-4xl font-bold text-white mb-1">
+                  <CountUp target={s.value} /><span className="text-cyan-400">{s.unit}</span>
+                </div>
+                <div className="text-xs text-gray-500">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ FEATURES ══════════════════════════════════════════════ */}
+      <section className="relative py-20 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">Capabilities</span>
+            <h2 className="text-3xl font-bold text-white mt-2">Built for believable characters</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              { Icon: Brain,  color: '#22d3ee', title: 'Long-term Memory',     desc: 'NPCs remember past events and let them shape personality over time.' },
+              { Icon: Eye,    color: '#818cf8', title: 'Rich Perception',       desc: 'Sense and respond to environmental events in real time.' },
+              { Icon: Target, color: '#f472b6', title: 'Goal & Planning',       desc: 'Form multi-step plans and pursue them autonomously.' },
+              { Icon: Users,  color: '#fb923c', title: 'Social Intelligence',   desc: 'Build relationships, develop rivalries, and adapt socially.' },
+              { Icon: Puzzle, color: '#4ade80', title: 'Modular & Extensible',  desc: 'Add custom actions with plain code and a one-line description.' },
+              { Icon: Zap,    color: '#facc15', title: 'Engine Native',         desc: 'First-class Unreal Engine plugin — works with your existing workflow.' },
+            ].map(({ Icon, color, title, desc }) => (
+              <div key={title}
+                className="rounded-xl p-5 transition-all duration-200 group"
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.borderColor = color + '35';
+                  (e.currentTarget as HTMLElement).style.background = color + '08';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.06)';
+                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.02)';
+                }}
+              >
+                <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-3"
+                  style={{ background: color + '15', border: `1px solid ${color}30` }}>
+                  <Icon size={16} style={{ color }} />
+                </div>
+                <div className="text-sm font-semibold text-white mb-1">{title}</div>
+                <div className="text-xs text-gray-500 leading-relaxed">{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══ DOCS HUB ══════════════════════════════════════════════ */}
+      <section className="relative py-16 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="w-6 h-6 rounded flex items-center justify-center"
+                style={{ background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.3)' }}>
+                <BookOpen size={12} className="text-cyan-400" />
+              </div>
+              <h2 className="text-base font-semibold text-white">Documentation Hub</h2>
+            </div>
+            <Link to="/docs/unrealengine" className="flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
+              View all <ArrowRight size={12} />
+            </Link>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4">
+            <DocCard icon={<Play size={16} className="text-cyan-400" />} title="Quick Start"
+              description="Get up and running in minutes." href="/docs/unrealengine/quickstart" />
+            <DocCard icon={<BookOpen size={16} className="text-cyan-400" />} title="UE Plugin Docs"
+              description="Full API reference for the Unreal Engine plugin." href="/docs/unrealengine" />
+            <DocCard icon={<FileText size={16} className="text-cyan-400" />} title="Changelog"
+              description="What's new in every release." href="/docs/unrealengine/changelog" badge="Latest" />
+          </div>
+        </div>
+      </section>
+
+      {/* ══ WAITLIST ══════════════════════════════════════════════ */}
+      <section className="relative py-24">
+        <div className="orb absolute w-[500px] h-[250px] bottom-0 left-1/2 -translate-x-1/2 opacity-12 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse, rgba(6,182,212,0.4) 0%, transparent 70%)' }} />
+        <div className="relative max-w-xl mx-auto px-4 text-center space-y-5">
+          <h2 className="text-3xl font-bold text-white">Stay in the loop</h2>
+          <p className="text-gray-400 text-sm">Get notified about new releases, features, and early access.</p>
+          <WaitlistForm />
+        </div>
+      </section>
+
+      {/* ══ CONTACT ═══════════════════════════════════════════════ */}
+      <section id="contact" className="border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+        <Contact />
+      </section>
+
+      {/* ══ FOOTER ════════════════════════════════════════════════ */}
+      <footer className="border-t py-14" style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(4,8,15,0.6)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-10">
+            <div className="col-span-2 md:col-span-1 space-y-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center"
+                  style={{ background: 'rgba(6,182,212,0.15)', border: '1px solid rgba(6,182,212,0.3)' }}>
+                  <img src={logoWhite} alt="" className="w-4 h-4 object-contain" />
+                </div>
+                <span className="text-white font-semibold text-sm">Clankr Intelligence</span>
+              </div>
+              <p className="text-xs text-gray-600 max-w-xs">AI-powered NPCs for the next generation of games.</p>
+              <div className="flex gap-3">
+                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Twitter size={15} /></a>
+                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Github size={15} /></a>
+                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Linkedin size={15} /></a>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <h4 className="text-xs font-semibold text-white uppercase tracking-widest">Product</h4>
+              <ul className="space-y-2 text-xs text-gray-600">
+                <li><a href="#demo" onClick={e=>{e.preventDefault();document.getElementById('demo')?.scrollIntoView({behavior:'smooth'})}} className="hover:text-gray-300 transition-colors">Demo</a></li>
+                <li><Link to="/docs/unrealengine/changelog" className="hover:text-gray-300 transition-colors">Changelog</Link></li>
+              </ul>
+            </div>
+            <div className="space-y-3">
+              <h4 className="text-xs font-semibold text-white uppercase tracking-widest">Resources</h4>
+              <ul className="space-y-2 text-xs text-gray-600">
+                <li><Link to="/docs/unrealengine" className="hover:text-gray-300 transition-colors">Documentation</Link></li>
+                <li><Link to="/docs/unrealengine/quickstart" className="hover:text-gray-300 transition-colors">Quick Start</Link></li>
+                <li><Link to="/docs/unrealengine/authoring-guide" className="hover:text-gray-300 transition-colors">Authoring Guide</Link></li>
+              </ul>
+            </div>
+            <div className="space-y-3">
+              <h4 className="text-xs font-semibold text-white uppercase tracking-widest">Company</h4>
+              <ul className="space-y-2 text-xs text-gray-600">
+                <li><a href="mailto:dli@clankrintelligence.com" className="flex items-center gap-1.5 hover:text-gray-300 transition-colors"><Mail size={10} /> Email us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row justify-between gap-2 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <p className="text-xs text-gray-700">© 2025 Clankr Intelligence. All rights reserved.</p>
+            <p className="text-xs text-gray-700">Making NPCs feel alive.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

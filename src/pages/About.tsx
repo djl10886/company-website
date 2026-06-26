@@ -1,136 +1,109 @@
 import React from 'react';
+import { ArrowRight } from 'lucide-react';
+
+function BenefitItem({ text }: { text: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+      <span className="text-gray-400 text-base leading-relaxed">{text}</span>
+    </div>
+  );
+}
 
 export default function About() {
   return (
-    <div className="relative min-h-screen pt-16">
-      {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 -z-10"></div>
-      <div className="fixed inset-0 opacity-30 -z-10" style={{
-        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
-        backgroundSize: '48px 48px'
-      }}></div>
+    <div className="relative py-24 px-6" style={{ background: '#070c18' }}>
+      <div className="max-w-6xl mx-auto space-y-24">
 
-      <div className="px-6 py-32">
-        <div className="max-w-6xl mx-auto">
-          {/* Our Approach Section */}
-          <section className="mb-32 text-center">
-            <div className="space-y-6 mb-16">
-              <div className="text-5xl font-bold text-white/10">01</div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
-                Our Approach
-              </h2>
-            </div>
+        {/* Our Approach */}
+        <section>
+          <div className="mb-8">
+            <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">01 / Our Approach</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mt-2">How it works</h2>
+          </div>
+          <div
+            className="rounded-2xl p-8 md:p-10"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}
+          >
+            <p className="text-lg text-gray-400 leading-relaxed">
+              Our framework is designed to be flexible and to easily integrate into existing workflows. Developers
+              customize an NPC using natural language descriptions — background, personality, and goals. NPC actions
+              are implemented in standard code and registered with a clear natural language description. The framework
+              then handles interfacing with the language model of choice to generate and execute behavior according to
+              each NPC's specifications. Whether you're creating a vast open world or a focused narrative experience,
+              Clankr brings your NPCs to life.
+            </p>
+          </div>
+        </section>
 
-            <div className="max-w-4xl mx-auto">
-              <p className="text-xl md:text-2xl text-gray-400 leading-relaxed">
-                Our framework is designed to be flexible and to easily integrate into existing workflows. Developers can customize an NPC with natural language descriptions on various aspects of an NPC, such as their background, personality, and goals. NPC actions can be implemented using standard code and then integrated into the framework with a clear natural language description of their purposes. The framework handles interfacing with the language models of choice to generate and then execute behavior according to the NPC's specifications. Whether you're creating a vast open world or a focused narrative experience, our framework can help bring your NPCs to life.
-              </p>
-            </div>
-          </section>
+        {/* Benefits */}
+        <section>
+          <div className="mb-10">
+            <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">02 / Potential Benefits</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mt-2">Why it matters</h2>
+          </div>
 
-          {/* Potential Benefits Section */}
-          <section className="mb-32 text-center">
-            <div className="space-y-6 mb-16">
-              <div className="text-5xl font-bold text-white/10">02</div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
-                Potential Benefits
-              </h2>
-            </div>
-
-            <div className="space-y-20">
-              {/* Player Benefits */}
-              <div>
-                <h3 className="text-2xl font-semibold text-white mb-8">
-                  From the Player Perspective
-                </h3>
-                <p className="text-xl text-gray-400 leading-relaxed mb-8 max-w-4xl mx-auto">
-                  NPCs built with our approach can provide an enhanced gaming experience through several key benefits:
-                </p>
-                <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
-                      <span className="text-lg text-gray-400">Enhanced immersion from NPCs actively participating in the game world, making the world feel more alive and organic</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
-                      <span className="text-lg text-gray-400">Increased replay value as NPC interactions and behaviors can create unique scenarios each playthrough</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
-                      <span className="text-lg text-gray-400">More unpredictable playthroughs as NPC actions can influence the narrative in nondeterministic ways</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
-                      <span className="text-lg text-gray-400">Deeper player engagement through more complex and meaningful NPC relationships</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Developer Benefits */}
-              <div>
-                <h3 className="text-2xl font-semibold text-white mb-8">
-                  From the Developer Perspective
-                </h3>
-                <p className="text-xl text-gray-400 leading-relaxed mb-8 max-w-4xl mx-auto">
-                  Our framework offers game developers powerful tools and advantages:
-                </p>
-                <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
-                      <span className="text-lg text-gray-400">Reduced development time for creating complex NPC behaviors through our AI-driven framework</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
-                      <span className="text-lg text-gray-400">More dynamic and emergent storytelling possibilities without manually scripting every interaction</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
-                      <span className="text-lg text-gray-400">Scalable NPC systems that can adapt to different game themes, genres, and requirements</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-start">
-                      <span className="text-white/20 mr-3 mt-1 text-2xl">→</span>
-                      <span className="text-lg text-gray-400">Easier maintenance and updates through self-sustaining AI behavior</span>
-                    </div>
-                  </div>
-                </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Players */}
+            <div
+              className="rounded-2xl p-8"
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}
+            >
+              <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold"
+                  style={{ background: 'rgba(6,182,212,0.15)', color: '#22d3ee', border: '1px solid rgba(6,182,212,0.3)' }}>P</span>
+                For Players
+              </h3>
+              <div className="space-y-4">
+                <BenefitItem text="Enhanced immersion from NPCs that actively participate in the world, making it feel alive and organic" />
+                <BenefitItem text="Increased replay value as NPC interactions create unique scenarios each playthrough" />
+                <BenefitItem text="More unpredictable experiences as NPC actions can influence the narrative in nondeterministic ways" />
+                <BenefitItem text="Deeper engagement through more complex and meaningful NPC relationships" />
               </div>
             </div>
-          </section>
 
-          {/* Our Inspiration Section */}
-          <section className="text-center">
-            <div className="space-y-6 mb-16">
-              <div className="text-5xl font-bold text-white/10">03</div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white">
-                Our Inspiration
-              </h2>
+            {/* Developers */}
+            <div
+              className="rounded-2xl p-8"
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}
+            >
+              <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold"
+                  style={{ background: 'rgba(74,222,128,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>D</span>
+                For Developers
+              </h3>
+              <div className="space-y-4">
+                <BenefitItem text="Reduced development time for complex NPC behaviors through our AI-driven framework" />
+                <BenefitItem text="Dynamic and emergent storytelling possibilities without manually scripting every interaction" />
+                <BenefitItem text="Scalable NPC systems that adapt to different game themes, genres, and requirements" />
+                <BenefitItem text="Easier maintenance and updates through self-sustaining AI behavior" />
+              </div>
             </div>
+          </div>
+        </section>
 
-            <div className="max-w-4xl mx-auto space-y-6">
-              <p className="text-xl md:text-2xl text-gray-400 leading-relaxed">
-                As passionate gamers, we've spent countless hours exploring virtual worlds and interacting with NPCs. While these digital characters have come a long way, we've always dreamed of NPCs that could truly participate in shaping the world around them – not just as quest givers or merchants, but as dynamic entities with their own goals and agency.
-              </p>
-              <p className="text-xl md:text-2xl text-gray-400 leading-relaxed">
-                Imagine a merchant who doesn't just stand behind their counter, but actively responds to market changes, forms relationships with other traders, and even expands their business. Or a village guard who remembers past interactions, develops rivalries, and makes decisions based on their personal history with the player. This vision of truly dynamic NPCs that can meaningfully impact their world is what drives our innovation at Clankr Intelligence.
-              </p>
-            </div>
-          </section>
-        </div>
+        {/* Inspiration */}
+        <section>
+          <div className="mb-8">
+            <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">03 / Our Inspiration</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mt-2">What drives us</h2>
+          </div>
+          <div className="space-y-6 max-w-4xl">
+            <p className="text-lg text-gray-400 leading-relaxed">
+              As passionate gamers, we've spent countless hours exploring virtual worlds and interacting with NPCs.
+              While these characters have come a long way, we've always dreamed of NPCs that could truly participate
+              in shaping the world around them — not just as quest givers or merchants, but as dynamic entities with
+              their own goals and agency.
+            </p>
+            <p className="text-lg text-gray-400 leading-relaxed">
+              Imagine a merchant who doesn't just stand behind a counter, but actively responds to market changes,
+              forms relationships with other traders, and expands their business. Or a village guard who remembers
+              past interactions, develops rivalries, and makes decisions based on personal history with the player.
+              This vision of truly dynamic NPCs is what drives our innovation at Clankr Intelligence.
+            </p>
+          </div>
+        </section>
+
       </div>
     </div>
   );

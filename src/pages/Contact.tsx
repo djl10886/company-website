@@ -1,8 +1,7 @@
 import React, { useState, FormEvent } from 'react';
-import { Send, CheckCircle, XCircle } from 'lucide-react';
+import { Send, CheckCircle, XCircle, Mail, MessageSquare } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
-// Initialize EmailJS
 emailjs.init("XFdWyLS5AexANO6C6");
 
 export default function Contact() {
@@ -12,187 +11,160 @@ export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-
-    if (!email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-
-    if (!message.trim()) {
-      newErrors.message = 'Message is required';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const validate = () => {
+    const errs: { [key: string]: string } = {};
+    if (!name.trim()) errs.name = 'Name is required';
+    if (!email.trim()) errs.email = 'Email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = 'Invalid email address';
+    if (!message.trim()) errs.message = 'Message is required';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
+    if (!validate()) return;
     setStatus('sending');
-
     try {
-      await emailjs.send(
-        'general_correspondence',
-        'contact_template',
-        {
-          from_name: name,
-          from_email: email,
-          message: message,
-          to_email: 'dli@clankrintelligence.com',
-        }
-      );
-
+      await emailjs.send('general_correspondence', 'contact_template', {
+        from_name: name,
+        from_email: email,
+        message,
+        to_email: 'dli@clankrintelligence.com',
+      });
       setStatus('success');
-      setName('');
-      setEmail('');
-      setMessage('');
-      setErrors({});
-    } catch (error) {
+      setName(''); setEmail(''); setMessage(''); setErrors({});
+    } catch {
       setStatus('error');
     }
-
-    setTimeout(() => {
-      setStatus('idle');
-    }, 5000);
+    setTimeout(() => setStatus('idle'), 5000);
   };
 
-  return (
-    <div className="relative min-h-screen pt-16">
-      {/* Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 -z-10"></div>
-      <div className="fixed inset-0 opacity-30 -z-10" style={{
-        backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
-        backgroundSize: '48px 48px'
-      }}></div>
+  const inputClass = (field: string) =>
+    `w-full px-4 py-3 rounded-lg text-white text-sm placeholder-gray-600 focus:outline-none transition-colors ${
+      errors[field] ? 'border-red-500/60' : ''
+    }`;
 
-      <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
-        <div className="text-center mb-12 md:mb-16">
-          <Send className="text-blue-400 w-10 h-10 md:w-12 md:h-12 mx-auto mb-4" />
-          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            Contact Us
-          </h1>
-          <div className="w-24 h-1 bg-blue-400 mx-auto mb-6 md:mb-8"></div>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto px-4"> 
-            We'd love to hear from you.
-            Whether you have a question, an idea, feedback, or just want to say hi, don't hesitate to reach out. We're all ears. 
+  const inputStyle = (field: string): React.CSSProperties => ({
+    background: 'rgba(255,255,255,0.04)',
+    border: `1px solid ${errors[field] ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.08)'}`,
+  });
+
+  return (
+    <div className="relative py-24 px-6" style={{ background: '#070c18' }}>
+      <div
+        className="orb absolute w-[400px] h-[400px] top-1/2 right-0 -translate-y-1/2 opacity-10 pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.5) 0%, transparent 70%)' }}
+      />
+
+      <div className="relative max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-10">
+          <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">Get in touch</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mt-2 mb-3">Contact Us</h2>
+          <p className="text-gray-400">
+            Have a question, idea, or just want to say hello? We'd love to hear from you.
           </p>
         </div>
 
-        <div className="max-w-xl mx-auto px-4">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Card */}
+        <div
+          className="rounded-2xl p-8"
+          style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}
+        >
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300">
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">
                 Name <span className="text-red-400">*</span>
               </label>
               <input
                 type="text"
-                id="name"
                 value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  if (errors.name) {
-                    setErrors({ ...errors, name: '' });
-                  }
-                }}
-                className={`mt-1 block w-full rounded-md bg-white/10 border-transparent focus:border-blue-500 focus:bg-white/20 focus:ring-0 text-white p-3 ${
-                  errors.name ? 'border-red-500 border-2' : ''
-                }`}
+                onChange={e => { setName(e.target.value); setErrors(p => ({ ...p, name: '' })); }}
                 placeholder="Your name"
+                className={inputClass('name')}
+                style={inputStyle('name')}
+                onFocus={e => !errors.name && (e.currentTarget.style.borderColor = 'rgba(6,182,212,0.4)')}
+                onBlur={e => !errors.name && (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
               />
-              {errors.name && (
-                <p className="mt-1 text-sm text-red-400">{errors.name}</p>
-              )}
+              {errors.name && <p className="mt-1 text-xs text-red-400">{errors.name}</p>}
             </div>
 
+            {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">
                 Email <span className="text-red-400">*</span>
               </label>
               <input
                 type="email"
-                id="email"
                 value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (errors.email) {
-                    setErrors({ ...errors, email: '' });
-                  }
-                }}
-                className={`mt-1 block w-full rounded-md bg-white/10 border-transparent focus:border-blue-500 focus:bg-white/20 focus:ring-0 text-white p-3 ${
-                  errors.email ? 'border-red-500 border-2' : ''
-                }`}
+                onChange={e => { setEmail(e.target.value); setErrors(p => ({ ...p, email: '' })); }}
                 placeholder="your@email.com"
+                className={inputClass('email')}
+                style={inputStyle('email')}
+                onFocus={e => !errors.email && (e.currentTarget.style.borderColor = 'rgba(6,182,212,0.4)')}
+                onBlur={e => !errors.email && (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-400">{errors.email}</p>
-              )}
+              {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
             </div>
 
+            {/* Message */}
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-300">
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">
                 Message <span className="text-red-400">*</span>
               </label>
               <textarea
-                id="message"
                 value={message}
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                  if (errors.message) {
-                    setErrors({ ...errors, message: '' });
-                  }
-                }}
-                rows={6}
-                className={`mt-1 block w-full rounded-md bg-white/10 border-transparent focus:border-blue-500 focus:bg-white/20 focus:ring-0 text-white p-3 ${
-                  errors.message ? 'border-red-500 border-2' : ''
-                }`}
+                onChange={e => { setMessage(e.target.value); setErrors(p => ({ ...p, message: '' })); }}
+                rows={5}
                 placeholder="Your message..."
+                className={inputClass('message')}
+                style={inputStyle('message')}
+                onFocus={e => !errors.message && (e.currentTarget.style.borderColor = 'rgba(6,182,212,0.4)')}
+                onBlur={e => !errors.message && (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
               />
-              {errors.message && (
-                <p className="mt-1 text-sm text-red-400">{errors.message}</p>
-              )}
+              {errors.message && <p className="mt-1 text-xs text-red-400">{errors.message}</p>}
             </div>
 
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            {/* Submit */}
+            <div className="flex items-center justify-between gap-4 pt-1">
               <button
                 type="submit"
                 disabled={status === 'sending'}
-                className={`w-full md:w-auto px-6 py-3 rounded-md text-white font-medium flex items-center justify-center space-x-2 transition-colors ${
-                  status === 'sending'
-                    ? 'bg-blue-400/50 cursor-not-allowed'
-                    : 'bg-blue-500 hover:bg-blue-600'
-                }`}
+                className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm transition-all"
+                style={{
+                  background: status === 'sending' ? 'rgba(6,182,212,0.3)' : '#06b6d4',
+                  color: '#04080f',
+                  cursor: status === 'sending' ? 'not-allowed' : 'pointer',
+                }}
               >
-                <Send size={20} className="mr-2" />
+                <Send size={15} />
                 {status === 'sending' ? 'Sending...' : 'Send Message'}
               </button>
 
               {status === 'success' && (
-                <div className="flex items-center text-green-400">
-                  <CheckCircle size={20} className="mr-2" />
-                  Message sent successfully!
+                <div className="flex items-center gap-1.5 text-green-400 text-sm">
+                  <CheckCircle size={16} /> Sent successfully!
                 </div>
               )}
-
               {status === 'error' && (
-                <div className="flex items-center text-red-400">
-                  <XCircle size={20} className="mr-2" />
-                  Failed to send message
+                <div className="flex items-center gap-1.5 text-red-400 text-sm">
+                  <XCircle size={16} /> Failed to send
                 </div>
               )}
             </div>
           </form>
+        </div>
+
+        {/* Direct email option */}
+        <div className="mt-6 text-center">
+          <p className="text-xs text-gray-600">
+            Or email us directly at{' '}
+            <a href="mailto:dli@clankrintelligence.com" className="text-cyan-400 hover:text-cyan-300 transition-colors">
+              dli@clankrintelligence.com
+            </a>
+          </p>
         </div>
       </div>
     </div>
