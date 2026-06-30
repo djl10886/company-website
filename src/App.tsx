@@ -13,7 +13,7 @@ import UnrealAuthoringGuide from './pages/docs/unrealengine/AuthoringGuide';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen" style={{ background: '#070c18' }}>
+      <div className="min-h-screen site-bg">
         <Navbar />
         <Routes>
           <Route path="/" element={<MainPage />} />

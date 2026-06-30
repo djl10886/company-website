@@ -12,7 +12,7 @@ function BenefitItem({ text }: { text: string }) {
 
 export default function About() {
   return (
-    <div className="relative py-24 px-6" style={{ background: '#070c18' }}>
+    <div className="relative py-24 px-6 site-bg">
       <div className="max-w-6xl mx-auto space-y-24">
 
         {/* Our Approach */}

@@ -4,7 +4,7 @@ import { ArrowRight, Play } from 'lucide-react';
 
 export default function Products() {
   return (
-    <div className="relative py-24 px-6" style={{ background: '#070c18' }}>
+    <div className="relative py-24 px-6 site-bg">
       {/* Background orb */}
       <div
         className="orb absolute w-[500px] h-[500px] top-0 left-1/2 -translate-x-1/2 opacity-10 pointer-events-none"

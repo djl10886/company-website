@@ -454,7 +454,7 @@ function NPCPanel() {
 /* ─── Main ───────────────────────────────────────────────────── */
 export default function Home() {
   return (
-    <div style={{ background: '#070c18' }}>
+    <div className="site-bg">
       {/* Dot grid */}
       <div className="fixed inset-0 pointer-events-none" style={{
         backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)',
@@ -540,7 +540,7 @@ export default function Home() {
       </section>
 
       {/* ══ MISSION ═══════════════════════════════════════════════ */}
-      <section className="relative py-20 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+      <section id="about" className="relative py-20 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -609,7 +609,7 @@ export default function Home() {
               { Icon: Target, color: '#f472b6', title: 'Goal & Planning',       desc: 'Form multi-step plans and pursue them autonomously.' },
               { Icon: Users,  color: '#fb923c', title: 'Social Intelligence',   desc: 'Build relationships, develop rivalries, and adapt socially.' },
               { Icon: Puzzle, color: '#4ade80', title: 'Modular & Extensible',  desc: 'Add custom actions with plain code and a one-line description.' },
-              { Icon: Zap,    color: '#facc15', title: 'Engine Native',         desc: 'First-class Unreal Engine plugin — works with your existing workflow.' },
+              { Icon: Zap,    color: '#facc15', title: 'Engine Agonistic',         desc: 'First-class Unreal Engine plugin — works with your existing workflow.' },
             ].map(({ Icon, color, title, desc }) => (
               <div key={title}
                 className="rounded-xl p-5 transition-all duration-200 group"
