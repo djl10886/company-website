@@ -258,11 +258,11 @@ export default function APIReferenceDocs() {
         <ApiSection title="Continuity, Time, and Configuration">
           <ApiEntry name="URNPCsDeveloperSettings">
             <p>
-              Project settings for calendar selection, automatic initial time, persistence reset, continuity save coordination, and world description. Provider services and model targets are configured separately through <code className={codeClassName}>Window → RealisticNPCs Daemon Config</code>.
+              Project settings for calendar selection, automatic initial time, persistent-state reset, and world description. Provider services and model targets are configured separately through <code className={codeClassName}>Window → RealisticNPCs Daemon Config</code>.
             </p>
             <ul className="list-disc list-inside pl-4 space-y-1">
               <li><code className={codeClassName}>DefaultCalendar</code>, <code className={codeClassName}>bAutoApplyInitialTime</code>, and <code className={codeClassName}>InitialTime</code>.</li>
-              <li><code className={codeClassName}>bResetPersistentStateOnStartup</code> and <code className={codeClassName}>ContinuityQuiesceTimeoutSeconds</code>.</li>
+              <li><code className={codeClassName}>bResetPersistentStateOnStartup</code>.</li>
               <li><code className={codeClassName}>WorldDescriptionFile</code> and <code className={codeClassName}>InlineWorldDescription</code>.</li>
             </ul>
           </ApiEntry>

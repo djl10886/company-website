@@ -136,12 +136,6 @@ export default function Configuration() {
                     </p>
                   </div>
 
-                  <div className="border-l-4 border-blue-500/50 pl-6">
-                    <code className="bg-white/20 px-2 py-1 rounded">ContinuityQuiesceTimeoutSeconds</code>
-                    <p className="mt-2">
-                      Sets how long continuity save preparation may wait for active NPC work to reach a safe checkpoint. Increase it only when save preparation regularly needs more time in a heavily loaded world.
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>

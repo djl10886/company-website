@@ -107,7 +107,7 @@ export default function MemoryAndPersistenceDocs() {
             Persisted world time is restored before the configured initial time. If no saved time exists and <code className="bg-white/20 px-2 py-1 rounded">Auto Apply Initial Time</code> is enabled, the plugin applies the Initial Time from Project Settings.
           </p>
           <p className="mt-4">
-            <code className="bg-white/20 px-2 py-1 rounded">Continuity Quiesce Timeout Seconds</code> controls how long save preparation allows active NPC commands to settle before the checkpoint is taken. The default is appropriate for most projects; increase it only when the game's save flow deliberately allows longer-running actions to finish.
+            During <code className="bg-white/20 px-2 py-1 rounded">Prepare Continuity Save</code>, the plugin pauses new NPC command intake and briefly allows active work to settle before taking the checkpoint. This coordination is automatic and requires no project setting.
           </p>
         </div>
 
