@@ -6,7 +6,7 @@ export default function ActionsAndMovementDocs() {
       <h2 className="text-3xl font-bold text-white mb-6">Actions and Movement</h2>
       <div className="space-y-8 text-gray-300 text-lg leading-relaxed">
         <p>
-          Actions are the gameplay primitives an NPC can choose while carrying out behavior. Authors define custom actions on an <code className="bg-white/20 px-2 py-1 rounded">ABaseNPCController</code> subclass, then decide which NPCs can use those actions through action-set assets and per-NPC overrides.
+          Actions are registered gameplay capabilities that the managed runtime may command while an NPC carries out its behavior. Authors define custom actions on an <code className="bg-white/20 px-2 py-1 rounded">ABaseNPCController</code> subclass, then decide which NPCs can use them through action-set assets and per-NPC overrides. Unreal validates and executes each command, then reports its outcome back to the runtime.
         </p>
 
         <div className="grid md:grid-cols-3 gap-4">

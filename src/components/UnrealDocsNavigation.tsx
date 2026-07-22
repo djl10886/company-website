@@ -176,7 +176,7 @@ export default function UnrealDocsNavigation() {
                         activeSection === 'memory-and-persistence' ? 'text-blue-400' : 'text-gray-300 hover:text-blue-400'
                       } transition-colors`}
                     >
-                      Memory and Persistence
+                      Memory, Continuity, and Persistence
                     </a>
                   </li>
                   <li>

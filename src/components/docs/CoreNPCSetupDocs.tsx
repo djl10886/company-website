@@ -39,7 +39,7 @@ export default function CoreNPCSetupDocs() {
             <li>Fill the NPC's core profile fields, including background, short-term goal, self-assessment, and authored relationships.</li>
             <li>Assign starting spatial knowledge and action sets only as needed for the NPC's role.</li>
             <li>Run the available validation actions in the editor before testing behavior.</li>
-            <li>Call <code className="bg-white/20 px-2 py-1 rounded">StartNPC()</code> from your <code className="bg-white/20 px-2 py-1 rounded">ABaseNPCController</code> subclass when the NPC is possessed and ready to begin autonomous behavior.</li>
+            <li>Possess the enabled NPC with its assigned controller. Registration and autonomous behavior startup happen automatically.</li>
           </ol>
         </div>
 
@@ -93,14 +93,14 @@ export default function CoreNPCSetupDocs() {
         <div>
           <h3 className="text-xl font-semibold text-white mt-8 mb-4">BaseNPC Setup</h3>
           <p>
-            <code className="bg-white/20 px-2 py-1 rounded">ABaseNPC</code> contains the main author-facing configuration for an autonomous NPC. Treat these fields as the NPC's starting authored state; the plugin can then use runtime perception, memory, and persistence to keep the NPC's behavior grounded as play continues.
+            <code className="bg-white/20 px-2 py-1 rounded">ABaseNPC</code> contains the main author-facing configuration for an autonomous NPC. Treat these fields as the NPC's starting authored state; they are synchronized with the managed runtime, which develops the NPC's behavior and persistent knowledge as play continues.
           </p>
 
           <div className="space-y-6 mt-6">
             <div>
               <h4 className="text-lg font-medium text-white mb-3">Behavior Controls</h4>
               <ul className="list-disc list-inside pl-4 space-y-2">
-                <li><code className="bg-white/20 px-2 py-1 rounded">bNPCEnabled</code> enables the NPC brain for autonomous behavior and plugin-routed conversation handling after startup.</li>
+                <li><code className="bg-white/20 px-2 py-1 rounded">bNPCEnabled</code> controls whether the NPC registers for autonomous behavior and plugin-routed conversation handling.</li>
                 <li><code className="bg-white/20 px-2 py-1 rounded">bLogBehavior</code> enables concise behavior logging for debugging intention changes, policy steps, actions, conversations, and stalls.</li>
               </ul>
             </div>
@@ -151,19 +151,13 @@ export default function CoreNPCSetupDocs() {
         <div>
           <h3 className="text-xl font-semibold text-white mt-8 mb-4">BaseNPCController Setup</h3>
           <p>
-            <code className="bg-white/20 px-2 py-1 rounded">ABaseNPCController</code> owns the NPC brain, action execution, movement coordination, and behavior startup. Most projects should create a controller subclass for each family of NPC behavior that needs different gameplay actions.
+            <code className="bg-white/20 px-2 py-1 rounded">ABaseNPCController</code> is the Unreal execution bridge for action registration, gameplay execution, movement coordination, and conversation mechanics. Most projects should create a controller subclass for each family of NPCs that needs different gameplay actions. Possessing an enabled <code className="bg-white/20 px-2 py-1 rounded">ABaseNPC</code> registers it automatically.
           </p>
           <div className="space-y-4 mt-4">
             <div className="border-l-4 border-blue-500/50 pl-6">
               <code className="bg-white/20 px-2 py-1 rounded">RegisterNPCActions(FNPCActionRegistrar&amp; Registrar)</code>
               <p className="mt-2">
-                Override this function to register custom gameplay actions that the behavior system may call. Action descriptions and parameter descriptions are prompt-facing, so they should describe the concrete gameplay effect in author-facing terms.
-              </p>
-            </div>
-            <div className="border-l-4 border-blue-500/50 pl-6">
-              <code className="bg-white/20 px-2 py-1 rounded">StartNPC()</code>
-              <p className="mt-2">
-                Starts autonomous NPC behavior after the controller has possessed a valid <code className="bg-white/20 px-2 py-1 rounded">ABaseNPC</code>. This is a protected controller-subclass call, and it respects <code className="bg-white/20 px-2 py-1 rounded">bNPCEnabled</code>.
+                Override this function to register custom gameplay actions that the managed runtime may command. Action descriptions and parameter descriptions should describe the concrete gameplay effect in author-facing terms.
               </p>
             </div>
             <div className="border-l-4 border-blue-500/50 pl-6">

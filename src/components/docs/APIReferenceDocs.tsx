@@ -63,16 +63,18 @@ export default function APIReferenceDocs() {
               <li>Identity fields: <code className={codeClassName}>Background</code>, <code className={codeClassName}>ShortTermGoal</code>, <code className={codeClassName}>SelfAssessment</code>, <code className={codeClassName}>Relationships</code>, <code className={codeClassName}>IdentityDevelopmentPolicy</code>.</li>
               <li>Spatial/action authoring fields: <code className={codeClassName}>InitialKnowledgePresets</code>, <code className={codeClassName}>InitialPlaceOverrides</code>, <code className={codeClassName}>InitialPacketAssignmentOverrides</code>, <code className={codeClassName}>ActionSetPresets</code>, <code className={codeClassName}>AddedActionIds</code>, <code className={codeClassName}>RemovedActionIds</code>.</li>
               <li>Validation helpers: <code className={codeClassName}>ValidateInitialPacketAssignments()</code> and <code className={codeClassName}>ValidateEnabledActions()</code>.</li>
+              <li>Conversation helpers: <code className={codeClassName}>StartDirectedConversation()</code> and <code className={codeClassName}>ForceEndConversation()</code>.</li>
             </ul>
           </ApiEntry>
 
           <ApiEntry name="ABaseNPCController">
             <p>
-              AI controller base for NPC behavior startup, action registration, action execution, plugin-owned movement, conversation routing, and movement lifecycle events.
+              AI controller base for automatic adapter registration, action registration and execution, plugin-owned movement, conversation routing, and movement lifecycle events.
             </p>
             <ul className="list-disc list-inside pl-4 space-y-1">
               <li>Override <code className={codeClassName}>RegisterNPCActions()</code> to register custom gameplay actions.</li>
-              <li>Call the protected <code className={codeClassName}>StartNPC()</code> helper from your controller subclass when the possessed NPC is ready to run autonomous behavior.</li>
+              <li>Possessing an enabled <code className={codeClassName}>ABaseNPC</code> registers it automatically; no manual startup call is required.</li>
+              <li>Call <code className={codeClassName}>FinishNPCAction()</code> when gameplay completes an authored until-complete action.</li>
               <li>Use <code className={codeClassName}>MoveToLocation()</code> and <code className={codeClassName}>MoveToCharacter()</code> from custom gameplay code when movement should use plugin-resolved targets. <code className={codeClassName}>MoveToCharacter()</code> expects a valid current character reference; it is not a policy-level shortcut for finding arbitrary characters.</li>
               <li>React to movement through <code className={codeClassName}>OnNPCMoveLifecycleEvent</code>.</li>
             </ul>
@@ -253,16 +255,54 @@ export default function APIReferenceDocs() {
           </ApiEntry>
         </ApiSection>
 
-        <ApiSection title="Memory, Time, and Configuration">
+        <ApiSection title="Continuity, Time, and Configuration">
           <ApiEntry name="URNPCsDeveloperSettings">
             <p>
-              Project settings for plugin-wide configuration. Author-facing settings include calendar selection, initial time, persistence reset, LLM config file, world description, and vector store provider.
+              Project settings for calendar selection, automatic initial time, persistence reset, continuity save coordination, and world description. Provider services and model targets are configured separately through <code className={codeClassName}>Window → RealisticNPCs Daemon Config</code>.
+            </p>
+            <ul className="list-disc list-inside pl-4 space-y-1">
+              <li><code className={codeClassName}>DefaultCalendar</code>, <code className={codeClassName}>bAutoApplyInitialTime</code>, and <code className={codeClassName}>InitialTime</code>.</li>
+              <li><code className={codeClassName}>bResetPersistentStateOnStartup</code> and <code className={codeClassName}>ContinuityQuiesceTimeoutSeconds</code>.</li>
+              <li><code className={codeClassName}>WorldDescriptionFile</code> and <code className={codeClassName}>InlineWorldDescription</code>.</li>
+            </ul>
+          </ApiEntry>
+
+          <ApiEntry name="URNPCContinuitySubsystem">
+            <p>
+              Game-instance subsystem that owns the active NPC continuity. Packaged games use <code className={codeClassName}>CreateNewContinuity()</code>, <code className={codeClassName}>ResumeContinuity()</code>, or <code className={codeClassName}>StartEphemeralContinuity()</code> to choose a timeline, and coordinate SaveGame checkpoints with <code className={codeClassName}>PrepareContinuitySave()</code> and <code className={codeClassName}>FinishContinuitySave()</code>.
+            </p>
+            <p>
+              <code className={codeClassName}>GetActiveContinuityToken()</code> and <code className={codeClassName}>GetContinuityState()</code> expose the current state. PIE resolves its persistent continuity automatically.
             </p>
           </ApiEntry>
 
-          <ApiEntry name="EVectorStoreProvider">
+          <ApiEntry name="Continuity Blueprint Async Nodes">
             <p>
-              Selects the memory vector backend. Use <code className={codeClassName}>SQLiteVec_Local</code> by default, or <code className={codeClassName}>Qdrant_REST</code> when the project intentionally uses an external Qdrant service.
+              Author-facing asynchronous nodes are <code className={codeClassName}>Create New Continuity</code>, <code className={codeClassName}>Resume Continuity</code>, <code className={codeClassName}>Start Ephemeral Continuity</code>, <code className={codeClassName}>Prepare Continuity Save</code>, and <code className={codeClassName}>Finish Continuity Save</code>. Each reports success or failure without blocking gameplay.
+            </p>
+          </ApiEntry>
+
+          <ApiEntry name="FRNPCContinuityToken">
+            <p>
+              SaveGame-compatible reference to a persistent NPC checkpoint. Store it with the project's save data and pass it to <code className={codeClassName}>Resume Continuity</code> when loading that save.
+            </p>
+          </ApiEntry>
+
+          <ApiEntry name="FRNPCPreparedContinuitySave">
+            <p>
+              Live prepared-checkpoint value returned by <code className={codeClassName}>Prepare Continuity Save</code>. Persist its token, retain the complete value in memory while writing the game save, then pass that same value to <code className={codeClassName}>Finish Continuity Save</code>.
+            </p>
+          </ApiEntry>
+
+          <ApiEntry name="FRNPCContinuityOperationResult and FRNPCPrepareContinuitySaveResult">
+            <p>
+              Result values for continuity start/resume operations and checkpoint preparation. They expose success, active state, the returned token or prepared save, and actionable error information. Start/resume results also report when loading an older checkpoint creates a new branch.
+            </p>
+          </ApiEntry>
+
+          <ApiEntry name="ERNPCContinuityState">
+            <p>
+              Current continuity lifecycle state, including unresolved, connecting, synchronizing, active, preparing a save, awaiting save completion, and failed.
             </p>
           </ApiEntry>
 
@@ -292,7 +332,7 @@ export default function APIReferenceDocs() {
 
           <ApiEntry name="RNPCsUtilities">
             <p>
-              Utility class for world description loading, character lookup by GUID, game time updates, and lower-level LLM transport helpers. Most authoring workflows only need <code className={codeClassName}>SetGameWorldTime()</code> for explicit gameplay time changes.
+              Utility class for world description loading, character lookup by GUID, and game-time updates. Most authoring workflows only need <code className={codeClassName}>SetGameWorldTime()</code> for explicit gameplay time changes.
             </p>
           </ApiEntry>
         </ApiSection>

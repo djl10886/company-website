@@ -35,27 +35,30 @@ export default function QuickStart() {
             </div>
 
             <div id="project-settings" className="scroll-mt-24">
-              <h2 className="text-3xl font-bold text-white mb-6">2. Configure Project Settings</h2>
+              <h2 className="text-3xl font-bold text-white mb-6">2. Configure the Daemon and Project</h2>
               <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
                 <p>
-                  Open <strong>Project Settings -&gt; Plugins -&gt; RealisticNPCs</strong>. The plugin needs model targets, a world description, and a game calendar before NPC behavior starts.
+                  Open <strong>Window -&gt; RealisticNPCs Daemon Config</strong>. This panel is the author-facing workflow for configuring the services and models used by RealisticNPCs.
                 </p>
 
-                <h3 className="text-xl font-semibold text-white mt-8">Language Model Configuration</h3>
-                <p>
-                  Create <code className="bg-white/20 px-2 py-1 rounded">Config/RealisticNPCsConfig.json</code> and point the <code className="bg-white/20 px-2 py-1 rounded">LLMConfigFile</code> setting at it. The minimal config should define <code className="bg-white/20 px-2 py-1 rounded">services</code>, <code className="bg-white/20 px-2 py-1 rounded">default_light_target</code>, <code className="bg-white/20 px-2 py-1 rounded">default_heavy_target</code>, and the required <code className="bg-white/20 px-2 py-1 rounded">embed_target</code>.
-                </p>
-                <p>
-                  The default SQLite memory backend works out of the box once <code className="bg-white/20 px-2 py-1 rounded">embed_target</code> is configured. Do not add a <code className="bg-white/20 px-2 py-1 rounded">vector_store</code> block unless you are intentionally configuring Qdrant or an advanced SQLite collection override.
-                </p>
+                <h3 className="text-xl font-semibold text-white mt-8">Daemon Configuration</h3>
+                <ol className="list-decimal list-inside space-y-4 pl-4">
+                  <li>Add each model service and enter its service ID and endpoint.</li>
+                  <li>Use <strong>Set Key</strong> to store the service's API key securely, then use <strong>Check Stored Key</strong> to confirm that it is available.</li>
+                  <li>Assign models for the required <strong>Default Light</strong>, <strong>Default Heavy</strong>, and <strong>Embedding</strong> targets.</li>
+                  <li>Select <strong>Save Profile</strong>, then <strong>Validate with Daemon</strong>.</li>
+                </ol>
                 <p>
                   For a first test, use responsive instant-response models. Reasoning models can be experimented with later, but the plugin is not yet tuned around their longer response latency and behavior may feel less fluid.
                 </p>
                 <p>
-                  See the <Link to="/docs/unrealengine/configuration" className="text-blue-400 hover:text-blue-300 transition-colors">configuration guide</Link> for the complete JSON format.
+                  See the <Link to="/docs/unrealengine/configuration" className="text-blue-400 hover:text-blue-300 transition-colors">configuration guide</Link> for optional usage-target overrides and profile management.
                 </p>
 
-                <h3 className="text-xl font-semibold text-white mt-8">World Description and Time</h3>
+                <h3 className="text-xl font-semibold text-white mt-8">Project Settings</h3>
+                <p>
+                  Open <strong>Project Settings -&gt; Plugins -&gt; RealisticNPCs</strong> to configure the world context and time settings used by your project.
+                </p>
                 <ul className="list-disc list-inside pl-4 space-y-2">
                   <li>Set <code className="bg-white/20 px-2 py-1 rounded">InlineWorldDescription</code>, or set <code className="bg-white/20 px-2 py-1 rounded">WorldDescriptionFile</code> to a text file. Inline text takes precedence when both are set.</li>
                   <li>Choose the default calendar and initial time for the world.</li>
@@ -117,7 +120,6 @@ class YOURGAME_API AShopkeeperNPCController : public ABaseNPCController
     GENERATED_BODY()
 
 protected:
-    virtual void OnPossess(APawn* InPawn) override;
     virtual void RegisterNPCActions(FNPCActionRegistrar& Registrar) override;
 
 private:
@@ -131,12 +133,6 @@ private:
                     <code className="text-sm text-gray-300">{`// ShopkeeperNPCController.cpp
 #include "ShopkeeperNPCController.h"
 #include "ActionTypes.h"
-
-void AShopkeeperNPCController::OnPossess(APawn* InPawn)
-{
-    Super::OnPossess(InPawn);
-    StartNPC();
-}
 
 void AShopkeeperNPCController::RegisterNPCActions(FNPCActionRegistrar& Registrar)
 {
@@ -195,16 +191,18 @@ void AShopkeeperNPCController::TendShop()
                 <div className="bg-blue-500/10 border border-blue-400/20 rounded-lg p-6">
                   <h3 className="text-xl font-semibold text-white mb-3">Expected First Result</h3>
                   <p>
-                    The NPC should initialize its brain, use the configured model targets, understand its starting place, select behavior from its profile and available actions, move through plugin-owned grounded movement when needed, and run the enabled custom action when appropriate.
+                    Unreal should start the managed daemon, synchronize the world and enabled NPC, then begin receiving the NPC's intentions, policies, and action commands. The NPC should understand its starting place, move through plugin-owned grounded movement when needed, and run the enabled custom action when appropriate.
                   </p>
                 </div>
 
                 <h3 className="text-xl font-semibold text-white mt-8">Debugging Tips</h3>
                 <ul className="list-disc list-inside pl-4 space-y-2">
-                  <li>If no behavior starts, confirm the NPC is possessed by an <code className="bg-white/20 px-2 py-1 rounded">ABaseNPCController</code> subclass and that the subclass calls <code className="bg-white/20 px-2 py-1 rounded">StartNPC()</code>.</li>
+                  <li>If no behavior starts, check the Unreal Output Log for daemon startup, handshake, and session-synchronization messages or an actionable startup failure.</li>
+                  <li>Confirm that the daemon profile was saved and validated, each referenced service has a stored key, and all three required usage targets are assigned.</li>
+                  <li>Confirm the NPC is enabled and possessed by the intended <code className="bg-white/20 px-2 py-1 rounded">ABaseNPCController</code> subclass.</li>
                   <li>If a custom action is never used, confirm its action id is registered by the controller and enabled through the NPC's action set or additions.</li>
                   <li>If location behavior seems stale after spatial authoring changes, enable <code className="bg-white/20 px-2 py-1 rounded">bResetPersistentStateOnStartup</code> for one clean run, then disable it again before testing persistence.</li>
-                  <li>If memory retrieval fails to initialize, confirm <code className="bg-white/20 px-2 py-1 rounded">embed_target</code> is present and points to a valid embedding service.</li>
+                  <li>If memory retrieval does not initialize, confirm that the required <strong>Embedding</strong> target selects a valid model and that its service key is stored.</li>
                 </ul>
 
                 <p>
