@@ -78,3 +78,11 @@ html {
   filter: blur(80px);
   pointer-events: none;
 }
+
+/* The mobile docs menu replaces the fixed desktop sidebar below Tailwind's md breakpoint. */
+@media (max-width: 767px) {
+  .rnpc-docs-navigation + .ml-64 {
+    margin-left: 0;
+  }
+}
+
