@@ -55,16 +55,19 @@ export default function Configuration() {
                   <div className="border-l-4 border-blue-500/50 pl-6">
                     <strong className="text-white">Set Key</strong>
                     <p className="mt-2">
-                      Stores the service's API key in the operating system's credential store. API keys are not written into the project profile.
+                      Stores the service's API key in the operating system's credential store for the current provider origin. API keys are not written into the project profile.
                     </p>
                   </div>
                   <div className="border-l-4 border-blue-500/50 pl-6">
                     <strong className="text-white">Check Stored Key</strong>
                     <p className="mt-2">
-                      Confirms whether a credential is currently stored for that service ID. It does not make a provider request or verify account access.
+                      Confirms whether a credential is currently stored for that service ID and provider origin. It does not make a provider request or verify account access.
                     </p>
                   </div>
                 </div>
+                <p className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-blue-200">
+                  Credentials are authorized for the endpoint's scheme, host, and port. Changing only the endpoint path can reuse the stored key, but changing the scheme, host, or port requires using <strong>Set Key</strong> for the new origin. RealisticNPCs never silently sends an existing key to a different origin.
+                </p>
 
                 <h3 className="text-2xl font-semibold text-white mt-8 mb-4">Assign Required Usage Targets</h3>
                 <p>

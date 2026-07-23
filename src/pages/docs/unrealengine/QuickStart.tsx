@@ -44,7 +44,7 @@ export default function QuickStart() {
                 <h3 className="text-xl font-semibold text-white mt-8">Daemon Configuration</h3>
                 <ol className="list-decimal list-inside space-y-4 pl-4">
                   <li>Add each model service and enter its service ID and endpoint.</li>
-                  <li>Use <strong>Set Key</strong> to store the service's API key securely, then use <strong>Check Stored Key</strong> to confirm that it is available.</li>
+                  <li>Use <strong>Set Key</strong> to store the service's API key for the current provider origin, then use <strong>Check Stored Key</strong> to confirm that it is available for that origin.</li>
                   <li>Assign models for the required <strong>Default Light</strong>, <strong>Default Heavy</strong>, and <strong>Embedding</strong> targets.</li>
                   <li>Select <strong>Save Profile</strong>, then <strong>Validate with Daemon</strong>.</li>
                 </ol>
@@ -198,11 +198,11 @@ void AShopkeeperNPCController::TendShop()
                 <h3 className="text-xl font-semibold text-white mt-8">Debugging Tips</h3>
                 <ul className="list-disc list-inside pl-4 space-y-2">
                   <li>If no behavior starts, check the Unreal Output Log for daemon startup, handshake, and session-synchronization messages or an actionable startup failure.</li>
-                  <li>Confirm that the daemon profile was saved and validated, each referenced service has a stored key, and all three required usage targets are assigned.</li>
+                  <li>Confirm that the daemon profile was saved and validated, each referenced service has a stored key for its configured provider origin, and all three required usage targets are assigned.</li>
                   <li>Confirm the NPC is enabled and possessed by the intended <code className="bg-white/20 px-2 py-1 rounded">ABaseNPCController</code> subclass.</li>
                   <li>If a custom action is never used, confirm its action id is registered by the controller and enabled through the NPC's action set or additions.</li>
                   <li>If location behavior seems stale after spatial authoring changes, enable <code className="bg-white/20 px-2 py-1 rounded">bResetPersistentStateOnStartup</code> for one clean run, then disable it again before testing persistence.</li>
-                  <li>If memory retrieval does not initialize, confirm that the required <strong>Embedding</strong> target selects a valid model and that its service key is stored.</li>
+                  <li>If memory retrieval does not initialize, confirm that the required <strong>Embedding</strong> target selects a valid model and that its service key is stored for the configured provider origin.</li>
                 </ul>
 
                 <p>

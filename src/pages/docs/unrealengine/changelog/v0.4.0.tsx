@@ -56,7 +56,7 @@ export const v0_4_0: Release = {
             The panel saves the canonical <code className="bg-slate-800/50 px-2 py-1 rounded">Config/RealisticNPCsDaemonProfile.json</code> profile and can validate it directly with the daemon.
           </li>
           <li>
-            API keys are stored outside project files in the platform credential store. The profile contains only secure key references rather than plaintext credentials.
+            API keys are stored outside project files in the platform credential store and authorized for the configured provider origin. The profile contains only secure key references rather than plaintext credentials.
           </li>
           <li>
             The previous <code className="bg-slate-800/50 px-2 py-1 rounded">RealisticNPCsConfig.json</code>, <code className="bg-slate-800/50 px-2 py-1 rounded">LLMConfigFile</code> setting, and Unreal vector-store selector are no longer used.
@@ -72,7 +72,7 @@ export const v0_4_0: Release = {
           <li>Save the daemon profile and use Validate with Daemon before starting PIE.</li>
         </ol>
         <p className="text-white mt-4">
-          Legacy configuration files and plaintext keys are not imported automatically.
+          Legacy configuration files, plaintext keys, and earlier unscoped credential entries are not imported automatically.
         </p>
       </div>
 
