@@ -92,6 +92,12 @@ export default function Navbar() {
               </div>
             </div>
 
+            <Link
+              to="/download"
+              className="px-3 py-2 text-sm text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/5"
+            >
+              Download
+            </Link>
             <button
               onClick={() => scrollToSection('products')}
               className="px-3 py-2 text-sm text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/5"
@@ -154,6 +160,13 @@ export default function Navbar() {
             onClick={() => setIsOpen(false)}
           >
             Documentation
+          </Link>
+          <Link
+            to="/download"
+            className="block px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+            onClick={() => setIsOpen(false)}
+          >
+            Download
           </Link>
           <button
             onClick={() => scrollToSection('products')}

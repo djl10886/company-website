@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import MainPage from './pages/MainPage';
+import DownloadPage from './pages/Download';
 import Changelog from './pages/docs/unrealengine/changelog/Changelog';
 import ChangelogDetail from './pages/docs/unrealengine/changelog/ChangelogDetail';
 import UnrealIntroduction from './pages/docs/unrealengine/Introduction';
@@ -17,6 +18,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/download" element={<DownloadPage />} />
           <Route path="/docs/unrealengine/changelog" element={<Changelog />} />
           <Route path="/docs/unrealengine/changelog/:version" element={<ChangelogDetail />} />
           <Route path="/docs/unrealengine" element={<Navigate to="/docs/unrealengine/introduction" replace />} />
