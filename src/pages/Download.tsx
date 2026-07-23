@@ -130,7 +130,6 @@ export default function DownloadPage() {
 
                     <a
                       href={artifact.downloadUrl}
-                      download={artifact.fileName}
                       className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-400 sm:w-auto"
                     >
                       <DownloadIcon className="h-4 w-4" aria-hidden="true" />

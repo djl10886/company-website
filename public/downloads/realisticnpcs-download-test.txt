@@ -1,5 +1,0 @@
-RealisticNPCs public download test
-
-If you can read this file, the website's public download flow is working correctly.
-
-This file is only a test artifact. It does not contain the RealisticNPCs Unreal Engine plugin or daemon.

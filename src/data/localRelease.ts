@@ -1,3 +1,5 @@
+const DOWNLOAD_ORIGIN = 'https://downloads.clankrintelligence.com';
+
 export type LocalReleaseStatus = 'test' | 'available';
 
 export interface LocalDownloadArtifact {
@@ -28,7 +30,7 @@ export const localRelease: LocalRelease = {
     {
       label: 'Download Test File',
       fileName: 'realisticnpcs-download-test.txt',
-      downloadUrl: '/downloads/realisticnpcs-download-test.txt',
+      downloadUrl: `${DOWNLOAD_ORIGIN}/realisticnpcs-download-test.txt`,
       format: 'Plain text',
       sizeLabel: 'Less than 1 KB',
     },
