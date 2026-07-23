@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import UnrealDocsNavigation from '../../../components/UnrealDocsNavigation';
+import { LOCAL_DEPLOYMENT_SCOPE } from '../../../data/localRelease';
 
 export default function Setup() {
   useEffect(() => {
@@ -39,6 +40,15 @@ export default function Setup() {
             <p className="text-gray-300 text-xl leading-relaxed">
               After enabling the plugin, open <strong>Window -&gt; RealisticNPCs Daemon Config</strong> to configure services, securely store API keys, assign model targets, save the profile, and validate it. Unreal starts and stops the managed daemon automatically; you do not launch or connect it manually.
             </p>
+            <div
+              className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-5 text-amber-100"
+              role="note"
+            >
+              <p className="text-xl leading-relaxed">
+                <strong className="text-amber-200">Deployment scope:</strong>{' '}
+                {LOCAL_DEPLOYMENT_SCOPE}
+              </p>
+            </div>
             <p className="text-gray-300 text-xl leading-relaxed">
               Packaged builds also require the matching platform daemon included with the plugin distribution. If the daemon binary is missing, incompatible, or cannot use the saved profile, NPC behavior remains inactive instead of falling back to a separate local implementation. Check the Unreal Output Log for the startup milestone or actionable failure message.
             </p>

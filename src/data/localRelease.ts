@@ -1,5 +1,8 @@
 const DOWNLOAD_ORIGIN = 'https://downloads.clankrintelligence.com';
 
+export const LOCAL_DEPLOYMENT_SCOPE =
+  'RealisticNPCs Local is intended for development and developer-controlled environments. Player-facing API-key provisioning is not included; developers distributing packaged games must provide their own secure runtime inference and authentication solution.';
+
 export type LocalReleaseStatus = 'test' | 'available';
 
 export interface LocalDownloadArtifact {

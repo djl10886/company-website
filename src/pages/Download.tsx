@@ -6,7 +6,7 @@ import {
   HardDrive,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { localRelease } from '../data/localRelease';
+import { LOCAL_DEPLOYMENT_SCOPE, localRelease } from '../data/localRelease';
 
 export default function DownloadPage() {
   const isTestRelease = localRelease.status === 'test';
@@ -161,6 +161,21 @@ export default function DownloadPage() {
                 The downloadable edition will remain available after the optional cloud
                 portal launches.
               </p>
+              <div
+                className="mt-5 rounded-lg p-4"
+                style={{
+                  background: 'rgba(245,158,11,0.08)',
+                  border: '1px solid rgba(245,158,11,0.22)',
+                }}
+                role="note"
+              >
+                <p className="text-xs font-semibold uppercase tracking-widest text-amber-300">
+                  Current deployment scope
+                </p>
+                <p className="mt-2 text-sm leading-6 text-amber-100/75">
+                  {LOCAL_DEPLOYMENT_SCOPE}
+                </p>
+              </div>
               <ul className="mt-6 space-y-3">
                 {[
                   'Public download with no account required',
