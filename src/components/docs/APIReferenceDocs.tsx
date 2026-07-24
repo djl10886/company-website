@@ -261,10 +261,20 @@ export default function APIReferenceDocs() {
               Project settings for calendar selection, automatic initial time, persistent-state reset, and world description. Provider services and model targets are configured separately through <code className={codeClassName}>Window → RealisticNPCs Daemon Config</code>.
             </p>
             <ul className="list-disc list-inside pl-4 space-y-1">
-              <li><code className={codeClassName}>DefaultCalendar</code>, <code className={codeClassName}>bAutoApplyInitialTime</code>, and <code className={codeClassName}>InitialTime</code>.</li>
+              <li><code className={codeClassName}>CalendarSource</code>, <code className={codeClassName}>SimpleCalendar</code>, <code className={codeClassName}>GregorianCalendar</code>, and <code className={codeClassName}>CustomCalendarAsset</code>.</li>
+              <li><code className={codeClassName}>bAutoApplyInitialTime</code> and <code className={codeClassName}>InitialTime</code>.</li>
               <li><code className={codeClassName}>bResetPersistentStateOnStartup</code>.</li>
               <li><code className={codeClassName}>WorldDescriptionFile</code> and <code className={codeClassName}>InlineWorldDescription</code>.</li>
             </ul>
+          </ApiEntry>
+
+          <ApiEntry name="ERNPCCalendarSource and Built-In Calendar Configuration">
+            <p>
+              <code className={codeClassName}>ERNPCCalendarSource</code> selects Built-in Simple, Built-in Gregorian, or a project-owned Custom Calendar Asset. <code className={codeClassName}>FRNPCSimpleCalendarConfiguration</code> exposes real seconds per game day, month-day counts, and optional month names; <code className={codeClassName}>FRNPCGregorianCalendarConfiguration</code> exposes real seconds per game day and optional month names.
+            </p>
+            <p>
+              Both built-ins default to 1800 real seconds per game day. Simple additionally defaults to twelve 30-day months. Their settings are stored separately and take effect when the world or PIE session restarts.
+            </p>
           </ApiEntry>
 
           <ApiEntry name="URNPCContinuitySubsystem">
@@ -314,7 +324,7 @@ export default function APIReferenceDocs() {
 
           <ApiEntry name="UBaseCalendar">
             <p>
-              Calendar data asset base class. Use the built-in simple or Gregorian calendar assets, or subclass this when the project needs a custom calendar and time conversion model.
+              Calendar Data Asset base class for advanced project-owned custom calendars. Most projects configure the code-backed Simple or Gregorian calendar through Project Settings; use a custom asset when the project needs a different calendar or time-conversion model.
             </p>
           </ApiEntry>
 

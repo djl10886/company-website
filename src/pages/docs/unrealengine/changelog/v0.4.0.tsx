@@ -89,9 +89,30 @@ export const v0_4_0: Release = {
             Persisted memory, evolved identity, and vector data created by the older Unreal-native runtime are not migrated. Projects upgrading from v0.3.0 should begin with a fresh v0.4.0 continuity history.
           </li>
           <li>
-            Authored NPC backgrounds, goals, self-assessments, relationships, action sets, perception settings, time settings, and spatial knowledge remain part of the Unreal authoring workflow and can be carried forward normally.
+            Authored NPC backgrounds, goals, self-assessments, relationships, action sets, perception settings, and spatial knowledge remain part of the Unreal authoring workflow and can be carried forward normally. Calendar settings use the new workflow below.
           </li>
         </ul>
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-6">5. Calendar Authoring</h2>
+        <ul className="list-disc space-y-3 text-white ml-6">
+          <li>
+            The previous <code className="bg-slate-800/50 px-2 py-1 rounded">DefaultCalendar</code> setting and bundled preset assets have been replaced by configurable Simple and Gregorian calendars in Project Settings.
+          </li>
+          <li>
+            Built-in calendars no longer require a Data Asset. Simple exposes day length, month lengths, and optional month names; Gregorian exposes day length and optional month names while retaining standard Gregorian arithmetic.
+          </li>
+          <li>
+            Advanced projects can still select a project-owned Custom Calendar Asset derived from <code className="bg-slate-800/50 px-2 py-1 rounded">UBaseCalendar</code>.
+          </li>
+        </ul>
+        <p className="text-white font-semibold mt-6 mb-3">
+          Upgrading an existing project
+        </p>
+        <p className="text-white">
+          Earlier calendar selections are not migrated automatically. Select the new Calendar Source, configure it in Project Settings, and begin a fresh continuity after upgrading. Future changes to calendar source or date structure likewise require fresh continuity, while changes only to day speed or month names do not.
+        </p>
       </div>
     </div>
   ),

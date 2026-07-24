@@ -119,9 +119,24 @@ export default function Configuration() {
 
                 <div className="space-y-4">
                   <div className="border-l-4 border-blue-500/50 pl-6">
-                    <code className="bg-white/20 px-2 py-1 rounded">DefaultCalendar</code>, <code className="bg-white/20 px-2 py-1 rounded">bAutoApplyInitialTime</code>, and <code className="bg-white/20 px-2 py-1 rounded">InitialTime</code>
+                    <code className="bg-white/20 px-2 py-1 rounded">CalendarSource</code>
                     <p className="mt-2">
-                      Select the project's calendar and choose the initial in-game time used when a continuity does not already provide saved world time.
+                      Select the calendar used by the project:
+                    </p>
+                    <ul className="mt-3 list-disc space-y-2 pl-6">
+                      <li><strong className="text-white">Built-in Simple</strong> uses configurable <code className="bg-white/20 px-2 py-1 rounded">RealSecondsPerGameDay</code>, <code className="bg-white/20 px-2 py-1 rounded">MonthDayCounts</code>, and optional <code className="bg-white/20 px-2 py-1 rounded">MonthNames</code>. It defaults to a 30-minute real-time day and twelve 30-day months.</li>
+                      <li><strong className="text-white">Built-in Gregorian</strong> uses standard Gregorian month and leap-year rules with a configurable 30-minute default day length and optional month names.</li>
+                      <li><strong className="text-white">Custom Calendar Asset</strong> uses a project-owned Calendar Data Asset derived from <code className="bg-white/20 px-2 py-1 rounded">UBaseCalendar</code> for projects that need a custom date model.</li>
+                    </ul>
+                    <p className="mt-3">
+                      The built-in calendars require no Data Asset. Their configurations are saved separately in the project's normal configuration, so switching between Simple and Gregorian does not discard either set of values. Restart the current world or PIE session after changing calendar settings.
+                    </p>
+                  </div>
+
+                  <div className="border-l-4 border-blue-500/50 pl-6">
+                    <code className="bg-white/20 px-2 py-1 rounded">bAutoApplyInitialTime</code> and <code className="bg-white/20 px-2 py-1 rounded">InitialTime</code>
+                    <p className="mt-2">
+                      Choose the initial in-game time used when a continuity does not already provide saved world time.
                     </p>
                   </div>
 
@@ -140,6 +155,9 @@ export default function Configuration() {
                   </div>
 
                 </div>
+                <p className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-yellow-200">
+                  Calendar day length must be positive. The Simple calendar also requires at least one month and a positive day count for every month. Invalid built-in settings log an error and use that calendar's defaults; an unset or invalid custom asset falls back to the built-in Simple calendar.
+                </p>
               </div>
             </div>
 
@@ -175,6 +193,9 @@ export default function Configuration() {
                 </p>
                 <p>
                   PIE automatically creates or resumes the project's continuity. Packaged-game save flows use the continuity Blueprint APIs described in the Authoring Guide. Use the reset setting only when you intentionally want to discard the current development continuity and begin fresh.
+                </p>
+                <p className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-yellow-200">
+                  Calendar source and date structure are part of continuity compatibility. Changing the source or Simple month-day counts requires a fresh continuity; changing only the real-time day length or month names does not. After changing a custom calendar's date interpretation, use a new asset path or begin a fresh continuity.
                 </p>
               </div>
             </div>

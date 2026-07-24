@@ -61,7 +61,7 @@ export default function QuickStart() {
                 </p>
                 <ul className="list-disc list-inside pl-4 space-y-2">
                   <li>Set <code className="bg-white/20 px-2 py-1 rounded">InlineWorldDescription</code>, or set <code className="bg-white/20 px-2 py-1 rounded">WorldDescriptionFile</code> to a text file. Inline text takes precedence when both are set.</li>
-                  <li>Choose the default calendar and initial time for the world.</li>
+                  <li>Select Built-in Simple, Built-in Gregorian, or Custom Calendar Asset, configure the fields shown, and choose the initial time. Restart PIE after calendar changes; see the <Link to="/docs/unrealengine/configuration" className="text-blue-400 hover:text-blue-300 transition-colors">configuration guide</Link> for details.</li>
                   <li>Leave <code className="bg-white/20 px-2 py-1 rounded">bResetPersistentStateOnStartup</code> disabled unless you need a clean-slate test run.</li>
                 </ul>
               </div>
