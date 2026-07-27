@@ -1,22 +1,23 @@
 const DOWNLOAD_ORIGIN = 'https://downloads.clankrintelligence.com';
+const INTERNAL_PLACEHOLDER_DOWNLOAD_URL =
+  DOWNLOAD_ORIGIN + '/realisticnpcs-download-test.txt';
 
 export const LOCAL_DEPLOYMENT_SCOPE =
-  'RealisticNPCs Local is intended for development and developer-controlled environments. Player-facing API-key provisioning is not included; developers distributing packaged games must provide their own secure runtime inference and authentication solution.';
-
-export type LocalReleaseStatus = 'test' | 'available';
+  'RealisticNPCs Local 0.4.0 is intended for development and developer-controlled environments. Distribution to player machines requires a developer-provided inference service and authentication solution; this player-facing infrastructure is not included with RealisticNPCs.';
 
 export interface LocalDownloadArtifact {
   label: string;
+  displayName: string;
   fileName: string;
   downloadUrl: string;
+  platformLabel: string;
   format: string;
-  sizeLabel: string;
+  sizeLabel?: string;
 }
 
 export interface LocalRelease {
   productName: string;
   editionName: string;
-  status: LocalReleaseStatus;
   version: string;
   summary: string;
   artifacts: LocalDownloadArtifact[];
@@ -25,17 +26,17 @@ export interface LocalRelease {
 export const localRelease: LocalRelease = {
   productName: 'RealisticNPCs',
   editionName: 'Local',
-  status: 'test',
-  version: 'Download System Test',
+  version: '0.4.0',
   summary:
-    'Download and run the RealisticNPCs backend with your Unreal Engine project from your own machine, independently of the future hosted service.',
+    'Download RealisticNPCs Local for Unreal Engine. Its managed backend runs locally on 64-bit Windows.',
   artifacts: [
     {
-      label: 'Download Test File',
-      fileName: 'realisticnpcs-download-test.txt',
-      downloadUrl: `${DOWNLOAD_ORIGIN}/realisticnpcs-download-test.txt`,
-      format: 'Plain text',
-      sizeLabel: 'Less than 1 KB',
+      label: 'Download for Windows',
+      displayName: 'RealisticNPCs Local for Unreal Engine',
+      fileName: 'RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip',
+      downloadUrl: INTERNAL_PLACEHOLDER_DOWNLOAD_URL,
+      platformLabel: 'Windows 10 and Windows 11 (64-bit)',
+      format: 'ZIP archive',
     },
   ],
 };

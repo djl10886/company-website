@@ -43,7 +43,7 @@ export default function QuickStart() {
 
                 <h3 className="text-xl font-semibold text-white mt-8">Daemon Configuration</h3>
                 <ol className="list-decimal list-inside space-y-4 pl-4">
-                  <li>Add each model service and enter its service ID and endpoint.</li>
+                  <li>Configure the initial service row with its service ID and endpoint. Use <strong>Add Service</strong> only when you need an additional service.</li>
                   <li>Use <strong>Set Key</strong> to store the service's API key for the current provider origin, then use <strong>Check Stored Key</strong> to confirm that it is available for that origin.</li>
                   <li>Assign models for the required <strong>Default Light</strong>, <strong>Default Heavy</strong>, and <strong>Embedding</strong> targets.</li>
                   <li>Select <strong>Save Profile</strong>, then <strong>Validate with Daemon</strong>.</li>

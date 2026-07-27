@@ -26,13 +26,19 @@ export default function Setup() {
 
           <div className="space-y-8">
             <p className="text-gray-300 text-xl leading-relaxed">
-              Install the complete RealisticNPCs plugin distribution for your release. The plugin folder includes the matching managed-daemon binary used by Unreal at runtime, so do not copy only the Source folder or mix files from different plugin versions. You can install the complete plugin as an engine-wide plugin available to all projects or as a project-specific plugin.
+              Close the Unreal Editor, then extract the downloaded product ZIP. The archive root contains release documents and one <code className="bg-white/20 px-2 py-1 rounded">RealisticNPCs</code> plugin directory. Install that complete directory—not the archive root or only its <code className="bg-white/20 px-2 py-1 rounded">Source</code> folder—and do not rearrange its contents or mix files from different releases.
             </p>
             <p className="text-gray-300 text-xl leading-relaxed">
-              For an engine-wide installation, navigate to your Unreal Engine installation directory and locate the "Plugins" folder. Copy the entire "RealisticNPCs" folder into this directory. Launch the Unreal Editor, open the Plugins window (Edit -&gt; Plugins), find the "RealisticNPCs" plugin, and enable it. Restart the editor for the changes to take effect.
+              For the recommended project-specific installation, create <code className="bg-white/20 px-2 py-1 rounded">&lt;Project&gt;/Plugins</code> if it does not exist, then copy the extracted plugin directory so its descriptor is located at <code className="bg-white/20 px-2 py-1 rounded">&lt;Project&gt;/Plugins/RealisticNPCs/RealisticNPCs.uplugin</code>.
             </p>
             <p className="text-gray-300 text-xl leading-relaxed">
-              For a project-specific installation, locate your project's root directory (where your .uproject file is) and create a "Plugins" folder if it doesn't exist. Copy the "RealisticNPCs" folder into this new "Plugins" folder. Right-click your .uproject file and select "Generate Visual Studio project files", then build the project. When you launch the editor, the plugin should be automatically enabled and ready to use.
+              For an optional engine-wide installation, copy the complete plugin directory to <code className="bg-white/20 px-2 py-1 rounded">&lt;Unreal Engine&gt;/Engine/Plugins/Marketplace/RealisticNPCs</code>. This makes it available to compatible projects using that Unreal Engine installation.
+            </p>
+            <p className="text-gray-300 text-xl leading-relaxed">
+              After copying the plugin, regenerate project files when required by your Unreal workflow and compile the project. Open the editor, verify that RealisticNPCs is enabled under <strong>Edit -&gt; Plugins</strong>, enable it if necessary, and restart when prompted.
+            </p>
+            <p className="text-gray-300 text-xl leading-relaxed">
+              The complete plugin directory already includes the bundled Win64 daemon at <code className="bg-white/20 px-2 py-1 rounded">RealisticNPCs/Binaries/ThirdParty/RealisticNPCsDaemon/Win64/rnpc-daemon.exe</code>. Leave it in that location. Unreal finds, starts, monitors, and stops it automatically; do not download, copy, or launch the daemon separately.
             </p>
             <p className="text-gray-300 text-xl leading-relaxed">
               If your project uses plugin classes from C++, add "RealisticNPCs" to the appropriate dependency list in your module's Build.cs file. Use PublicDependencyModuleNames when public headers expose plugin types, or PrivateDependencyModuleNames when the dependency is only used inside your module implementation.
@@ -50,7 +56,7 @@ export default function Setup() {
               </p>
             </div>
             <p className="text-gray-300 text-xl leading-relaxed">
-              Packaged builds also require the matching platform daemon included with the plugin distribution. If the daemon binary is missing, incompatible, or cannot use the saved profile, NPC behavior remains inactive instead of falling back to a separate local implementation. Check the Unreal Output Log for the startup milestone or actionable failure message.
+              If the bundled Win64 daemon is missing, incompatible, or cannot use the saved profile, NPC behavior remains inactive instead of falling back to a separate local implementation. Check the Unreal Output Log for the startup milestone or actionable failure message.
             </p>
           </div>
         </div>

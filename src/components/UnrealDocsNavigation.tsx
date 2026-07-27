@@ -138,7 +138,7 @@ export default function UnrealDocsNavigation() {
         className="fixed top-16 left-0 z-30 hidden h-[calc(100vh-4rem)] w-64 overflow-y-auto bg-slate-800/50 backdrop-blur-sm md:block"
       >
         <div className="p-6">
-          <h2 className="mb-6 text-lg font-semibold text-white">Unreal Engine Plugin</h2>
+          <h2 className="mb-6 text-lg font-semibold text-white">RealisticNPCs for Unreal Engine</h2>
           {renderDocLinks(false)}
         </div>
       </nav>
@@ -153,7 +153,7 @@ export default function UnrealDocsNavigation() {
         >
           <span>
             <span className="block text-xs font-medium uppercase tracking-wider text-gray-500">
-              Unreal Engine Plugin
+              RealisticNPCs for Unreal Engine
             </span>
             <span className="block text-sm font-semibold text-white">{currentPageLabel}</span>
           </span>
@@ -181,4 +181,3 @@ export default function UnrealDocsNavigation() {
     </div>
   );
 }
-
