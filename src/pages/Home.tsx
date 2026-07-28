@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, Zap, Brain, Eye, Target, Users, Puzzle,
-  BookOpen, FileText, CheckCircle, XCircle, Play,
+  BookOpen, FileText, CheckCircle, XCircle, Play, Download,
   Github, Twitter, Linkedin, Mail,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -369,7 +369,7 @@ function NPCPanel() {
   };
 
   return (
-    <div className="relative w-[340px] mx-auto" style={{ height: '340px' }}>
+    <div className="relative w-full max-w-[340px] mx-auto" style={{ height: '340px' }}>
       {/* Ghost card 2 (furthest back) */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ ...cardBase, border: `1px solid ${prev2.color}18`, transform: 'rotate(4deg) translateY(12px) scale(0.93)', opacity: 0.35 }} />
@@ -454,7 +454,7 @@ function NPCPanel() {
 /* ─── Main ───────────────────────────────────────────────────── */
 export default function Home() {
   return (
-    <div style={{ background: '#070c18' }}>
+    <div className="overflow-x-clip">
       {/* Dot grid */}
       <div className="fixed inset-0 pointer-events-none" style={{
         backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)',
@@ -472,12 +472,6 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left */}
             <div className="space-y-7">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium"
-                style={{ background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.25)', color: '#4ade80' }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                AI NPCs for Unreal Engine — prototype available now
-              </div>
-
               <div>
                 <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight tracking-tight">
                   Humanlike behavior for the next generation
@@ -493,12 +487,12 @@ export default function Home() {
               </p>
 
               <div className="flex flex-wrap gap-3">
-                <Link to="/docs/unrealengine"
+                <Link to="/download"
                   className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm"
                   style={{ background: '#06b6d4', color: '#04080f' }}
                   onMouseEnter={e => (e.currentTarget.style.background = '#22d3ee')}
                   onMouseLeave={e => (e.currentTarget.style.background = '#06b6d4')}>
-                  <BookOpen size={15} /> Explore Docs
+                  <Download size={15} /> Download for Unreal Engine
                 </Link>
                 <a href="#demo" onClick={e => { e.preventDefault(); document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' }); }}
                   className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-sm"
@@ -540,7 +534,7 @@ export default function Home() {
       </section>
 
       {/* ══ MISSION ═══════════════════════════════════════════════ */}
-      <section className="relative py-20 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+      <section id="about" className="relative py-20 border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -608,8 +602,8 @@ export default function Home() {
               { Icon: Eye,    color: '#818cf8', title: 'Rich Perception',       desc: 'Sense and respond to environmental events in real time.' },
               { Icon: Target, color: '#f472b6', title: 'Goal & Planning',       desc: 'Form multi-step plans and pursue them autonomously.' },
               { Icon: Users,  color: '#fb923c', title: 'Social Intelligence',   desc: 'Build relationships, develop rivalries, and adapt socially.' },
-              { Icon: Puzzle, color: '#4ade80', title: 'Modular & Extensible',  desc: 'Add custom actions with plain code and a one-line description.' },
-              { Icon: Zap,    color: '#facc15', title: 'Engine Native',         desc: 'First-class Unreal Engine plugin — works with your existing workflow.' },
+              { Icon: Puzzle, color: '#4ade80', title: 'Modular & Extensible',  desc: 'Implement custom NPC actions in ordinary game code and describe them in natural language.' },
+              { Icon: Zap,    color: '#facc15', title: 'Engine Agnostic',       desc: 'Engine-agnostic backend designed for native engine adapters. Currently available for Unreal Engine.' },
             ].map(({ Icon, color, title, desc }) => (
               <div key={title}
                 className="rounded-xl p-5 transition-all duration-200 group"

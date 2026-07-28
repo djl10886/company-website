@@ -1,5 +1,5 @@
 import React, { useState, FormEvent } from 'react';
-import { Send, CheckCircle, XCircle, Mail, MessageSquare } from 'lucide-react';
+import { Send, CheckCircle, XCircle } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
 emailjs.init("XFdWyLS5AexANO6C6");
@@ -51,7 +51,7 @@ export default function Contact() {
   });
 
   return (
-    <div className="relative py-24 px-6" style={{ background: '#070c18' }}>
+    <div className="relative py-24 px-6">
       <div
         className="orb absolute w-[400px] h-[400px] top-1/2 right-0 -translate-y-1/2 opacity-10 pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.5) 0%, transparent 70%)' }}
@@ -155,16 +155,6 @@ export default function Contact() {
               )}
             </div>
           </form>
-        </div>
-
-        {/* Direct email option */}
-        <div className="mt-6 text-center">
-          <p className="text-xs text-gray-600">
-            Or email us directly at{' '}
-            <a href="mailto:dli@clankrintelligence.com" className="text-cyan-400 hover:text-cyan-300 transition-colors">
-              dli@clankrintelligence.com
-            </a>
-          </p>
         </div>
       </div>
     </div>
