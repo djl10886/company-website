@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, ExternalLink } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logoWhite from '../assets/clankr-logo-white.png';
 
@@ -93,7 +93,7 @@ export default function Navbar() {
             </div>
 
             <button
-              onClick={() => scrollToSection('products')}
+              onClick={() => scrollToSection('demo')}
               className="px-3 py-2 text-sm text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/5"
             >
               Demo
@@ -156,7 +156,7 @@ export default function Navbar() {
             Documentation
           </Link>
           <button
-            onClick={() => scrollToSection('products')}
+            onClick={() => scrollToSection('demo')}
             className="w-full text-left px-3 py-2.5 rounded-lg text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
           >
             Demo
