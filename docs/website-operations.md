@@ -127,7 +127,7 @@ Before merging into `staging`:
 
 Preview URLs are public. Do not place confidential content or private release artifacts in a preview.
 
-Routine smoke testing must not submit waitlist or contact forms because those actions invoke real external services.
+Routine smoke testing must not submit the contact form because that action invokes a real external service.
 
 ### Production deployment
 
@@ -169,7 +169,6 @@ Do not change DNS, redirect rules, R2 objects, mail records, or unrelated zone r
 
 - Worker previews, static assets, client JavaScript, and source maps if ever published are public.
 - Every `VITE_*` value is compiled into browser-visible code. Use it only for public client configuration.
-- A Supabase URL and anonymous client key may be public. A Supabase service-role key or any privileged provider credential may not.
 - Never commit Cloudflare tokens, personal Wrangler OAuth credentials, R2 credentials, private artifacts, or other secrets to source, logs, pull requests, or build output.
 - Personal Wrangler authentication is stored outside the repository and must not be shared. `.wrangler/` remains ignored.
 - Cloudflare dashboard access is required for Git build controls, DNS, and Single Redirect rules; it does not justify copying account credentials into the repository.
