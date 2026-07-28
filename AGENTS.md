@@ -8,7 +8,7 @@
 - Keep detailed operational procedures in the runbook instead of duplicating them here.
 
 ## Validation
-- Do NOT compile, build, or add/run any tests after making code changes - I will test manually myself.
+- Do not install or upgrade dependencies or tooling without explicit user authorization. When the required dependencies are already available, run validation appropriate to the change.
 - Make sure to use CRLF line endings when editing files in this repository.
 
 ## Security
