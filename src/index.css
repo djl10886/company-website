@@ -97,3 +97,24 @@ html {
   }
 }
 
+.rnpc-docs-page {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rnpc-docs-page pre {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-wrap: normal;
+}
+
+.rnpc-docs-page pre code {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.rnpc-docs-page :not(pre) > code {
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
