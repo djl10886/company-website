@@ -369,7 +369,7 @@ function NPCPanel() {
   };
 
   return (
-    <div className="relative w-[340px] mx-auto" style={{ height: '340px' }}>
+    <div className="relative w-full max-w-[340px] mx-auto" style={{ height: '340px' }}>
       {/* Ghost card 2 (furthest back) */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ ...cardBase, border: `1px solid ${prev2.color}18`, transform: 'rotate(4deg) translateY(12px) scale(0.93)', opacity: 0.35 }} />
@@ -454,7 +454,7 @@ function NPCPanel() {
 /* ─── Main ───────────────────────────────────────────────────── */
 export default function Home() {
   return (
-    <div>
+    <div className="overflow-x-clip">
       {/* Dot grid */}
       <div className="fixed inset-0 pointer-events-none" style={{
         backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)',
