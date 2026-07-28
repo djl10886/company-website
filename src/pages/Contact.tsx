@@ -156,16 +156,6 @@ export default function Contact() {
             </div>
           </form>
         </div>
-
-        {/* Direct email option */}
-        <div className="mt-6 text-center">
-          <p className="text-xs text-gray-600">
-            Or email us directly at{' '}
-            <a href="mailto:dli@clankrintelligence.com" className="text-cyan-400 hover:text-cyan-300 transition-colors">
-              dli@clankrintelligence.com
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );
