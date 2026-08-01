@@ -1,0 +1,23 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "realisticnpcs-download-gateway",
+  "main": "src/worker.mjs",
+  "compatibility_date": "2026-07-27",
+  "workers_dev": false,
+  "preview_urls": false,
+  "observability": {
+    "enabled": false
+  },
+  "routes": [
+    {
+      "pattern": "downloads.clankrintelligence.com",
+      "custom_domain": true
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "RELEASE_BUCKET",
+      "bucket_name": "realisticnpcs-releases"
+    }
+  ]
+}
