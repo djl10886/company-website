@@ -182,6 +182,19 @@ test('validates registered release objects', async () => {
   const artifactId = 'realisticnpcs-local-unreal-v0.4.0-windows-x86_64';
   const fileName = 'RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip';
   const key = `releases/0.4.0/unreal/windows-x86_64/${fileName}`;
+  const releases = Object.freeze({
+    [artifactId]: Object.freeze({
+      artifactId,
+      key,
+      fileName,
+      contentType: 'application/zip',
+      size: 3,
+      artifactSha256: 'a'.repeat(64),
+      licenseSha256: LICENSE_SHA,
+      licenseUrl:
+        'https://clankrintelligence.com/legal/realisticnpcs-local/0.4.0/LICENSE.txt',
+    }),
+  });
   const object = objectFor('zip', {
     httpMetadata: {
       contentType: 'application/zip',
@@ -200,6 +213,7 @@ test('validates registered release objects', async () => {
   const response = await handleRequest(
     post({ artifact_id: artifactId }),
     envWith(object, key),
+    releases,
   );
   assert.equal(response.status, 200);
   assert.equal(await response.text(), 'zip');
@@ -210,6 +224,7 @@ test('validates registered release objects', async () => {
       await handleRequest(
         post({ artifact_id: artifactId, license_sha256: 'b'.repeat(64) }),
         envWith(object),
+        releases,
       )
     ).status,
     403,
@@ -217,14 +232,61 @@ test('validates registered release objects', async () => {
 
   object.customMetadata['license-sha256'] = 'b'.repeat(64);
   assert.equal(
-    (await handleRequest(post({ artifact_id: artifactId }), envWith(object, key))).status,
+    (
+      await handleRequest(
+        post({ artifact_id: artifactId }),
+        envWith(object, key),
+        releases,
+      )
+    ).status,
     503,
   );
 
   object.customMetadata['license-sha256'] = LICENSE_SHA;
   object.customMetadata.unexpected = 'value';
   assert.equal(
-    (await handleRequest(post({ artifact_id: artifactId }), envWith(object, key))).status,
+    (
+      await handleRequest(
+        post({ artifact_id: artifactId }),
+        envWith(object, key),
+        releases,
+      )
+    ).status,
     503,
+  );
+
+  delete object.customMetadata.unexpected;
+  object.customMetadata['artifact-sha256'] = 'c'.repeat(64);
+  assert.equal(
+    (
+      await handleRequest(
+        post({ artifact_id: artifactId }),
+        envWith(object, key),
+        releases,
+      )
+    ).status,
+    503,
+  );
+
+  object.customMetadata['artifact-sha256'] = 'a'.repeat(64);
+  object.size = 4;
+  assert.equal(
+    (
+      await handleRequest(
+        post({ artifact_id: artifactId }),
+        envWith(object, key),
+        releases,
+      )
+    ).status,
+    503,
+  );
+
+  assert.equal(
+    (
+      await handleRequest(post({ artifact_id: artifactId }), envWith(object), {
+        [artifactId]: { ...releases[artifactId], size: 0 },
+      })
+    ).status,
+    404,
   );
 });

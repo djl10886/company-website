@@ -25,19 +25,9 @@ const SYSTEM_TEST = Object.freeze({
     '2b514ea59e74f917fda45607f91b755399f2b7f286b9a6b37e259782391b9dd1',
 });
 
-const RELEASES = Object.freeze({
-  'realisticnpcs-local-unreal-v0.4.0-windows-x86_64': Object.freeze({
-    artifactId: 'realisticnpcs-local-unreal-v0.4.0-windows-x86_64',
-    key:
-      'releases/0.4.0/unreal/windows-x86_64/' +
-      'RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip',
-    fileName: 'RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip',
-    contentType: 'application/zip',
-    licenseSha256:
-      '2b514ea59e74f917fda45607f91b755399f2b7f286b9a6b37e259782391b9dd1',
-    licenseUrl: `${WEBSITE_ORIGIN}/legal/realisticnpcs-local/0.4.0/LICENSE.txt`,
-  }),
-});
+// Add a product release only after its final candidate bytes exist. Each entry
+// must pin the exact size, digest, object key, filename, and approved license.
+const RELEASES = Object.freeze({});
 
 function errorResponse(status, message) {
   const headers = new Headers({
@@ -51,22 +41,33 @@ function errorResponse(status, message) {
   return new Response(`${message}\n`, { status, headers });
 }
 
-function getRegisteredRelease(artifactId) {
-  return Object.hasOwn(RELEASES, artifactId) ? RELEASES[artifactId] : null;
+function getRegisteredRelease(releases, artifactId) {
+  if (!Object.hasOwn(releases, artifactId)) {
+    return null;
+  }
+  const release = releases[artifactId];
+  return release &&
+    typeof release === 'object' &&
+    release.artifactId === artifactId &&
+    Number.isSafeInteger(release.size) &&
+    release.size > 0 &&
+    SHA256_PATTERN.test(release.artifactSha256 ?? '')
+    ? release
+    : null;
 }
 
 function validateReleaseObject(object, release) {
   const metadata = object.customMetadata ?? {};
   const metadataFields = Object.keys(metadata).sort();
   return (
-    object.size > 0 &&
+    object.size === release.size &&
     metadataFields.length === RELEASE_METADATA_FIELDS.length &&
     metadataFields.every(
       (field, index) => field === RELEASE_METADATA_FIELDS[index],
     ) &&
     metadata['delivery-contract'] === DELIVERY_CONTRACT &&
     metadata['artifact-id'] === release.artifactId &&
-    SHA256_PATTERN.test(metadata['artifact-sha256'] ?? '') &&
+    metadata['artifact-sha256'] === release.artifactSha256 &&
     metadata['license-sha256'] === release.licenseSha256 &&
     metadata['license-url'] === release.licenseUrl &&
     object.httpMetadata?.contentType === release.contentType &&
@@ -135,7 +136,7 @@ async function getArtifact(env, key) {
   }
 }
 
-export async function handleRequest(request, env) {
+export async function handleRequest(request, env, releases = RELEASES) {
   const url = new URL(request.url);
   if (url.origin !== GATEWAY_ORIGIN || url.pathname !== DOWNLOAD_PATH || url.search) {
     return errorResponse(404, 'Not found.');
@@ -175,7 +176,7 @@ export async function handleRequest(request, env) {
     return attachmentResponse(object, SYSTEM_TEST);
   }
 
-  const release = getRegisteredRelease(artifactId ?? '');
+  const release = getRegisteredRelease(releases, artifactId ?? '');
   if (!release) {
     return errorResponse(404, 'Download artifact was not found.');
   }
@@ -190,5 +191,7 @@ export async function handleRequest(request, env) {
 }
 
 export default {
-  fetch: handleRequest,
+  fetch(request, env) {
+    return handleRequest(request, env);
+  },
 };
