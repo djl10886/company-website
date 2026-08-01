@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import NotFound from '../../../NotFound';
 import { releases } from './releases';
 
 export default function ChangelogDetail() {
@@ -9,24 +10,7 @@ export default function ChangelogDetail() {
   const release = releases.find(r => r.version === version);
 
   if (!release) {
-    return (
-      <div className="rnpc-docs-page relative min-h-screen pt-16">
-        <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-        <div className="fixed inset-0 opacity-30" style={{
-          backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
-          backgroundSize: '48px 48px'
-        }}></div>
-
-        <div className="relative px-6 py-32">
-          <div className="max-w-5xl mx-auto">
-            <p className="text-white text-xl">Release not found</p>
-            <Link to="/docs/unrealengine/changelog" className="text-blue-400 hover:text-blue-300 mt-4 inline-block">
-              Back to Changelog
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+    return <NotFound />;
   }
 
   return (

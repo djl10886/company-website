@@ -4,12 +4,15 @@ This document is the durable operating contract for developing, previewing, depl
 
 ## Architecture and sources of truth
 
-The website is a Vite and React single-page application deployed as static assets by the Cloudflare Worker `clankr-intelligence-website`.
+The website is a Vite and React application whose public routes are statically prerendered at build time, hydrated in the browser, and deployed as static assets by the Cloudflare Worker `clankr-intelligence-website`.
 
 | Concern | Authoritative location |
 | --- | --- |
-| Worker name, compatibility date, static asset directory, SPA fallback, preview URLs, and apex custom domain | `wrangler.jsonc` |
+| Worker name, compatibility date, static asset directory, HTML handling, 404 behavior, preview URLs, and apex custom domain | `wrangler.jsonc` |
 | Wrangler version | Exact development dependency in `package.json` and `package-lock.json` |
+| Canonical public routes, page metadata, structured data, and sitemap inventory | `src/seo/siteMetadata.ts` |
+| Static route aliases and preview indexing headers | `public/_redirects` and `public/_headers` |
+| Origin crawler policy and sitemap declaration | `public/robots.txt` |
 | Git repository connection, production branch, build command, and deployment commands | Cloudflare Worker build settings |
 | Branch protections and required deployment check | GitHub repository settings |
 | `www` DNS and redirect behavior, apex HTTP redirect, and zone configuration | Cloudflare DNS and Redirect Rules |
@@ -22,7 +25,10 @@ The repository configuration currently establishes:
 - Worker: `clankr-intelligence-website`.
 - Wrangler: `4.114.0`.
 - Static assets: `./dist`.
-- Missing-asset handling: `single-page-application`, which permits direct refreshes on React routes.
+- HTML handling: `auto-trailing-slash`, with slashless canonical URLs backed by extension-based prerendered HTML files.
+- Missing-asset handling: `404-page`, which serves the prerendered `404.html` with a `404` status.
+- Exact documentation alias: `/docs/unrealengine` redirects permanently to `/docs/unrealengine/introduction`.
+- Public Worker version and branch previews carry `X-Robots-Tag: noindex, nofollow, noarchive`.
 - Production custom domain: `clankrintelligence.com`.
 - Public Worker version previews: enabled.
 - Download gateway Worker: `realisticnpcs-download-gateway`.
@@ -111,6 +117,8 @@ Cloudflare builds from the repository root using these settings:
 
 A non-production build uploads a Worker version and exposes public commit and branch preview URLs. It must not change the active production deployment. A production build deploys the new `main` version to the apex custom domain.
 
+`npm run build` verifies the approved download license, builds the browser bundle, creates a temporary server-rendering bundle, prerenders every canonical public route and the 404 page, generates `sitemap.xml`, validates the complete SEO output, and removes the temporary server bundle. Every canonical route must produce meaningful HTML before client JavaScript runs. Browser navigation then keeps the title, canonical URL, robots directive, social metadata, and structured data synchronized with the active route.
+
 The required GitHub check and Cloudflare pull-request comment are the expected proof that a preview was created. The base production `workers.dev` hostname is not the production health endpoint; production validation uses `https://clankrintelligence.com`.
 
 Normal publication occurs only through the Git-connected `main` workflow. Do not use a local `wrangler deploy` as an alternative publication path.
@@ -136,7 +144,11 @@ Before merging into `staging`:
 
 - Load `/` and every route declared in `src/App.tsx`.
 - Exercise every supported concrete value for parameterized routes, including every current changelog version behind `:version`.
-- Refresh nested React routes directly and confirm the SPA fallback renders them.
+- Inspect the raw response for every canonical route and confirm it contains the route's rendered content, title, description, canonical URL, robots directive, Open Graph metadata, and X/Twitter metadata before JavaScript runs.
+- Refresh every slashless nested route directly and confirm it returns `200`; confirm trailing-slash variants normalize to the slashless canonical URL.
+- Confirm `/docs/unrealengine` returns the permanent redirect to `/docs/unrealengine/introduction`.
+- Confirm arbitrary paths and unsupported changelog versions return the rendered 404 page with `noindex,follow`.
+- Confirm `robots.txt` is plain text and `sitemap.xml` contains exactly the canonical route inventory.
 - Check hashed JavaScript and CSS, images, favicon, fonts if present, and their content types.
 - Exercise desktop and mobile navigation at representative small, medium, and desktop widths.
 - Check internal links, hash links, browser back/forward navigation, wrapping, and overflow.
@@ -146,6 +158,7 @@ Before merging into `staging`:
 - Confirm the download button remains disabled until the acceptance checkbox is selected.
 - Confirm the form targets `https://downloads.clankrintelligence.com/download` and contains only the documented acceptance fields. Do not expect a preview-origin submission to succeed; the gateway intentionally accepts only the production website origin.
 - Confirm `/` and `/download` return `Content-Security-Policy: frame-ancestors 'none'` and `X-Frame-Options: DENY`.
+- Confirm the public Worker preview response carries `X-Robots-Tag: noindex, nofollow, noarchive` while production canonical metadata continues to reference only `https://clankrintelligence.com`.
 - Confirm the preview did not replace the active production deployment.
 
 Preview URLs are public. Do not place confidential content or private release artifacts in a preview.
@@ -158,6 +171,8 @@ After promotion to `main`:
 
 - Confirm the Cloudflare production build succeeded for the exact merged commit.
 - Load the apex root and every route declared in `src/App.tsx`, including direct nested-route refreshes.
+- Confirm every canonical route returns meaningful prerendered HTML and exactly one route-specific metadata set before JavaScript runs.
+- Confirm the documentation alias, trailing-slash normalization, real 404 responses, `robots.txt`, and `sitemap.xml` match the repository contract.
 - Verify assets, content types, navigation, responsive behavior, console output, and network requests.
 - Confirm apex HTTP redirects once to the identical HTTPS path and query string.
 - Confirm both HTTP and HTTPS `www` requests redirect once to the identical apex HTTPS path and query string without loops.
@@ -207,6 +222,8 @@ If the download gateway itself is unhealthy after a reviewed deployment, restore
 ## Maintenance
 
 - Keep `wrangler.jsonc` byte-equivalent on `main` and `staging` in steady state. A reviewed hosting change may temporarily differ on `staging`; restore equivalence after its production promotion.
+- Register every new indexable public route in `src/seo/siteMetadata.ts` in the same change that adds the route. The shared catalog owns prerender output, browser metadata, and sitemap membership; aliases and 404 routes are not sitemap entries.
+- Keep valid public pages prerender-safe: browser-only work belongs in effects or event handlers, and server output must hydrate without content mismatches.
 - Keep the Cloudflare production branch set to `main` and non-production builds enabled.
 - Preserve the exact required GitHub check and its Cloudflare App binding on both permanent branches.
 - Update this runbook whenever a durable branch control, build command, domain, redirect, deployment, validation, rollback, or hosting responsibility changes.

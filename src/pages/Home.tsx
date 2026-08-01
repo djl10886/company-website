@@ -168,7 +168,7 @@ const STATS = [
 ];
 
 function CountUp({ target }: { target: string }) {
-  const [display, setDisplay] = useState('0');
+  const [display, setDisplay] = useState(target);
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
@@ -180,6 +180,7 @@ function CountUp({ target }: { target: string }) {
       if (entry.isIntersecting && !started.current) {
         started.current = true;
         let start = 0;
+        setDisplay('0');
         const step = Math.ceil(num / 30);
         const t = setInterval(() => {
           start = Math.min(start + step, num);
@@ -425,10 +426,13 @@ export default function Home() {
               <div>
                 <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight tracking-tight">
                   Humanlike behavior for the next generation
-                </h1>
-                <h1 className="text-5xl md:text-6xl font-bold leading-tight tracking-tight mt-1"
-                  style={{ color: '#4ade80', textShadow: '0 0 40px rgba(74,222,128,0.3)' }}>
-                  of game NPCs
+                  {' '}
+                  <span
+                    className="mt-1 block"
+                    style={{ color: '#4ade80', textShadow: '0 0 40px rgba(74,222,128,0.3)' }}
+                  >
+                    of game NPCs
+                  </span>
                 </h1>
               </div>
 

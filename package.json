@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "npm run verify:download-license",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir .wrangler/prerender-server && node scripts/prerender.mjs && npm run validate:seo",
     "lint": "eslint .",
     "preview": "vite preview",
+    "validate:seo": "node scripts/validate-seo.mjs",
     "verify:download-license": "node scripts/verify-download-license.mjs",
     "test:download-gateway": "node --test workers/download-gateway/test/*.test.mjs",
     "check:download-gateway": "npm run verify:download-license && npm run test:download-gateway && wrangler deploy --dry-run --config workers/download-gateway/wrangler.jsonc --outdir .wrangler/download-gateway-check"
