@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowRight, Zap, Brain, Eye, Target, Users, Puzzle,
   BookOpen, FileText, Play, Download,
-  Github, Twitter, Linkedin, Mail,
+  Mail,
 } from 'lucide-react';
 import logoWhite from '../assets/clankr-logo-white.png';
 import Contact from './Contact';
@@ -516,7 +516,7 @@ export default function Home() {
             <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">How it works</span>
             <h2 className="text-3xl font-bold text-white mt-2">Every NPC runs its own AI loop</h2>
             <p className="text-gray-500 mt-3 max-w-lg mx-auto text-sm">
-              Continuously cycling through perception, memory, planning, and action — in real time, inside Unreal Engine.
+              Continuously cycling through perception, memory, planning, and action, in real time.
             </p>
           </div>
           <Pipeline />
@@ -623,11 +623,6 @@ export default function Home() {
                 <span className="text-white font-semibold text-sm">Clankr Intelligence</span>
               </div>
               <p className="text-xs text-gray-600 max-w-xs">AI-powered NPCs for the next generation of games.</p>
-              <div className="flex gap-3">
-                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Twitter size={15} /></a>
-                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Github size={15} /></a>
-                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Linkedin size={15} /></a>
-              </div>
             </div>
             <div className="space-y-3">
               <h4 className="text-xs font-semibold text-white uppercase tracking-widest">Product</h4>
