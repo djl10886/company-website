@@ -1,6 +1,98 @@
+import { useState } from 'react';
 import { ArrowRight, Download as DownloadIcon, Package } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { LOCAL_DEPLOYMENT_SCOPE, localRelease } from '../data/localRelease';
+import {
+  LOCAL_DEPLOYMENT_SCOPE,
+  LOCAL_RELEASE_LICENSE,
+  type LocalDownloadArtifact,
+  localRelease,
+} from '../data/localRelease';
+
+function DownloadArtifact({ artifact }: { artifact: LocalDownloadArtifact }) {
+  const [accepted, setAccepted] = useState(false);
+  const checkboxId = `accept-license-${artifact.artifactId}`;
+  const agreementTextId = `${checkboxId}-text`;
+  const agreementLicenseId = `${checkboxId}-license`;
+
+  return (
+    <article
+      className="rounded-xl p-4 sm:p-5"
+      style={{
+        background: 'rgba(7,13,26,0.72)',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
+      <div className="flex min-w-0 items-start gap-4">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
+          style={{
+            background: 'rgba(6,182,212,0.12)',
+            border: '1px solid rgba(6,182,212,0.25)',
+          }}
+        >
+          <Package className="h-5 w-5 text-cyan-300" aria-hidden="true" />
+        </div>
+        <div className="min-w-0">
+          <h3 className="font-semibold text-white">{artifact.displayName}</h3>
+          <p className="mt-1 text-sm text-gray-400">
+            {artifact.platformLabel} <span aria-hidden="true">·</span>{' '}
+            {artifact.format}
+            {artifact.sizeLabel && (
+              <>
+                {' '}
+                <span aria-hidden="true">·</span> {artifact.sizeLabel}
+              </>
+            )}
+          </p>
+          <p className="mt-2 break-all text-xs text-gray-500">{artifact.fileName}</p>
+        </div>
+      </div>
+
+      <form action={artifact.downloadEndpoint} method="post" className="mt-6">
+        <input type="hidden" name="artifact_id" value={artifact.artifactId} />
+        <input type="hidden" name="license_sha256" value={LOCAL_RELEASE_LICENSE.sha256} />
+
+        <div className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/[0.025] p-4">
+          <input
+            id={checkboxId}
+            name="acceptance"
+            type="checkbox"
+            value="accepted"
+            required
+            checked={accepted}
+            onChange={(event) => setAccepted(event.target.checked)}
+            aria-labelledby={`${agreementTextId} ${agreementLicenseId}`}
+            className="mt-1 h-4 w-4 shrink-0 accent-cyan-400"
+          />
+          <p className="text-sm leading-6 text-gray-300">
+            <label id={agreementTextId} htmlFor={checkboxId}>
+              I have read and agree to the
+            </label>{' '}
+            <a
+              id={agreementLicenseId}
+              href={LOCAL_RELEASE_LICENSE.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-cyan-400 underline decoration-cyan-400/50 underline-offset-2 transition-colors hover:text-cyan-300"
+            >
+              {LOCAL_RELEASE_LICENSE.label}
+            </a>
+            .
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          disabled={!accepted}
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors enabled:hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
+        >
+          <DownloadIcon className="h-4 w-4" aria-hidden="true" />
+          {artifact.label}
+        </button>
+      </form>
+    </article>
+  );
+}
 
 export default function DownloadPage() {
   return (
@@ -70,52 +162,23 @@ export default function DownloadPage() {
 
             <div className="space-y-4">
               {localRelease.artifacts.map((artifact) => (
-                <article
-                  key={artifact.fileName}
-                  className="flex flex-col gap-5 rounded-xl p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
-                  style={{
-                    background: 'rgba(7,13,26,0.72)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                  }}
-                >
-                  <div className="flex min-w-0 items-start gap-4">
-                    <div
-                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
-                      style={{
-                        background: 'rgba(6,182,212,0.12)',
-                        border: '1px solid rgba(6,182,212,0.25)',
-                      }}
-                    >
-                      <Package className="h-5 w-5 text-cyan-300" aria-hidden="true" />
-                    </div>
-                    <div className="min-w-0">
-                      <h3 className="font-semibold text-white">{artifact.displayName}</h3>
-                      <p className="mt-1 text-sm text-gray-400">
-                        {artifact.platformLabel} <span aria-hidden="true">·</span>{' '}
-                        {artifact.format}
-                        {artifact.sizeLabel && (
-                          <>
-                            {' '}
-                            <span aria-hidden="true">·</span> {artifact.sizeLabel}
-                          </>
-                        )}
-                      </p>
-                      <p className="mt-2 break-all text-xs text-gray-500">
-                        {artifact.fileName}
-                      </p>
-                    </div>
-                  </div>
-
-                  <a
-                    href={artifact.downloadUrl}
-                    className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-lg bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-400 sm:w-auto"
-                  >
-                    <DownloadIcon className="h-4 w-4" aria-hidden="true" />
-                    {artifact.label}
-                  </a>
-                </article>
+                <DownloadArtifact key={artifact.artifactId} artifact={artifact} />
               ))}
             </div>
+
+            {localRelease.status === 'test' && (
+              <div
+                className="mt-5 rounded-lg px-4 py-3 text-sm leading-6 text-amber-200"
+                style={{
+                  background: 'rgba(245,158,11,0.08)',
+                  border: '1px solid rgba(245,158,11,0.24)',
+                }}
+              >
+                <span className="font-semibold">Download system test:</span> This small
+                text file verifies the gated public delivery path. It is not the
+                RealisticNPCs product.
+              </div>
+            )}
 
             <div className="mt-6 space-y-3 border-t border-white/10 pt-5 text-sm leading-6 text-gray-400">
               <p>

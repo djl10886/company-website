@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, Zap, Brain, Eye, Target, Users, Puzzle,
-  BookOpen, FileText, CheckCircle, XCircle, Play, Download,
-  Github, Twitter, Linkedin, Mail,
+  BookOpen, FileText, Play, Download,
+  Mail,
 } from 'lucide-react';
-import { supabase } from '../lib/supabase';
 import logoWhite from '../assets/clankr-logo-white.png';
 import Contact from './Contact';
 
@@ -169,7 +168,7 @@ const STATS = [
 ];
 
 function CountUp({ target }: { target: string }) {
-  const [display, setDisplay] = useState('0');
+  const [display, setDisplay] = useState(target);
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
@@ -181,6 +180,7 @@ function CountUp({ target }: { target: string }) {
       if (entry.isIntersecting && !started.current) {
         started.current = true;
         let start = 0;
+        setDisplay('0');
         const step = Math.ceil(num / 30);
         const t = setInterval(() => {
           start = Math.min(start + step, num);
@@ -256,55 +256,6 @@ function DocCard({ icon, title, description, href, badge }: {
       </div>
       <ArrowRight size={14} className="text-gray-600 group-hover:text-cyan-400 transition-colors shrink-0 mt-0.5" />
     </Link>
-  );
-}
-
-/* ─── Waitlist form ──────────────────────────────────────────── */
-function WaitlistForm() {
-  const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Please enter a valid email'); setStatus('error'); return;
-    }
-    setStatus('submitting'); setError('');
-    try {
-      const { error: err } = await supabase.from('waitlist').insert([{ email: email.toLowerCase() }]);
-      if (err) { setError(err.code === '23505' ? 'Already on the waitlist!' : 'Something went wrong.'); setStatus('error'); return; }
-      setStatus('success'); setEmail('');
-    } catch { setStatus('error'); setError('Something went wrong.'); }
-    setTimeout(() => setStatus('idle'), 5000);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-      <input type="email" value={email}
-        onChange={e => { setEmail(e.target.value); setError(''); setStatus('idle'); }}
-        placeholder="Enter your email"
-        className="flex-1 px-4 py-3 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none"
-        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
-      />
-      <button type="submit" disabled={status === 'submitting'}
-        className="px-6 py-3 rounded-lg font-semibold text-sm transition-all whitespace-nowrap"
-        style={{ background: status === 'submitting' ? 'rgba(6,182,212,0.3)' : '#06b6d4', color: '#04080f' }}>
-        {status === 'submitting'
-          ? <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin mx-auto" />
-          : 'Join Waitlist'}
-      </button>
-      {status === 'success' && (
-        <p className="text-green-400 text-sm flex items-center gap-1.5 justify-center col-span-2">
-          <CheckCircle size={15} /> You're on the list!
-        </p>
-      )}
-      {status === 'error' && (
-        <p className="text-red-400 text-sm flex items-center gap-1.5 justify-center col-span-2">
-          <XCircle size={15} /> {error}
-        </p>
-      )}
-    </form>
   );
 }
 
@@ -475,10 +426,13 @@ export default function Home() {
               <div>
                 <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight tracking-tight">
                   Humanlike behavior for the next generation
-                </h1>
-                <h1 className="text-5xl md:text-6xl font-bold leading-tight tracking-tight mt-1"
-                  style={{ color: '#4ade80', textShadow: '0 0 40px rgba(74,222,128,0.3)' }}>
-                  of game NPCs
+                  {' '}
+                  <span
+                    className="mt-1 block"
+                    style={{ color: '#4ade80', textShadow: '0 0 40px rgba(74,222,128,0.3)' }}
+                  >
+                    of game NPCs
+                  </span>
                 </h1>
               </div>
 
@@ -566,7 +520,7 @@ export default function Home() {
             <span className="text-xs text-cyan-400 font-semibold tracking-widest uppercase">How it works</span>
             <h2 className="text-3xl font-bold text-white mt-2">Every NPC runs its own AI loop</h2>
             <p className="text-gray-500 mt-3 max-w-lg mx-auto text-sm">
-              Continuously cycling through perception, memory, planning, and action — in real time, inside Unreal Engine.
+              Continuously cycling through perception, memory, planning, and action, in real time.
             </p>
           </div>
           <Pipeline />
@@ -655,17 +609,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ══ WAITLIST ══════════════════════════════════════════════ */}
-      <section className="relative py-24">
-        <div className="orb absolute w-[500px] h-[250px] bottom-0 left-1/2 -translate-x-1/2 opacity-12 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse, rgba(6,182,212,0.4) 0%, transparent 70%)' }} />
-        <div className="relative max-w-xl mx-auto px-4 text-center space-y-5">
-          <h2 className="text-3xl font-bold text-white">Stay in the loop</h2>
-          <p className="text-gray-400 text-sm">Get notified about new releases, features, and early access.</p>
-          <WaitlistForm />
-        </div>
-      </section>
-
       {/* ══ CONTACT ═══════════════════════════════════════════════ */}
       <section id="contact" className="border-t" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
         <Contact />
@@ -684,11 +627,6 @@ export default function Home() {
                 <span className="text-white font-semibold text-sm">Clankr Intelligence</span>
               </div>
               <p className="text-xs text-gray-600 max-w-xs">AI-powered NPCs for the next generation of games.</p>
-              <div className="flex gap-3">
-                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Twitter size={15} /></a>
-                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Github size={15} /></a>
-                <a href="#" className="text-gray-700 hover:text-gray-400 transition-colors"><Linkedin size={15} /></a>
-              </div>
             </div>
             <div className="space-y-3">
               <h4 className="text-xs font-semibold text-white uppercase tracking-widest">Product</h4>

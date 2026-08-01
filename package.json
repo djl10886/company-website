@@ -5,13 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "prebuild": "npm run verify:download-license",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir .wrangler/prerender-server && node scripts/prerender.mjs && npm run validate:seo",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "validate:seo": "node scripts/validate-seo.mjs",
+    "verify:download-license": "node scripts/verify-download-license.mjs",
+    "test:download-gateway": "node --test workers/download-gateway/test/*.test.mjs",
+    "check:download-gateway": "npm run verify:download-license && npm run test:download-gateway && wrangler deploy --dry-run --config workers/download-gateway/wrangler.jsonc --outdir .wrangler/download-gateway-check"
   },
   "dependencies": {
     "@emailjs/browser": "^4.3.3",
-    "@supabase/supabase-js": "^2.39.7",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
