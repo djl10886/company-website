@@ -91,6 +91,56 @@ function attachmentResponse(object, artifact) {
   return new Response(object.body, { status: 200, headers });
 }
 
+async function cancelReader(reader) {
+  try {
+    await reader.cancel();
+  } catch {
+    // The request stream is already unusable, so cancellation is best-effort.
+  }
+}
+
+async function readBoundedBody(request) {
+  if (!request.body) {
+    return { bytes: new Uint8Array() };
+  }
+
+  const reader = request.body.getReader();
+  const chunks = [];
+  let byteLength = 0;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+      if (!(value instanceof Uint8Array)) {
+        await cancelReader(reader);
+        return { malformed: true };
+      }
+      if (value.byteLength > MAX_FORM_BYTES - byteLength) {
+        await cancelReader(reader);
+        return { tooLarge: true };
+      }
+      chunks.push(value);
+      byteLength += value.byteLength;
+    }
+  } catch {
+    await cancelReader(reader);
+    return { malformed: true };
+  } finally {
+    reader.releaseLock();
+  }
+
+  const bytes = new Uint8Array(byteLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return { bytes };
+}
+
 async function parseForm(request) {
   const contentType = request.headers.get('Content-Type') ?? '';
   const mediaType = contentType.split(';', 1)[0].trim().toLowerCase();
@@ -101,10 +151,14 @@ async function parseForm(request) {
   if (Number.isFinite(declaredLength) && declaredLength > MAX_FORM_BYTES) {
     return { error: errorResponse(413, 'Request body is too large.') };
   }
-  const bytes = new Uint8Array(await request.arrayBuffer());
-  if (bytes.byteLength > MAX_FORM_BYTES) {
+  const body = await readBoundedBody(request);
+  if (body.tooLarge) {
     return { error: errorResponse(413, 'Request body is too large.') };
   }
+  if (body.malformed) {
+    return { error: errorResponse(400, 'Malformed acceptance request.') };
+  }
+  const bytes = body.bytes;
   let encodedForm;
   try {
     encodedForm = new TextDecoder('utf-8', { fatal: true }).decode(bytes);

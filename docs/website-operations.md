@@ -13,6 +13,7 @@ The website is a Vite and React single-page application deployed as static asset
 | Git repository connection, production branch, build command, and deployment commands | Cloudflare Worker build settings |
 | Branch protections and required deployment check | GitHub repository settings |
 | `www` DNS and redirect behavior, apex HTTP redirect, and zone configuration | Cloudflare DNS and Redirect Rules |
+| Site-wide anti-framing response headers | `public/_headers` |
 | Private product objects | Cloudflare R2 and the product release pipeline |
 | License-acceptance gateway, R2 binding, and download custom domain | `workers/download-gateway/wrangler.jsonc` |
 
@@ -28,6 +29,7 @@ The repository configuration currently establishes:
 - Private release bucket binding: `RELEASE_BUCKET` to `realisticnpcs-releases`.
 - Download gateway custom domain: `downloads.clankrintelligence.com`.
 - Download gateway `workers.dev`, preview URLs, and observability: disabled.
+- Static website responses deny framing through CSP `frame-ancestors 'none'` with `X-Frame-Options: DENY` fallback coverage.
 
 The domain boundaries are:
 
@@ -143,6 +145,7 @@ Before merging into `staging`:
 - Open the public license link and confirm it matches the approved license identity.
 - Confirm the download button remains disabled until the acceptance checkbox is selected.
 - Confirm the form targets `https://downloads.clankrintelligence.com/download` and contains only the documented acceptance fields. Do not expect a preview-origin submission to succeed; the gateway intentionally accepts only the production website origin.
+- Confirm `/` and `/download` return `Content-Security-Policy: frame-ancestors 'none'` and `X-Frame-Options: DENY`.
 - Confirm the preview did not replace the active production deployment.
 
 Preview URLs are public. Do not place confidential content or private release artifacts in a preview.
@@ -159,6 +162,7 @@ After promotion to `main`:
 - Confirm apex HTTP redirects once to the identical HTTPS path and query string.
 - Confirm both HTTP and HTTPS `www` requests redirect once to the identical apex HTTPS path and query string without loops.
 - Verify the public license and submit the gated download form from the production page.
+- Confirm `/` and `/download` return the site-wide anti-framing headers.
 - Confirm a direct GET to the former R2 object path returns `404` and GET on `/download` returns `405` with `Allow: POST`.
 - Confirm the accepted POST returns the exact expected attachment with `Cache-Control: private, no-store` and no redirect or cookie.
 - Confirm the active Worker deployment corresponds to the successful `main` build.

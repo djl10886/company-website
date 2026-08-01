@@ -11,6 +11,8 @@ import {
 function DownloadArtifact({ artifact }: { artifact: LocalDownloadArtifact }) {
   const [accepted, setAccepted] = useState(false);
   const checkboxId = `accept-license-${artifact.artifactId}`;
+  const agreementTextId = `${checkboxId}-text`;
+  const agreementLicenseId = `${checkboxId}-license`;
 
   return (
     <article
@@ -59,11 +61,15 @@ function DownloadArtifact({ artifact }: { artifact: LocalDownloadArtifact }) {
             required
             checked={accepted}
             onChange={(event) => setAccepted(event.target.checked)}
+            aria-labelledby={`${agreementTextId} ${agreementLicenseId}`}
             className="mt-1 h-4 w-4 shrink-0 accent-cyan-400"
           />
           <p className="text-sm leading-6 text-gray-300">
-            <label htmlFor={checkboxId}>I have read and agree to the </label>
+            <label id={agreementTextId} htmlFor={checkboxId}>
+              I have read and agree to the
+            </label>{' '}
             <a
+              id={agreementLicenseId}
               href={LOCAL_RELEASE_LICENSE.url}
               target="_blank"
               rel="noopener noreferrer"

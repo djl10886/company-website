@@ -8,6 +8,7 @@ const TEST_ID = 'realisticnpcs-local-unreal-v0.4.0-windows-x86_64-system-test';
 const LICENSE_SHA =
   '2b514ea59e74f917fda45607f91b755399f2b7f286b9a6b37e259782391b9dd1';
 const TEST_TEXT = 'x'.repeat(226);
+const MAX_FORM_BYTES = 4096;
 
 function objectFor(body = TEST_TEXT, overrides = {}) {
   return {
@@ -55,6 +56,51 @@ function post(fields = {}, headers = {}) {
     headers: { Origin: ORIGIN, ...headers },
     body,
   });
+}
+
+function streamedPost(chunks, headers = {}) {
+  const encodedChunks = chunks.map((chunk) =>
+    typeof chunk === 'string' ? new TextEncoder().encode(chunk) : chunk,
+  );
+  let chunkIndex = 0;
+  let cancelled = false;
+  const body = new ReadableStream({
+    pull(controller) {
+      if (chunkIndex === encodedChunks.length) {
+        controller.close();
+        return;
+      }
+      controller.enqueue(encodedChunks[chunkIndex]);
+      chunkIndex += 1;
+    },
+    cancel() {
+      cancelled = true;
+    },
+  });
+  return {
+    request: new Request('https://downloads.clankrintelligence.com/download', {
+      method: 'POST',
+      headers: {
+        Origin: ORIGIN,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        ...headers,
+      },
+      body,
+      duplex: 'half',
+    }),
+    wasCancelled() {
+      return cancelled;
+    },
+  };
+}
+
+function encodedForm(fields = {}) {
+  return new URLSearchParams({
+    acceptance: 'accepted',
+    artifact_id: TEST_ID,
+    license_sha256: LICENSE_SHA,
+    ...fields,
+  }).toString();
 }
 
 test('rejects non-POST requests and unrelated paths', async () => {
@@ -150,6 +196,66 @@ test('rejects wrong origins and malformed acceptance', async () => {
     );
     assert.equal(malformedResponse.status, 400);
   }
+});
+
+test('enforces the form limit while streaming request bodies', async () => {
+  const validBody = encodedForm();
+  const streamedValid = streamedPost([
+    validBody.slice(0, 17),
+    validBody.slice(17, 83),
+    validBody.slice(83),
+  ]);
+  assert.equal(streamedValid.request.headers.get('Content-Length'), null);
+  const validResponse = await handleRequest(
+    streamedValid.request,
+    envWith(objectFor(), 'realisticnpcs-download-test.txt'),
+  );
+  assert.equal(validResponse.status, 200);
+  assert.equal(streamedValid.wasCancelled(), false);
+
+  const fixedFormBytes = new TextEncoder().encode(
+    `acceptance=accepted&artifact_id=&license_sha256=${LICENSE_SHA}`,
+  ).byteLength;
+  const boundaryBody = encodedForm({
+    artifact_id: 'a'.repeat(MAX_FORM_BYTES - fixedFormBytes),
+  });
+  assert.equal(new TextEncoder().encode(boundaryBody).byteLength, MAX_FORM_BYTES);
+  const boundary = streamedPost([boundaryBody.slice(0, 2048), boundaryBody.slice(2048)]);
+  assert.equal((await handleRequest(boundary.request, envWith(null))).status, 404);
+  assert.equal(boundary.wasCancelled(), false);
+
+  const oversized = streamedPost(
+    ['a'.repeat(2048), 'b'.repeat(2048), 'c'],
+    { 'Content-Length': '1' },
+  );
+  assert.equal((await handleRequest(oversized.request, envWith(null))).status, 413);
+  assert.equal(oversized.wasCancelled(), true);
+
+  const declaredOversized = post({}, {
+    'Content-Length': String(MAX_FORM_BYTES + 1),
+  });
+  assert.equal(
+    (await handleRequest(declaredOversized, envWith(null))).status,
+    413,
+  );
+});
+
+test('rejects request stream failures as malformed acceptance', async () => {
+  const body = new ReadableStream({
+    pull(controller) {
+      controller.error(new Error('request stream failed'));
+    },
+  });
+  const request = new Request('https://downloads.clankrintelligence.com/download', {
+    method: 'POST',
+    headers: {
+      Origin: ORIGIN,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body,
+    duplex: 'half',
+  });
+  assert.equal((await handleRequest(request, envWith(null))).status, 400);
 });
 
 test('streams the exact system-test object without a persistent grant', async () => {
