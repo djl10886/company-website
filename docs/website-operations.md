@@ -14,7 +14,7 @@ The website is a Vite and React application whose public routes are statically p
 | Static route aliases and preview indexing headers | `public/_redirects` and `public/_headers` |
 | Origin crawler policy and sitemap declaration | `public/robots.txt` |
 | Git repository connection, production branch, build command, and deployment commands | Cloudflare Worker build settings |
-| Branch protections and required deployment check | GitHub repository settings |
+| Branch protections and required deployment checks | GitHub repository settings |
 | `www` DNS and redirect behavior, apex HTTP redirect, and zone configuration | Cloudflare DNS and Redirect Rules |
 | Site-wide anti-framing response headers | `public/_headers` |
 | Private product objects | Cloudflare R2 and the product release pipeline |
@@ -60,7 +60,7 @@ Do not push directly to either permanent branch.
 
 1. Update local references and branch from current `staging`.
 2. Make the focused change and open a pull request into `staging`.
-3. Wait for `Workers Builds: clankr-intelligence-website` to succeed and for Cloudflare to publish the public preview link.
+3. Wait for both required Worker checks to succeed and for Cloudflare to publish the website preview link. The download-gateway check is compile-only on non-production branches.
 4. Validate the preview using the checklist below.
 5. Obtain one approval, resolve every conversation, and ensure the branch is current.
 6. Squash-merge the pull request into `staging`.
@@ -74,9 +74,9 @@ Merging into `staging` does not replace the active production deployment.
 2. If `main` has commits that are not in `staging`, create a synchronization branch from current `staging`, merge current `main` into it, and open a pull request into `staging`.
 3. Validate the synchronization preview, obtain approval, resolve conversations, and merge the synchronization pull request with a merge commit so `main` remains in `staging` history.
 4. Open or refresh the `staging` pull request into `main`.
-5. Require the Cloudflare check, preview validation, one approval, resolved conversations, and a current branch.
+5. Require both Cloudflare checks, preview validation, one approval, resolved conversations, and a current branch.
 6. Merge `staging` into `main` with a merge commit. Do not squash or rebase a production promotion.
-7. Monitor the production build and validate the exact merged deployment on the apex domain.
+7. Monitor both production builds and validate the exact merged website and gateway deployments.
 8. Retain `staging` for subsequent work.
 
 All application fixes, including urgent hotfixes, follow this path through `staging`. If production must be stabilized before a fix can complete the normal workflow, roll back the Worker first; do not bypass `staging` with a direct hotfix into `main`.
@@ -95,6 +95,7 @@ Both `main` and `staging` are protected with the following contract:
 - Every review conversation must be resolved.
 - The branch must be current before merge.
 - `Workers Builds: clankr-intelligence-website` is required and pinned to the Cloudflare GitHub App with app ID `85455`.
+- `Workers Builds: realisticnpcs-download-gateway` is required and pinned to the same Cloudflare GitHub App.
 - Force pushes and branch deletion are disabled.
 
 The repository permits multiple GitHub merge mechanisms, but the operating convention is narrower:
@@ -104,7 +105,7 @@ The repository permits multiple GitHub merge mechanisms, but the operating conve
 - Do not use rebase merge for either permanent branch workflow.
 - Delete completed short-lived branches manually; automatic branch deletion is not enabled.
 
-If the required Cloudflare check is missing rather than pending, verify that the Cloudflare Workers and Pages GitHub App still has access to the repository before changing branch protection.
+If either required Cloudflare check is missing rather than pending, verify that the applicable Worker remains connected to the repository and that the Cloudflare Workers and Pages GitHub App still has access before changing branch protection.
 
 ## Cloudflare build and deployment behavior
 
@@ -119,13 +120,15 @@ A non-production build uploads a Worker version and exposes public commit and br
 
 `npm run build` verifies the approved download license, builds the browser bundle, creates a temporary server-rendering bundle, prerenders every canonical public route and the 404 page, generates `sitemap.xml`, validates the complete SEO output, and removes the temporary server bundle. Every canonical route must produce meaningful HTML before client JavaScript runs. Browser navigation then keeps the title, canonical URL, robots directive, social metadata, and structured data synchronized with the active route.
 
-The required GitHub check and Cloudflare pull-request comment are the expected proof that a preview was created. The base production `workers.dev` hostname is not the production health endpoint; production validation uses `https://clankrintelligence.com`.
+The `Workers Builds: clankr-intelligence-website` check and Cloudflare pull-request comment are the expected proof that a website preview was created. The base production `workers.dev` hostname is not the production health endpoint; production validation uses `https://clankrintelligence.com`.
 
 Normal publication occurs only through the Git-connected `main` workflow. Do not use a local `wrangler deploy` as an alternative publication path.
 
 ### Download gateway builds
 
-The download gateway is a separate Worker built from the same repository. Its Cloudflare build settings are:
+The download gateway is a separate Worker with its own Cloudflare Git connection to this repository. Its production branch and repository root match the website Worker, but it has independent build commands, deployment history, and the required `Workers Builds: realisticnpcs-download-gateway` check. A website Worker build does not deploy the gateway.
+
+Its Cloudflare build settings are:
 
 | Build type | Branch | Build command | Deployment command |
 | --- | --- | --- | --- |
@@ -169,7 +172,7 @@ Routine smoke testing must not submit the contact form because that action invok
 
 After promotion to `main`:
 
-- Confirm the Cloudflare production build succeeded for the exact merged commit.
+- Confirm both Cloudflare production builds succeeded for the exact merged commit.
 - Load the apex root and every route declared in `src/App.tsx`, including direct nested-route refreshes.
 - Confirm every canonical route returns meaningful prerendered HTML and exactly one route-specific metadata set before JavaScript runs.
 - Confirm the documentation alias, trailing-slash normalization, real 404 responses, `robots.txt`, and `sitemap.xml` match the repository contract.
@@ -180,7 +183,7 @@ After promotion to `main`:
 - Confirm `/` and `/download` return the site-wide anti-framing headers.
 - Confirm a direct GET to the former R2 object path returns `404` and GET on `/download` returns `405` with `Allow: POST`.
 - Confirm the accepted POST returns the exact expected attachment with `Cache-Control: private, no-store` and no redirect or cookie.
-- Confirm the active Worker deployment corresponds to the successful `main` build.
+- Confirm both active Worker deployments correspond to the successful `main` builds.
 
 ## Rollback and recovery
 
@@ -225,7 +228,7 @@ If the download gateway itself is unhealthy after a reviewed deployment, restore
 - Register every new indexable public route in `src/seo/siteMetadata.ts` in the same change that adds the route. The shared catalog owns prerender output, browser metadata, and sitemap membership; aliases and 404 routes are not sitemap entries.
 - Keep valid public pages prerender-safe: browser-only work belongs in effects or event handlers, and server output must hydrate without content mismatches.
 - Keep the Cloudflare production branch set to `main` and non-production builds enabled.
-- Preserve the exact required GitHub check and its Cloudflare App binding on both permanent branches.
+- Preserve both exact required GitHub checks and their Cloudflare App binding on both permanent branches.
 - Update this runbook whenever a durable branch control, build command, domain, redirect, deployment, validation, rollback, or hosting responsibility changes.
 - Delete merged short-lived branches manually.
 - Retain `staging` permanently.
