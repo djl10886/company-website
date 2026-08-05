@@ -166,20 +166,6 @@ export default function DownloadPage() {
               ))}
             </div>
 
-            {localRelease.status === 'test' && (
-              <div
-                className="mt-5 rounded-lg px-4 py-3 text-sm leading-6 text-amber-200"
-                style={{
-                  background: 'rgba(245,158,11,0.08)',
-                  border: '1px solid rgba(245,158,11,0.24)',
-                }}
-              >
-                <span className="font-semibold">Download system test:</span> This small
-                text file verifies the gated public delivery path. It is not the
-                RealisticNPCs product.
-              </div>
-            )}
-
             <div className="mt-6 space-y-3 border-t border-white/10 pt-5 text-sm leading-6 text-gray-400">
               <p>
                 <span className="font-semibold text-gray-300">Requirements:</span>{' '}
