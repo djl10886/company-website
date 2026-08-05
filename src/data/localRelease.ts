@@ -24,7 +24,6 @@ export interface LocalRelease {
   productName: string;
   editionName: string;
   version: string;
-  status: 'test' | 'available';
   summary: string;
   artifacts: LocalDownloadArtifact[];
 }
@@ -33,20 +32,18 @@ export const localRelease: LocalRelease = {
   productName: 'RealisticNPCs',
   editionName: 'Local',
   version: '0.4.0',
-  status: 'test',
   summary:
-    'The public download path is being prepared for RealisticNPCs Local for Unreal Engine.',
+    'RealisticNPCs Local 0.4.0 is an initial developer-facing alpha for Unreal Engine, combining a source-visible adapter with a bundled local daemon.',
   artifacts: [
     {
-      artifactId:
-        'realisticnpcs-local-unreal-v0.4.0-windows-x86_64-system-test',
+      artifactId: 'realisticnpcs-local-unreal-v0.4.0-windows-x86_64',
       label: 'I Agree and Download',
-      displayName: 'RealisticNPCs download system test',
-      fileName: 'realisticnpcs-download-test.txt',
+      displayName: 'RealisticNPCs Local for Unreal Engine',
+      fileName: 'RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip',
       downloadEndpoint: DOWNLOAD_ORIGIN + '/download',
-      platformLabel: 'Public delivery test',
-      format: 'Text file',
-      sizeLabel: '226 bytes',
+      platformLabel: 'Windows 10/11 x86_64',
+      format: 'ZIP archive',
+      sizeLabel: '7.9 MB',
     },
   ],
 };

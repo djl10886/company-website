@@ -13,21 +13,27 @@ const RELEASE_METADATA_FIELDS = [
 ];
 const SHA256_PATTERN = /^[0-9a-f]{64}$/;
 
-const SYSTEM_TEST = Object.freeze({
-  artifactId:
-    'realisticnpcs-local-unreal-v0.4.0-windows-x86_64-system-test',
-  key: 'realisticnpcs-download-test.txt',
-  fileName: 'realisticnpcs-download-test.txt',
-  contentType: 'text/plain; charset=utf-8',
-  size: 226,
-  etag: '"ee3d07b6c5ebac9e287f2232cd5fd372"',
-  licenseSha256:
-    '2b514ea59e74f917fda45607f91b755399f2b7f286b9a6b37e259782391b9dd1',
-});
-
 // Add a product release only after its final candidate bytes exist. Each entry
 // must pin the exact size, digest, object key, filename, and approved license.
-const RELEASES = Object.freeze({});
+const REALISTICNPCS_LOCAL_UNREAL_0_4_0 = Object.freeze({
+  artifactId: 'realisticnpcs-local-unreal-v0.4.0-windows-x86_64',
+  key:
+    'releases/0.4.0/unreal/windows-x86_64/RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip',
+  fileName: 'RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip',
+  contentType: 'application/zip',
+  size: 7853380,
+  artifactSha256:
+    '5430ed62329c3709f0f1d791bc370725ecf4a2ec44ca151b0b92d8fd33944c42',
+  licenseSha256:
+    '2b514ea59e74f917fda45607f91b755399f2b7f286b9a6b37e259782391b9dd1',
+  licenseUrl:
+    'https://clankrintelligence.com/legal/realisticnpcs-local/0.4.0/LICENSE.txt',
+});
+
+const RELEASES = Object.freeze({
+  [REALISTICNPCS_LOCAL_UNREAL_0_4_0.artifactId]:
+    REALISTICNPCS_LOCAL_UNREAL_0_4_0,
+});
 
 function errorResponse(status, message) {
   const headers = new Headers({
@@ -213,21 +219,6 @@ export async function handleRequest(request, env, releases = RELEASES) {
     !SHA256_PATTERN.test(licenseSha256 ?? '')
   ) {
     return errorResponse(403, 'License acceptance is required.');
-  }
-
-  if (artifactId === SYSTEM_TEST.artifactId) {
-    if (licenseSha256 !== SYSTEM_TEST.licenseSha256) {
-      return errorResponse(403, 'License acceptance does not match this artifact.');
-    }
-    const object = await getArtifact(env, SYSTEM_TEST.key);
-    if (
-      !object ||
-      object.size !== SYSTEM_TEST.size ||
-      object.httpEtag !== SYSTEM_TEST.etag
-    ) {
-      return errorResponse(503, 'Download artifact is unavailable.');
-    }
-    return attachmentResponse(object, SYSTEM_TEST);
   }
 
   const release = getRegisteredRelease(releases, artifactId ?? '');

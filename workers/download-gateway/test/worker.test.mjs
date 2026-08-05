@@ -4,19 +4,41 @@ import { test } from 'node:test';
 import { handleRequest } from '../src/worker.mjs';
 
 const ORIGIN = 'https://clankrintelligence.com';
-const TEST_ID = 'realisticnpcs-local-unreal-v0.4.0-windows-x86_64-system-test';
+const RELEASE_ID = 'realisticnpcs-local-unreal-v0.4.0-windows-x86_64';
+const FORMER_TEST_ID =
+  'realisticnpcs-local-unreal-v0.4.0-windows-x86_64-system-test';
+const RELEASE_FILE_NAME =
+  'RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip';
+const RELEASE_KEY =
+  `releases/0.4.0/unreal/windows-x86_64/${RELEASE_FILE_NAME}`;
+const RELEASE_SIZE = 7853380;
+const RELEASE_SHA =
+  '5430ed62329c3709f0f1d791bc370725ecf4a2ec44ca151b0b92d8fd33944c42';
 const LICENSE_SHA =
   '2b514ea59e74f917fda45607f91b755399f2b7f286b9a6b37e259782391b9dd1';
-const TEST_TEXT = 'x'.repeat(226);
+const LICENSE_URL =
+  'https://clankrintelligence.com/legal/realisticnpcs-local/0.4.0/LICENSE.txt';
+const RELEASE_BODY = 'zip';
+const RELEASE_ETAG = '"release-etag"';
 const MAX_FORM_BYTES = 4096;
 
-function objectFor(body = TEST_TEXT, overrides = {}) {
+function releaseObject(overrides = {}) {
   return {
-    body,
-    size: new TextEncoder().encode(body).byteLength,
-    httpEtag: '"ee3d07b6c5ebac9e287f2232cd5fd372"',
-    httpMetadata: {},
-    customMetadata: {},
+    body: RELEASE_BODY,
+    size: RELEASE_SIZE,
+    httpEtag: RELEASE_ETAG,
+    httpMetadata: {
+      contentType: 'application/zip',
+      contentDisposition: `attachment; filename="${RELEASE_FILE_NAME}"`,
+      cacheControl: 'private, no-store',
+    },
+    customMetadata: {
+      'delivery-contract': 'download-page-clickwrap-v1',
+      'artifact-id': RELEASE_ID,
+      'artifact-sha256': RELEASE_SHA,
+      'license-sha256': LICENSE_SHA,
+      'license-url': LICENSE_URL,
+    },
     ...overrides,
   };
 }
@@ -47,7 +69,7 @@ function failingEnv() {
 function post(fields = {}, headers = {}) {
   const body = new URLSearchParams({
     acceptance: 'accepted',
-    artifact_id: TEST_ID,
+    artifact_id: RELEASE_ID,
     license_sha256: LICENSE_SHA,
     ...fields,
   });
@@ -97,7 +119,7 @@ function streamedPost(chunks, headers = {}) {
 function encodedForm(fields = {}) {
   return new URLSearchParams({
     acceptance: 'accepted',
-    artifact_id: TEST_ID,
+    artifact_id: RELEASE_ID,
     license_sha256: LICENSE_SHA,
     ...fields,
   }).toString();
@@ -112,20 +134,30 @@ test('rejects non-POST requests and unrelated paths', async () => {
   assert.equal(get.status, 405);
   assert.equal(get.headers.get('Allow'), 'POST');
 
-  const missing = await handleRequest(
-    new Request('https://downloads.clankrintelligence.com/realisticnpcs-download-test.txt'),
-    env,
-  );
-  assert.equal(missing.status, 404);
+  for (const path of [
+    '/realisticnpcs-download-test.txt',
+    `/${RELEASE_KEY}`,
+    `/${RELEASE_KEY}.sha256`,
+  ]) {
+    const missing = await handleRequest(
+      new Request(`https://downloads.clankrintelligence.com${path}`),
+      env,
+    );
+    assert.equal(missing.status, 404);
+  }
 
   assert.equal(
     (await handleRequest(post({ artifact_id: 'toString' }), env)).status,
     404,
   );
+  assert.equal(
+    (await handleRequest(post({ artifact_id: FORMER_TEST_ID }), env)).status,
+    404,
+  );
 
   const acceptedBody = new URLSearchParams({
     acceptance: 'accepted',
-    artifact_id: TEST_ID,
+    artifact_id: RELEASE_ID,
     license_sha256: LICENSE_SHA,
   });
   for (const url of [
@@ -145,7 +177,7 @@ test('rejects non-POST requests and unrelated paths', async () => {
 });
 
 test('rejects wrong origins and malformed acceptance', async () => {
-  const env = envWith(objectFor());
+  const env = envWith(releaseObject());
   assert.equal(
     (await handleRequest(post({}, { Origin: 'https://example.com' }), env)).status,
     403,
@@ -155,7 +187,7 @@ test('rejects wrong origins and malformed acceptance', async () => {
 
   const duplicate = new URLSearchParams({
     acceptance: 'accepted',
-    artifact_id: TEST_ID,
+    artifact_id: RELEASE_ID,
     license_sha256: LICENSE_SHA,
   });
   duplicate.append('acceptance', 'accepted');
@@ -208,7 +240,7 @@ test('enforces the form limit while streaming request bodies', async () => {
   assert.equal(streamedValid.request.headers.get('Content-Length'), null);
   const validResponse = await handleRequest(
     streamedValid.request,
-    envWith(objectFor(), 'realisticnpcs-download-test.txt'),
+    envWith(releaseObject(), RELEASE_KEY),
   );
   assert.equal(validResponse.status, 200);
   assert.equal(streamedValid.wasCancelled(), false);
@@ -258,79 +290,35 @@ test('rejects request stream failures as malformed acceptance', async () => {
   assert.equal((await handleRequest(request, envWith(null))).status, 400);
 });
 
-test('streams the exact system-test object without a persistent grant', async () => {
+test('streams the exact registered release without a persistent grant', async () => {
   const response = await handleRequest(
     post(),
-    envWith(objectFor(), 'realisticnpcs-download-test.txt'),
+    envWith(releaseObject(), RELEASE_KEY),
   );
   assert.equal(response.status, 200);
-  assert.equal(await response.text(), TEST_TEXT);
-  assert.equal(response.headers.get('Content-Length'), '226');
+  assert.equal(await response.text(), RELEASE_BODY);
+  assert.equal(response.headers.get('Content-Length'), String(RELEASE_SIZE));
   assert.equal(
     response.headers.get('Content-Disposition'),
-    'attachment; filename="realisticnpcs-download-test.txt"',
+    `attachment; filename="${RELEASE_FILE_NAME}"`,
   );
+  assert.equal(response.headers.get('Content-Type'), 'application/zip');
   assert.equal(response.headers.get('Cache-Control'), 'private, no-store');
   assert.equal(response.headers.get('X-Content-Type-Options'), 'nosniff');
+  assert.equal(response.headers.get('ETag'), RELEASE_ETAG);
+  assert.equal(response.headers.get('X-Artifact-SHA256'), null);
   assert.equal(response.headers.get('Set-Cookie'), null);
   assert.equal(response.headers.get('Location'), null);
   assert.equal(response.headers.get('Access-Control-Allow-Origin'), null);
-
-  const wrongObject = objectFor(TEST_TEXT, { httpEtag: '"changed"' });
-  assert.equal(
-    (await handleRequest(post(), envWith(wrongObject))).status,
-    503,
-  );
-  assert.equal((await handleRequest(post(), failingEnv())).status, 503);
 });
 
-test('validates registered release objects', async () => {
-  const artifactId = 'realisticnpcs-local-unreal-v0.4.0-windows-x86_64';
-  const fileName = 'RealisticNPCs-Local-Unreal-v0.4.0-Windows-x86_64.zip';
-  const key = `releases/0.4.0/unreal/windows-x86_64/${fileName}`;
-  const releases = Object.freeze({
-    [artifactId]: Object.freeze({
-      artifactId,
-      key,
-      fileName,
-      contentType: 'application/zip',
-      size: 3,
-      artifactSha256: 'a'.repeat(64),
-      licenseSha256: LICENSE_SHA,
-      licenseUrl:
-        'https://clankrintelligence.com/legal/realisticnpcs-local/0.4.0/LICENSE.txt',
-    }),
-  });
-  const object = objectFor('zip', {
-    httpMetadata: {
-      contentType: 'application/zip',
-      contentDisposition: `attachment; filename="${fileName}"`,
-      cacheControl: 'private, no-store',
-    },
-    customMetadata: {
-      'delivery-contract': 'download-page-clickwrap-v1',
-      'artifact-id': artifactId,
-      'artifact-sha256': 'a'.repeat(64),
-      'license-sha256': LICENSE_SHA,
-      'license-url':
-        'https://clankrintelligence.com/legal/realisticnpcs-local/0.4.0/LICENSE.txt',
-    },
-  });
-  const response = await handleRequest(
-    post({ artifact_id: artifactId }),
-    envWith(object, key),
-    releases,
-  );
-  assert.equal(response.status, 200);
-  assert.equal(await response.text(), 'zip');
-  assert.equal(response.headers.get('X-Artifact-SHA256'), null);
-
+test('rejects unavailable or incorrectly described release objects', async () => {
+  const object = releaseObject();
   assert.equal(
     (
       await handleRequest(
-        post({ artifact_id: artifactId, license_sha256: 'b'.repeat(64) }),
+        post({ artifact_id: RELEASE_ID, license_sha256: 'b'.repeat(64) }),
         envWith(object),
-        releases,
       )
     ).status,
     403,
@@ -340,9 +328,8 @@ test('validates registered release objects', async () => {
   assert.equal(
     (
       await handleRequest(
-        post({ artifact_id: artifactId }),
-        envWith(object, key),
-        releases,
+        post({ artifact_id: RELEASE_ID }),
+        envWith(object, RELEASE_KEY),
       )
     ).status,
     503,
@@ -353,9 +340,8 @@ test('validates registered release objects', async () => {
   assert.equal(
     (
       await handleRequest(
-        post({ artifact_id: artifactId }),
-        envWith(object, key),
-        releases,
+        post({ artifact_id: RELEASE_ID }),
+        envWith(object, RELEASE_KEY),
       )
     ).status,
     503,
@@ -366,22 +352,20 @@ test('validates registered release objects', async () => {
   assert.equal(
     (
       await handleRequest(
-        post({ artifact_id: artifactId }),
-        envWith(object, key),
-        releases,
+        post({ artifact_id: RELEASE_ID }),
+        envWith(object, RELEASE_KEY),
       )
     ).status,
     503,
   );
 
-  object.customMetadata['artifact-sha256'] = 'a'.repeat(64);
-  object.size = 4;
+  object.customMetadata['artifact-sha256'] = RELEASE_SHA;
+  object.size = RELEASE_SIZE - 1;
   assert.equal(
     (
       await handleRequest(
-        post({ artifact_id: artifactId }),
-        envWith(object, key),
-        releases,
+        post({ artifact_id: RELEASE_ID }),
+        envWith(object, RELEASE_KEY),
       )
     ).status,
     503,
@@ -389,8 +373,26 @@ test('validates registered release objects', async () => {
 
   assert.equal(
     (
-      await handleRequest(post({ artifact_id: artifactId }), envWith(object), {
-        [artifactId]: { ...releases[artifactId], size: 0 },
+      await handleRequest(
+        post({ artifact_id: RELEASE_ID }),
+        envWith(null, RELEASE_KEY),
+      )
+    ).status,
+    503,
+  );
+  assert.equal(
+    (await handleRequest(post({ artifact_id: RELEASE_ID }), failingEnv())).status,
+    503,
+  );
+
+  assert.equal(
+    (
+      await handleRequest(post({ artifact_id: RELEASE_ID }), envWith(object), {
+        [RELEASE_ID]: {
+          artifactId: RELEASE_ID,
+          size: 0,
+          artifactSha256: RELEASE_SHA,
+        },
       })
     ).status,
     404,

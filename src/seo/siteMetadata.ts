@@ -151,7 +151,7 @@ function structuredDataForPath(pathname: string): Record<string, unknown>[] {
     ];
   }
 
-  if (pathname === '/download' && localRelease.status === 'available') {
+  if (pathname === '/download') {
     return [
       {
         '@context': 'https://schema.org',
