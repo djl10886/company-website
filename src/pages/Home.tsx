@@ -6,6 +6,10 @@ import {
   Mail,
 } from 'lucide-react';
 import logoWhite from '../assets/clankr-logo-white.png';
+import marcusSprite from '../assets/marcus-sprite.png';
+import elenaSprite from '../assets/elena-sprite.png';
+import oldTomSprite from '../assets/oldtom-sprite.png';
+import townScene from '../assets/town-scene.jpg';
 import Contact from './Contact';
 
 /* ─── Animated NPC Pipeline ──────────────────────────────────── */
@@ -74,91 +78,6 @@ function Pipeline() {
   );
 }
 
-/* ─── Pixel Sprite ──────────────────────────────────────────── */
-const SPRITE_COLORS: Record<string, string | null> = {
-  '.': null,
-  'k': '#111111', 'B': '#111111',
-  'E': '#2d1b00',
-  's': '#f5c5a3',
-  'C': '#22d3ee', 'c': '#164e63', 'l': '#a5f3fc',
-  'A': '#4ade80', 'a': '#16a34a',
-  'P': '#a78bfa', 'W': '#f9fafb', 'w': '#e5e7eb', 'b': '#d1d5db',
-};
-
-function PixelSprite({ pixels, scale = 3 }: { pixels: string[]; scale?: number }) {
-  const h = pixels.length;
-  const w = pixels[0]?.length ?? 0;
-  return (
-    <svg width={w * scale} height={h * scale} style={{ imageRendering: 'pixelated', display: 'block' }}>
-      {pixels.flatMap((row, y) =>
-        [...row].map((ch, x) => {
-          const fill = SPRITE_COLORS[ch];
-          return fill
-            ? <rect key={`${x}-${y}`} x={x * scale} y={y * scale} width={scale} height={scale} fill={fill} />
-            : null;
-        })
-      )}
-    </svg>
-  );
-}
-
-const MARCUS_SPRITE = [
-  '....kkkk........',
-  '...kCCCCk.......',
-  '..kCCllCCk......',
-  '..kCCllCCk......',
-  '...ksssskk......',
-  '...ksEsEkk......',
-  '...ksssskk......',
-  '...ksBBsk.......',
-  '....ksskk.......',
-  '...kCCCCk.......',
-  '..kCCCCCCk......',
-  '..kCcCCcCk......',
-  '..kCCCCCCk......',
-  '..kccBBcck......',
-  '...kCCkCCk......',
-  '...kCCkCCk......',
-];
-
-const ELENA_SPRITE = [
-  '...kAAAAk.......',
-  '..kAAAAAAk......',
-  '..kAAssssAAk....',
-  '..kAAEssEAAk....',
-  '..kAAssssAAk....',
-  '..kAAsBBsAAk....',
-  '..kAAAAAAk......',
-  '...kAAAAk.......',
-  '.kAAAAAAAAk.....',
-  '.kAAAAAaAAk.....',
-  '.kAAAAaAAAk.....',
-  '.kAAAAAAaAk.....',
-  '.kAAAAAAAk......',
-  '..kAAAAk........',
-  '..kAAkAAk.......',
-  '..kAAkAAk.......',
-];
-
-const OLDTOM_SPRITE = [
-  '....ksskk.......',
-  '...ksssskk......',
-  '..ksssssskk.....',
-  '..ksEssEskk.....',
-  '..ksssssskk.....',
-  '..kssBBsskk.....',
-  '..kbbbbbkk......',
-  '..kbbbbbbk......',
-  '..kPbbbbPk......',
-  '.kPPWWWWPPk.....',
-  '.kPPWwwWPPk.....',
-  '.kPPWWWWPPk.....',
-  '.kPPWWWWPPk.....',
-  '..kPWWWPk.......',
-  '..kPPkPPk.......',
-  '..kPPkPPk.......',
-];
-
 /* ─── Stats strip ────────────────────────────────────────────── */
 const STATS = [
   { value: '3',   unit: 'min',  label: 'to author your first NPC' },
@@ -196,42 +115,6 @@ function CountUp({ target }: { target: string }) {
   return <span ref={ref}>{display}</span>;
 }
 
-/* ─── Code snippet card ──────────────────────────────────────── */
-function CodeCard() {
-  return (
-    <div
-      className="rounded-xl overflow-hidden text-left"
-      style={{ background: '#0a0f1e', border: '1px solid rgba(255,255,255,0.08)' }}
-    >
-      {/* Terminal bar */}
-      <div className="flex items-center gap-1.5 px-4 py-3" style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <span className="w-3 h-3 rounded-full bg-red-500/60" />
-        <span className="w-3 h-3 rounded-full bg-yellow-500/60" />
-        <span className="w-3 h-3 rounded-full bg-green-500/60" />
-        <span className="ml-2 text-xs text-gray-600">npc_setup.cpp</span>
-      </div>
-      <pre className="px-5 py-4 text-xs leading-6 overflow-x-auto">
-        <code>
-<span style={{color:'#6b7280'}}>// Define your NPC in plain language</span>{'\n'}
-<span style={{color:'#818cf8'}}>UClankrNPC</span><span style={{color:'#e2e8f0'}}> *Guard = </span><span style={{color:'#818cf8'}}>NewObject</span><span style={{color:'#e2e8f0'}}>&lt;</span><span style={{color:'#818cf8'}}>UClankrNPC</span><span style={{color:'#e2e8f0'}}>&gt;();</span>{'\n'}
-{'\n'}
-<span style={{color:'#e2e8f0'}}>Guard-&gt;</span><span style={{color:'#22d3ee'}}>Personality</span><span style={{color:'#e2e8f0'}}> = </span><span style={{color:'#4ade80'}}>"A gruff but fair town guard</span>{'\n'}
-<span style={{color:'#4ade80'}}>  who remembers every face."</span><span style={{color:'#e2e8f0'}}>;</span>{'\n'}
-{'\n'}
-<span style={{color:'#e2e8f0'}}>Guard-&gt;</span><span style={{color:'#22d3ee'}}>Goals</span><span style={{color:'#e2e8f0'}}>{' = {'}</span>{'\n'}
-<span style={{color:'#4ade80'}}>  "Keep the peace"</span><span style={{color:'#e2e8f0'}}>,</span>{'\n'}
-<span style={{color:'#4ade80'}}>  "Protect merchants from thieves"</span>{'\n'}
-<span style={{color:'#e2e8f0'}}>{'}'}</span><span style={{color:'#e2e8f0'}}>;</span>{'\n'}
-{'\n'}
-<span style={{color:'#6b7280'}}>// Register actions with natural language</span>{'\n'}
-<span style={{color:'#e2e8f0'}}>Guard-&gt;</span><span style={{color:'#22d3ee'}}>RegisterAction</span><span style={{color:'#e2e8f0'}}>(PatrolRoute,</span>{'\n'}
-<span style={{color:'#4ade80'}}>  "Walk the market perimeter"</span><span style={{color:'#e2e8f0'}}>);</span>{'\n'}
-        </code>
-      </pre>
-    </div>
-  );
-}
-
 /* ─── Doc card ───────────────────────────────────────────────── */
 function DocCard({ icon, title, description, href, badge }: {
   icon: React.ReactNode; title: string; description: string; href: string; badge?: string;
@@ -260,12 +143,13 @@ function DocCard({ icon, title, description, href, badge }: {
 }
 
 /* ─── NPC Card Panel ─────────────────────────────────────────── */
+/* Pixel-scene backdrops for the mission section — each NPC staged in the setting their role implies. */
 const NPCS = [
   {
     name: 'Marcus',
     role: 'Town Guard',
     color: '#22d3ee',
-    sprite: MARCUS_SPRITE,
+    spriteImg: marcusSprite,
     thought: '"That merchant is selling silk 40% below market rate. Could be stolen goods — I should investigate."',
     goal: 'Maintain market security',
     memories: ['Assisted player in arrest (2 days ago)', 'Unusual price drop at stall #7 (1h ago)'],
@@ -275,7 +159,7 @@ const NPCS = [
     name: 'Elena',
     role: 'Silk Merchant',
     color: '#4ade80',
-    sprite: ELENA_SPRITE,
+    spriteImg: elenaSprite,
     thought: '"Festival in 3 days. If I undercut Aldric now, I can capture his regulars before he restocks."',
     goal: 'Maximize festival profits',
     memories: ['Aldric restocked yesterday', 'Festival crowd +40% expected (3 days)'],
@@ -285,13 +169,33 @@ const NPCS = [
     name: 'Old Tom',
     role: 'Tavern Keeper',
     color: '#a78bfa',
-    sprite: OLDTOM_SPRITE,
+    spriteImg: oldTomSprite,
     thought: '"The guard\'s watching that merchant closely. Something\'s brewing. Regulars will want to hear about this."',
     goal: 'Gather useful information',
     memories: ['Overheard bandit rumor this morning', 'Guard noticed suspicious merchant (now)'],
     action: 'ObserveNearby(market_square)',
   },
 ];
+
+/* ─── Town scene ─────────────────────────────────────────────── */
+function TownScene() {
+  return (
+    <div className="rounded-xl overflow-hidden text-left" style={{ background: '#0a0f1e', border: '1px solid rgba(255,255,255,0.08)' }}>
+      {/* Scene bar */}
+      <div className="flex items-center gap-1.5 px-4 py-3" style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <span className="w-3 h-3 rounded-full bg-red-500/60" />
+        <span className="w-3 h-3 rounded-full bg-yellow-500/60" />
+        <span className="w-3 h-3 rounded-full bg-green-500/60" />
+        <span className="ml-2 text-xs text-gray-600">clankr_town.scene</span>
+      </div>
+      <img
+        src={townScene}
+        alt="Marcus, Elena, and Old Tom in the town square, each with a thought bubble showing what they're reasoning about"
+        className="w-full h-auto block"
+      />
+    </div>
+  );
+}
 
 function NPCPanel() {
   const [idx, setIdx] = useState(0);
@@ -335,7 +239,7 @@ function NPCPanel() {
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: `1px solid ${npc.color}18` }}>
           <div className="flex items-center gap-2.5">
-            <PixelSprite pixels={npc.sprite} scale={3} />
+            <img src={npc.spriteImg} alt={npc.name} className="w-12 h-12 rounded-md object-cover" />
             <div>
               <div className="text-white font-semibold text-sm leading-none">{npc.name}</div>
               <div className="text-xs mt-0.5" style={{ color: npc.color + 'aa' }}>{npc.role}</div>
@@ -437,7 +341,7 @@ export default function Home() {
               </div>
 
               <p className="text-lg text-gray-400 max-w-lg">
-                Give your NPCs memory, perception, and goals — so they think, adapt, and surprise players every time.
+                Give your NPCs memory, perception, and goals, making every playthrough more immersive and unique
               </p>
 
               <div className="flex flex-wrap gap-3">
@@ -495,7 +399,7 @@ export default function Home() {
               <span className="text-xs text-purple-400 font-semibold tracking-widest uppercase">What drives us</span>
               <h2 className="text-3xl font-bold text-white mt-2 mb-5">We dreamed of NPCs with real agency</h2>
               <p className="text-gray-400 leading-relaxed">
-                As gamers, we've always wanted a merchant who reacts to market shifts, a guard who remembers your history together, a world that feels genuinely alive. That vision — NPCs with goals, memory, and real autonomy — is what we're building.
+                Growing up in the 2000s with classic games like Mario, Pokemon, Skyrim, and Dark Souls, we always thought NPCs would become more intelligent and evolve past merely repeating the same dialogue back at you in loops. A knight who remembers your battles together, a merchant that reacts to market shifts,  characters that have their own plans and agency, a world that feels genuinely alive. This is the vision we're building.
               </p>
               <div className="mt-6 flex flex-col gap-3">
                 {['Merchants who adapt to market changes', 'Guards who remember past encounters', 'Villagers with their own agendas'].map(t => (
@@ -506,7 +410,7 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <CodeCard />
+            <TownScene />
           </div>
         </div>
       </section>
