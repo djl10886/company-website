@@ -1,5 +1,4 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
 
 function BenefitItem({ text }: { text: string }) {
   return (

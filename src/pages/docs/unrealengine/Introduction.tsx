@@ -8,7 +8,7 @@ export default function Introduction() {
   }, []);
 
   return (
-    <div id="top" className="relative min-h-screen pt-16">
+    <div id="top" className="rnpc-docs-page relative min-h-screen pt-16">
       <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
       <div className="fixed inset-0 opacity-30" style={{
         backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
@@ -19,7 +19,7 @@ export default function Introduction() {
         <div className="mx-auto px-[8%] py-16">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Unreal Engine Documentation
+              RealisticNPCs for Unreal Engine
             </h1>
             <div className="w-24 h-1 bg-blue-400 mx-auto mb-8"></div>
             <div className="space-y-6 text-left">
@@ -29,10 +29,19 @@ export default function Introduction() {
               <p className="text-gray-300 text-xl">
                 This documentation focuses on the technical details of how to use the plugin. Note that the plugin is currently in an alpha phase so there may be major changes without advanced warning.
               </p>
-              <div className="pt-4">
+              <div className="flex flex-col gap-3 pt-4 sm:flex-row">
+                <Link
+                  to="/download"
+                  className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors text-lg"
+                >
+                  Download RealisticNPCs -&gt;
+                </Link>
+                <span className="hidden text-gray-700 sm:inline" aria-hidden="true">
+                  /
+                </span>
                 <Link
                   to="/docs/unrealengine/changelog"
-                  className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors text-lg"
+                  className="inline-flex items-center text-gray-400 hover:text-white transition-colors text-lg"
                 >
                   View Changelog -&gt;
                 </Link>

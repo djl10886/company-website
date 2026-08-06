@@ -21,7 +21,7 @@ export default function AuthoringGuide() {
   }, []);
 
   return (
-    <div id="top" className="relative min-h-screen pt-16">
+    <div id="top" className="rnpc-docs-page relative min-h-screen pt-16">
       <div className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
       <div className="fixed inset-0 opacity-30" style={{
         backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',

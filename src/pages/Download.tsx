@@ -1,0 +1,205 @@
+import { useState } from 'react';
+import { ArrowRight, Download as DownloadIcon, Package } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import {
+  LOCAL_DEPLOYMENT_SCOPE,
+  LOCAL_RELEASE_LICENSE,
+  type LocalDownloadArtifact,
+  localRelease,
+} from '../data/localRelease';
+
+function DownloadArtifact({ artifact }: { artifact: LocalDownloadArtifact }) {
+  const [accepted, setAccepted] = useState(false);
+  const checkboxId = `accept-license-${artifact.artifactId}`;
+  const agreementTextId = `${checkboxId}-text`;
+  const agreementLicenseId = `${checkboxId}-license`;
+
+  return (
+    <article
+      className="rounded-xl p-4 sm:p-5"
+      style={{
+        background: 'rgba(7,13,26,0.72)',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
+      <div className="flex min-w-0 items-start gap-4">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
+          style={{
+            background: 'rgba(6,182,212,0.12)',
+            border: '1px solid rgba(6,182,212,0.25)',
+          }}
+        >
+          <Package className="h-5 w-5 text-cyan-300" aria-hidden="true" />
+        </div>
+        <div className="min-w-0">
+          <h3 className="font-semibold text-white">{artifact.displayName}</h3>
+          <p className="mt-1 text-sm text-gray-400">
+            {artifact.platformLabel} <span aria-hidden="true">·</span>{' '}
+            {artifact.format}
+            {artifact.sizeLabel && (
+              <>
+                {' '}
+                <span aria-hidden="true">·</span> {artifact.sizeLabel}
+              </>
+            )}
+          </p>
+          <p className="mt-2 break-all text-xs text-gray-500">{artifact.fileName}</p>
+        </div>
+      </div>
+
+      <form action={artifact.downloadEndpoint} method="post" className="mt-6">
+        <input type="hidden" name="artifact_id" value={artifact.artifactId} />
+        <input type="hidden" name="license_sha256" value={LOCAL_RELEASE_LICENSE.sha256} />
+
+        <div className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/[0.025] p-4">
+          <input
+            id={checkboxId}
+            name="acceptance"
+            type="checkbox"
+            value="accepted"
+            required
+            checked={accepted}
+            onChange={(event) => setAccepted(event.target.checked)}
+            aria-labelledby={`${agreementTextId} ${agreementLicenseId}`}
+            className="mt-1 h-4 w-4 shrink-0 accent-cyan-400"
+          />
+          <p className="text-sm leading-6 text-gray-300">
+            <label id={agreementTextId} htmlFor={checkboxId}>
+              I have read and agree to the
+            </label>{' '}
+            <a
+              id={agreementLicenseId}
+              href={LOCAL_RELEASE_LICENSE.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-cyan-400 underline decoration-cyan-400/50 underline-offset-2 transition-colors hover:text-cyan-300"
+            >
+              {LOCAL_RELEASE_LICENSE.label}
+            </a>
+            .
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          disabled={!accepted}
+          className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors enabled:hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
+        >
+          <DownloadIcon className="h-4 w-4" aria-hidden="true" />
+          {artifact.label}
+        </button>
+      </form>
+    </article>
+  );
+}
+
+export default function DownloadPage() {
+  return (
+    <main className="relative min-h-screen overflow-hidden pt-16">
+      <div
+        className="fixed inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"
+        aria-hidden="true"
+      />
+      <div
+        className="fixed inset-0 opacity-30"
+        style={{
+          backgroundImage:
+            'radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0)',
+          backgroundSize: '48px 48px',
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="orb fixed -right-40 top-20 h-[480px] w-[480px] opacity-15"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(6,182,212,0.5) 0%, transparent 70%)',
+        }}
+        aria-hidden="true"
+      />
+
+      <section className="relative px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-10 max-w-3xl sm:mb-12">
+            <span
+              className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-widest text-cyan-300"
+              style={{
+                background: 'rgba(6,182,212,0.12)',
+                border: '1px solid rgba(6,182,212,0.3)',
+              }}
+            >
+              {localRelease.editionName} edition
+            </span>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+              {localRelease.productName}{' '}
+              <span className="text-cyan-400">{localRelease.editionName}</span>
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-gray-400 sm:text-lg">
+              {localRelease.summary}
+            </p>
+          </div>
+
+          <section
+            className="rounded-2xl p-5 sm:p-7"
+            style={{
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
+            aria-labelledby="available-downloads"
+          >
+            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-cyan-400">
+                  Windows download
+                </p>
+                <h2 id="available-downloads" className="mt-2 text-2xl font-semibold text-white">
+                  Version {localRelease.version}
+                </h2>
+              </div>
+              <span className="text-sm text-gray-500">No sign-in required</span>
+            </div>
+
+            <div className="space-y-4">
+              {localRelease.artifacts.map((artifact) => (
+                <DownloadArtifact key={artifact.artifactId} artifact={artifact} />
+              ))}
+            </div>
+
+            <div className="mt-6 space-y-3 border-t border-white/10 pt-5 text-sm leading-6 text-gray-400">
+              <p>
+                <span className="font-semibold text-gray-300">Requirements:</span>{' '}
+                Requires 64-bit Windows 10 or Windows 11, an Unreal Engine C++ project,
+                and the matching C++ toolchain.
+              </p>
+              <p>
+                <span className="font-semibold text-gray-300">Deployment scope:</span>{' '}
+                {LOCAL_DEPLOYMENT_SCOPE}
+              </p>
+            </div>
+          </section>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              to="/docs/unrealengine"
+              className="inline-flex items-center gap-2 text-sm font-medium text-cyan-400 transition-colors hover:text-cyan-300"
+            >
+              Read the documentation
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <span className="hidden text-gray-700 sm:inline" aria-hidden="true">
+              /
+            </span>
+            <Link
+              to="/docs/unrealengine/changelog"
+              className="inline-flex items-center gap-2 text-sm font-medium text-gray-400 transition-colors hover:text-white"
+            >
+              View the Changelog
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
