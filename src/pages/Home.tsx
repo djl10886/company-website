@@ -399,7 +399,7 @@ export default function Home() {
               <span className="text-xs text-purple-400 font-semibold tracking-widest uppercase">What drives us</span>
               <h2 className="text-3xl font-bold text-white mt-2 mb-5">We dreamed of NPCs with real agency</h2>
               <p className="text-gray-400 leading-relaxed">
-                Growing up with classic games like Mario, Pokémon, Skyrim, and Dark Souls, we always thought NPCs would become more intelligent and evolve beyond merely repeating the same dialogue in loops. We imagined a knight who remembers your battles together, a merchant who reacts to market shifts, and characters with plans and agency of their own—a world that feels genuinely alive. This is the vision we're building.
+                Growing up with classic games like Mario, Pokémon, Skyrim, and Dark Souls, we always thought NPCs would become more intelligent and evolve beyond merely repeating the same dialogue in loops. We imagined a knight who remembers your battles together, a merchant who reacts to market shifts, and characters with plans and agency of their own-a world that feels genuinely alive. This is the vision we're building.
               </p>
               <div className="mt-6 flex flex-col gap-3">
                 {['Merchants who adapt to market changes', 'Guards who remember past encounters', 'Villagers with their own agendas'].map(t => (
