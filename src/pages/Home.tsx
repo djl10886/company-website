@@ -150,7 +150,7 @@ const NPCS = [
     role: 'Town Guard',
     color: '#22d3ee',
     spriteImg: marcusSprite,
-    thought: '"That merchant is selling silk 40% below market rate. Could be stolen goods — I should investigate."',
+    thought: '"That merchant is selling silk 40% below market rate. Could be stolen goods - I should investigate."',
     goal: 'Maintain market security',
     memories: ['Assisted player in arrest (2 days ago)', 'Unusual price drop at stall #7 (1h ago)'],
     action: 'InvestigateTarget(stall_7)',

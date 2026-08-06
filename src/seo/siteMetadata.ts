@@ -22,7 +22,7 @@ export interface ResolvedSeoPage extends SeoPageDefinition {
 const STATIC_PAGES: readonly SeoPageDefinition[] = [
   {
     path: '/',
-    title: 'RealisticNPCs — Humanlike AI NPC Behavior for Unreal Engine',
+    title: 'RealisticNPCs - Humanlike AI NPC Behavior for Unreal Engine',
     description:
       'RealisticNPCs is an AI behavior and cognition system for humanlike game NPCs, with memory, perception, planning, conversation, and actions.',
     indexable: true,
