@@ -3,8 +3,9 @@ import type { Release } from './types';
 export const v0_5_0: Release = {
   version: 'v0.5.0',
   date: 'TBD',
-  summary: 'Added object perception and subjective knowledge of people and objects, with richer memory, conversation, spatial reasoning, and behavior continuity.',
+  summary: 'Added authored item knowledge and object perception, with richer personal memory, conversation, spatial reasoning, and behavior continuity.',
   highlights: [
+    'Reuse existing item data through Item Knowledge Libraries and give each NPC distinct starting knowledge.',
     'Added a Perceivable Object authoring workflow with geometry-aware visibility and occlusion',
     'NPCs maintain individual knowledge of people and objects, with selective attention shaped by their current situation',
     'Improved remembered knowledge and conversation context for known people and objects',
@@ -43,7 +44,25 @@ export const v0_5_0: Release = {
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-white mb-6">3. NPC-Specific Knowledge and Object-Aware Behavior</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">3. Authored Item Knowledge</h2>
+        <ul className="list-disc space-y-3 text-white ml-6">
+          <li>
+            <strong>Reuse existing item data.</strong> Create an <code className="bg-slate-800/50 px-2 py-1 rounded">Item Knowledge Library</code> from DataTables, Data Assets (including Primary Data Assets), data-only Blueprint defaults, or Data Registries. Select relevant properties and add descriptions where the existing data needs more explanation.
+          </li>
+          <li>
+            <strong>Give characters different starting knowledge.</strong> Choose <code className="bg-slate-800/50 px-2 py-1 rounded">Use in Current Level</code> from the library's Content Browser menu, then assign reusable collections or individual facts through each NPC's <code className="bg-slate-800/50 px-2 py-1 rounded">Starting Item Knowledge</code> controls. A herbalist can know a remedy and its preparation while another character knows only its name.
+          </li>
+          <li>
+            <strong>Preview what each NPC knows.</strong> Search the automatically updated preview, inspect complete facts and their sources, and distinguish included knowledge from information the NPC will not receive. Mapping and assignment problems appear alongside the preview.
+          </li>
+          <li>
+            <strong>Let knowledge inform behavior.</strong> NPCs can discuss known items, consider them when deciding what to do, and interpret encountered objects using their own knowledge and available evidence. Knowing a remedy can motivate a question or search before a specimen is encountered; ambiguous evidence can still leave identification uncertain.
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-6">4. NPC-Specific Knowledge and Object-Aware Behavior</h2>
         <ul className="list-disc space-y-3 text-white ml-6">
           <li>
             Each NPC maintains its own current, recent, and remembered knowledge. An object being loaded in the world does not make every NPC aware of it, and losing sight does not necessarily erase useful knowledge.
@@ -61,7 +80,7 @@ export const v0_5_0: Release = {
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-white mb-6">4. Memory and Conversation</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">5. Memory and Conversation</h2>
         <ul className="list-disc space-y-3 text-white ml-6">
           <li>
             Meaningful encounters can build familiarity with people and objects. Learned names and accepted corrections or withdrawals are retained more consistently, while routine visibility alone does not create a permanent record of every prop.
@@ -73,13 +92,13 @@ export const v0_5_0: Release = {
             NPCs can discuss known offstage objects or ask another person about an object while keeping the inquiry subject distinct from the conversation partner. Relevant names and relationships help inform the exchange without assuming prior acquaintance.
           </li>
           <li>
-            When grounded conversation learning is enabled, supported statements from a completed conversation can contribute fallible knowledge. Ambiguous or unsupported dialogue does not automatically become an accepted fact.
+            NPCs can learn factual information from conversations they hear, including while listening without replying. They can remember who supplied information, retain uncertainty or conflicting accounts, and revise earlier understanding. Learned knowledge can inform later conversation, behavior, and item identification just like other personal knowledge. Learning happens in the background and may not be reflected in the first reply.
           </li>
         </ul>
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-white mb-6">5. Spatial Reasoning and Behavior Continuity</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">6. Spatial Reasoning and Behavior Continuity</h2>
         <ul className="list-disc space-y-3 text-white ml-6">
           <li>
             Known place descriptions and parent/subarea relationships are used more consistently when forming intentions and selecting movement destinations. An NPC outside a building can consider a known interior area directly, subject to live movement validation, without requiring a stop at the broader building first.
@@ -97,7 +116,7 @@ export const v0_5_0: Release = {
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-white mb-6">6. Shared Visual Configuration and Upgrade Notes</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">7. Shared Visual Configuration and Upgrade Notes</h2>
         <ul className="list-disc space-y-3 text-white ml-6">
           <li>
             Character Sight, Object Vision, and visual place discovery use the same Unreal Sight configuration and observer viewpoint while retaining their own sensing behavior. The editor's Visual Perception Envelope preview shows the shared viewing configuration, not guaranteed visibility of individual targets.
@@ -111,6 +130,9 @@ export const v0_5_0: Release = {
         </p>
         <p className="text-white">
           Review each NPC controller's Unreal Sight configuration. Retired independent Spatial Perception range, field-of-view, and eye-origin settings no longer control visual sensing or provide a fallback. Spatial observation cadence and place-cue enablement remain separate spatial settings.
+        </p>
+        <p className="text-white mt-4">
+          Library changes take effect in a new session. They do not overwrite the personal knowledge of NPCs already initialized or restored from a save.
         </p>
       </div>
     </div>
